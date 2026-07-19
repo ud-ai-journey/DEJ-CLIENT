@@ -3,162 +3,196 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reviewer Dashboard</title>
+  <title>Reviewer Dashboard - Digital Evolution Journal</title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Roboto&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Merriweather', 'serif'],
+          },
+          colors: {
+            navy: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+            },
+            gold: {
+              50: '#fdfdf6',
+              100: '#fbf9eb',
+              500: '#d97706',
+              600: '#b45309',
+              700: '#78350f',
+            }
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    body { font-family: 'Roboto', sans-serif; }
-    .font-lato { font-family: 'Lato', sans-serif; }
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4, h5, h6, .font-editorial { font-family: 'Merriweather', serif; }
   </style>
 </head>
-<body class="bg-[#F9FAFB] text-[#1A1A2E]">
-  <header class="sticky top-0 z-50 bg-white shadow-sm">
-    <div class="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-      <div class="text-xl font-bold font-lato">
-        <a href="/"><img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-12 sm:h-14 w-auto"></a>
+<body class="bg-[#f8fafc] text-navy-900 min-h-screen flex flex-col justify-between">
+
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-navy-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <a href="/" class="transition-opacity hover:opacity-90">
+          <img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-10 sm:h-12 w-auto">
+        </a>
       </div>
 
       <!-- Desktop Navigation -->
-      <nav class="hidden md:flex items-center space-x-6 text-sm">
-        <a href="/" class="hover:text-[#3F72AF]">Home</a>
-        <a href="/researches" class="hover:text-[#3F72AF]">Published Papers</a>
-        <a href="/submit" class="hover:text-[#3F72AF]">Submit Research</a>
-        <a href="/reviewer" class="hover:text-[#3F72AF]">Review Paper</a>
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <a href="/" class="text-navy-500 hover:text-gold-500 transition-colors">Home</a>
+        <a href="/researches" class="text-navy-500 hover:text-gold-500 transition-colors">Published Papers</a>
+        <a href="/submit" class="text-navy-500 hover:text-gold-500 transition-colors">Submit Research</a>
         <span id="dashboardTab" class="relative">
-          <button class="inline-flex items-center gap-1 px-3 py-1 rounded hover:bg-gray-100">Dashboards
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/></svg>
+          <button class="inline-flex items-center gap-1 text-navy-800 hover:text-gold-500 transition-colors font-medium">
+            Dashboards
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
+            </svg>
           </button>
-          <div class="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg hidden" id="dashboardMenu">
-            <a href="/dashboard/author" class="block px-4 py-2 hover:bg-gray-100">Author</a>
-            <a href="/dashboard/reviewer" class="block px-4 py-2 hover:bg-gray-100">Reviewer</a>
+          <div class="absolute right-0 mt-2 w-44 bg-white border border-navy-100 rounded-md shadow-lg hidden py-1" id="dashboardMenu">
+            <a href="/dashboard/author" class="block px-4 py-2 text-navy-700 hover:bg-navy-50 hover:text-gold-500 transition-colors">Author</a>
+            <a href="/dashboard/reviewer" class="block px-4 py-2 text-navy-700 hover:bg-navy-50 hover:text-gold-500 transition-colors">Reviewer</a>
           </div>
         </span>
-        <span id="authLinks" class="flex items-center gap-2"></span>
+        <span id="authLinks" class="flex items-center gap-4 border-l border-navy-100 pl-8"></span>
       </nav>
 
       <!-- Mobile Menu Button -->
-      <button id="mobileMenuButton" class="md:hidden p-2 text-gray-600 focus:outline-none">
+      <button id="mobileMenuButton" class="md:hidden p-2 text-navy-600 hover:text-navy-900 focus:outline-none transition-colors">
         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
       </button>
     </div>
 
-    <!-- Mobile Navigation Menu -->
-    <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
-      <div class="px-4 py-2 space-y-1">
-        <a href="/" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Home</a>
-        <a href="/researches" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Published Papers</a>
-        <a href="/submit" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Submit Research</a>
-        <a href="/reviewer" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Review Paper</a>
-        <span id="mobileDashboardTab">
-          <div class="px-3 py-2">
-            <div class="font-medium text-gray-900 mb-2">Dashboards</div>
-            <a href="/dashboard/author" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Author</a>
-            <a href="/dashboard/reviewer" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Reviewer</a>
-          </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden hidden bg-white border-t border-navy-100">
+      <div class="px-4 py-4 space-y-2">
+        <a href="/" class="block px-3 py-2 text-base font-medium text-navy-900 hover:bg-navy-50 rounded">Home</a>
+        <a href="/researches" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">Published Papers</a>
+        <a href="/submit" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">Submit Research</a>
+        <span id="mobileDashboardTab" class="block border-t border-navy-50 pt-2">
+          <a href="/dashboard/author" class="block px-6 py-2 text-navy-600 hover:bg-navy-50 rounded">Author Dashboard</a>
+          <a href="/dashboard/reviewer" class="block px-6 py-2 text-navy-600 hover:bg-navy-50 rounded">Reviewer Dashboard</a>
         </span>
-        <div id="mobileAuthLinks" class="px-3 py-2 space-y-2"></div>
+        <div id="mobileAuthLinks" class="border-t border-navy-100 pt-4 flex flex-col gap-2"></div>
       </div>
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
-    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between mb-6">
+  <!-- Main Dashboard -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-12 flex-grow space-y-8">
+    
+    <!-- Welcome Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-navy-100 pb-6">
       <div>
-        <h1 class="text-xl sm:text-2xl font-bold font-lato">Reviewer Dashboard</h1>
-        <p class="text-sm text-gray-600">Your assignments, deadlines, and claims</p>
+        <h1 class="text-3xl font-bold font-editorial text-navy-900">Reviewer Dashboard</h1>
+        <p class="text-sm text-navy-500">Manage and complete your assigned peer reviews</p>
       </div>
-      <div class="flex items-center gap-2 text-sm">
-        <button class="px-3 py-2 border rounded hover:bg-gray-50">My Capacity: 3/5</button>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-      <div class="bg-gradient-to-br from-indigo-50 to-white border rounded-lg p-4 flex items-center gap-3">
-        <div class="text-indigo-600">🗂️</div>
-        <div>
-          <div class="text-sm text-gray-500">Assigned</div>
-          <div class="text-2xl font-bold" id="statAssigned">—</div>
-        </div>
-      </div>
-      <div class="bg-gradient-to-br from-amber-50 to-white border rounded-lg p-4 flex items-center gap-3">
-        <div class="text-amber-600">📅</div>
-        <div>
-          <div class="text-sm text-gray-500">Due This Week</div>
-          <div class="text-2xl font-bold" id="statDue">—</div>
-        </div>
-      </div>
-      <div class="bg-gradient-to-br from-emerald-50 to-white border rounded-lg p-4 flex items-center gap-3">
-        <div class="text-emerald-600">✅</div>
-        <div>
-          <div class="text-sm text-gray-500">Completed</div>
-          <div class="text-2xl font-bold" id="statDone">—</div>
-        </div>
+      <div class="bg-navy-50 border border-navy-100 px-4 py-2 rounded-lg text-xs font-semibold text-navy-700 tracking-wide uppercase shadow-sm">
+        My Capacity: <span class="text-gold-500">3 / 5</span>
       </div>
     </div>
 
-    <section class="bg-white border rounded-xl overflow-hidden mb-8">
-      <div class="px-4 py-3 border-b font-medium">
-        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <span>Assigned Papers</span>
-          <div class="flex flex-wrap items-center gap-2 text-xs">
-            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100">Legend:</span>
-            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-50 text-amber-700">Pending</span>
-            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-sky-50 text-sky-700">In Progress</span>
-            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-50 text-emerald-700">Submitted</span>
-          </div>
+    <!-- Statistics Panel -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div class="bg-white border border-navy-100 p-6 rounded-xl shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 bg-navy-50 rounded-lg flex items-center justify-center text-xl text-navy-800">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-navy-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 2H9" />
+          </svg>
+        </div>
+        <div>
+          <div class="text-xs font-semibold text-navy-500 uppercase tracking-wider">Total Assigned</div>
+          <div class="text-2xl font-bold font-editorial text-navy-900" id="statAssigned">—</div>
         </div>
       </div>
-      <div class="overflow-x-auto">
-        <table class="min-w-full text-sm">
-          <thead class="bg-gray-50 sticky top-0 z-10">
-            <tr>
-              <th class="text-left px-3 sm:px-4 py-2 min-w-[200px]">Title</th>
-              <th class="text-left px-3 sm:px-4 py-2 min-w-[100px]">Due</th>
-              <th class="text-left px-3 sm:px-4 py-2 min-w-[100px]">Status</th>
-              <th class="text-left px-3 sm:px-4 py-2 min-w-[120px]">Progress</th>
-              <th class="text-left px-3 sm:px-4 py-2 min-w-[100px]">Paper</th>
-              <th class="text-left px-3 sm:px-4 py-2 min-w-[100px]">Action</th>
-            </tr>
-          </thead>
-          <tbody id="assignedRows"></tbody>
-        </table>
-        <div id="assignedEmpty" class="hidden p-8 text-center text-gray-500">No assigned papers.</div>
+      <div class="bg-white border border-navy-100 p-6 rounded-xl shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 bg-gold-50 rounded-lg flex items-center justify-center text-xl">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gold-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <div>
+          <div class="text-xs font-semibold text-navy-500 uppercase tracking-wider">Due This Week</div>
+          <div class="text-2xl font-bold font-editorial text-navy-900" id="statDue">—</div>
+        </div>
       </div>
+      <div class="bg-white border border-navy-100 p-6 rounded-xl shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 bg-emerald-50 rounded-lg flex items-center justify-center text-xl">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div>
+          <div class="text-xs font-semibold text-navy-500 uppercase tracking-wider">Completed</div>
+          <div class="text-2xl font-bold font-editorial text-navy-900" id="statDone">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assigned Papers List Section -->
+    <section class="space-y-6">
+      <div class="flex justify-between items-center border-b border-navy-100 pb-2">
+        <h2 class="text-lg font-bold font-editorial text-navy-900">Your Assignments</h2>
+        <div class="flex gap-2 text-xs">
+          <span class="px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-100 font-medium">Pending</span>
+          <span class="px-2 py-0.5 rounded bg-sky-50 text-sky-700 border border-sky-100 font-medium">In Progress</span>
+          <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-100 font-medium">Submitted</span>
+        </div>
+      </div>
+
+      <div id="assignedEmpty" class="hidden bg-white border border-navy-100 rounded-xl p-12 text-center text-navy-500 shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-navy-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2" />
+        </svg>
+        <p class="font-medium text-navy-800">No assigned papers</p>
+        <p class="text-xs text-navy-400 mt-1">Assignments will appear here when allocated by the editors.</p>
+      </div>
+
+      <div id="assignedList" class="space-y-6"></div>
     </section>
 
-    <!-- Unassigned Pool Section - Commented out for next stage
-    <section class="bg-white border rounded-xl overflow-hidden">
-      <div class="px-4 py-3 border-b font-medium">
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <span>Unassigned Pool</span>
-          <div class="flex items-center gap-2">
-            <input id="poolSearch" type="text" placeholder="Search by keyword" class="border rounded px-3 py-2 text-sm w-full sm:w-64">
-          </div>
-        </div>
-      </div>
-      <div class="overflow-x-auto">
-        <table class="min-w-full text-sm">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="text-left px-3 sm:px-4 py-2 min-w-[200px]">Title</th>
-              <th class="text-left px-3 sm:px-4 py-2 min-w-[150px]">Keywords</th>
-              <th class="text-left px-3 sm:px-4 py-2 min-w-[100px]">Claim</th>
-            </tr>
-          </thead>
-          <tbody id="poolRows"></tbody>
-        </table>
-        <div id="poolEmpty" class="hidden p-8 text-center text-gray-500">No matching papers.</div>
-      </div>
-    </section>
-    -->
   </main>
 
+  <!-- Footer -->
+  <footer class="bg-navy-900 text-navy-400 text-xs py-8 border-t border-navy-800 text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex gap-4">
+        <a href="#" class="hover:text-navy-300">Privacy Policy</a>
+        <span>·</span>
+        <a href="#" class="hover:text-navy-300">Terms of Service</a>
+      </div>
+      <div>© 2026 Digital Evolution Journal. All rights reserved.</div>
+    </div>
+  </footer>
+
   <script>
-    function fmtDate(ts){ try{ return new Date(ts).toLocaleDateString(); }catch(e){ return ts; } }
+    function fmtDate(ts){ try{ return new Date(ts).toLocaleDateString(undefined, {month: 'short', day: 'numeric', year: 'numeric'}); }catch(e){ return ts; } }
+    
     (async () => {
+      // Dashboards tab menu
       const dashTab = document.getElementById('dashboardTab');
       const menu = document.getElementById('dashboardMenu');
       const btn = dashTab.querySelector('button');
@@ -166,7 +200,7 @@
       btn.addEventListener('click', (e) => { e.preventDefault(); open = !open; menu.classList.toggle('hidden', !open); });
       document.addEventListener('click', (e) => { if (!dashTab.contains(e.target)) { open = false; menu.classList.add('hidden'); } });
 
-      // Auth UI with Auth0
+      // Verification of Auth0
       const res = await fetch('/api/me', { credentials: 'include' });
       const data = await res.json();
       const el = document.getElementById('authLinks');
@@ -175,11 +209,13 @@
       if (data && data.isAuthenticated) {
         const u = data.user || {};
         const displayName = u.name || u.email || 'User';
-        const authContent = `<span class="text-sm text-gray-700">Hello, ${displayName}</span>
-          <a href="/logout" class="border px-3 py-1 rounded hover:bg-gray-100">Logout</a>`;
+        const authContent = `
+          <span class="text-sm text-navy-600">Hello, ${displayName}</span>
+          <a href="/logout" class="border border-navy-200 hover:border-navy-400 px-3 py-1.5 rounded text-navy-700 transition-colors bg-white">Logout</a>
+        `;
         const mobileAuthContent = `
-          <div class="text-sm text-gray-700 mb-2">Hello, ${displayName}</div>
-          <a href="/logout" class="block w-full text-center border px-4 py-2 rounded hover:bg-gray-100">Logout</a>
+          <div class="text-sm text-navy-600 mb-2 font-medium">Hello, ${displayName}</div>
+          <a href="/logout" class="block w-full text-center border border-navy-200 px-4 py-2.5 rounded hover:bg-navy-50 transition-colors">Logout</a>
         `;
         
         if (el) el.innerHTML = authContent;
@@ -189,67 +225,33 @@
         return;
       }
 
-      // Mobile menu functionality
+      // Mobile navbar trigger
       const mobileMenuButton = document.getElementById('mobileMenuButton');
       const mobileMenu = document.getElementById('mobileMenu');
-      
       if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', () => {
-          mobileMenu.classList.toggle('hidden');
-        });
-        
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', (e) => {
-          if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
-            mobileMenu.classList.add('hidden');
-          }
-        });
-        
-        // Close mobile menu when window is resized to desktop
-        window.addEventListener('resize', () => {
-          if (window.innerWidth >= 768) { // md breakpoint
-            mobileMenu.classList.add('hidden');
-          }
-        });
+        mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
       }
 
-      // Fetch assigned submissions from API
+      // Retrieve assignments
       let assigned = [];
       try {
-        const assignedRes = await fetch('/api/assigned-submissions', {
-          credentials: 'include'
-        });
-        if (assignedRes.ok) {
-          assigned = await assignedRes.json();
-        } else {
-          console.error('Failed to fetch assigned submissions:', await assignedRes.text());
-        }
+        const assignedRes = await fetch('/api/assigned-submissions', { credentials: 'include' });
+        if (assignedRes.ok) assigned = await assignedRes.json();
       } catch (error) {
         console.error('Error fetching assigned submissions:', error);
       }
-      
-      // Fetch unassigned submissions from API - Commented out for next stage
-      /*
-      let pool = [];
-      try {
-        const poolRes = await fetch('/api/unassigned-submissions', {
-          credentials: 'include'
-        });
-        if (poolRes.ok) {
-          pool = await poolRes.json();
-        } else {
-          console.error('Failed to fetch unassigned submissions:', await poolRes.text());
-        }
-      } catch (error) {
-        console.error('Error fetching unassigned submissions:', error);
-      }
-      */
-      
+
       const statusBadge = (s) => {
-        const map = { pending: 'bg-amber-50 text-amber-700', in_progress: 'bg-sky-50 text-sky-700', submitted: 'bg-emerald-50 text-emerald-700' };
-        return `<span class="px-2 py-1 rounded-full text-xs ${map[s] || 'bg-gray-100 text-gray-700'}">${s.replace('_',' ')}</span>`;
+        const map = {
+          pending: 'bg-amber-50 text-amber-700 border border-amber-100',
+          in_progress: 'bg-sky-50 text-sky-700 border border-sky-100',
+          submitted: 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+        };
+        return `<span class="px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider ${map[s] || 'bg-gray-100 text-gray-700'}">${s.replace('_',' ')}</span>`;
       };
+
       const progressOf = (s) => s === 'pending' ? 10 : s === 'in_progress' ? 60 : 100;
+      
       document.getElementById('statAssigned').textContent = assigned.length;
       document.getElementById('statDue').textContent = assigned.filter(a => {
         const review = a.reviews && a.reviews.length > 0 ? a.reviews[0] : null;
@@ -260,85 +262,69 @@
         const review = a.reviews && a.reviews.length > 0 ? a.reviews[0] : null;
         return review && review.status === 'COMPLETED';
       }).length;
-      const assignedRows = document.getElementById('assignedRows');
-      assignedRows.innerHTML = assigned.map(a => {
-        // Get review status from the reviews array
-        const review = a.reviews && a.reviews.length > 0 ? a.reviews[0] : null;
-        const status = review ? review.status.toLowerCase() : 'pending';
-        const dueDate = review ? review.due_date : null;
-        
-        // Get paper file information
-        const paperFile = a.submission_files && a.submission_files.length > 0 ? a.submission_files[0] : null;
-        const viewPaperButton = paperFile 
-          ? `<a href="/api/reviewer/files/view/${paperFile.id}" target="_blank" class="inline-flex items-center px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded font-medium">
-               <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-               </svg>
-               View Paper
-             </a>`
-          : '<span class="text-xs text-gray-400">No file</span>';
-        
-        return `
-        <tr class="border-t hover:bg-gray-50">
-          <td class="px-4 py-2">${a.title}</td>
-          <td class="px-4 py-2">${dueDate ? fmtDate(dueDate) : 'N/A'}</td>
-          <td class="px-4 py-2">${statusBadge(status)}</td>
-          <td class="px-4 py-2">
-            <div class="w-28 bg-gray-100 rounded-full h-2 overflow-hidden">
-              <div class="h-2 bg-[#3F72AF]" style="width:${progressOf(status)}%"></div>
-            </div>
-          </td>
-          <td class="px-4 py-2">${viewPaperButton}</td>
-          <td class="px-4 py-2"><a href="/review/${a.id}" class="text-[#3F72AF] hover:underline">Open Review</a></td>
-        </tr>`;
-      }).join('');
-      document.getElementById('assignedEmpty').classList.toggle('hidden', assigned.length !== 0);
 
-      // Unassigned Pool JavaScript - Commented out for next stage
-      /*
-      const poolRows = document.getElementById('poolRows');
-      const renderPool = (list) => {
-        poolRows.innerHTML = list.map(p => `
-        <tr class="border-t hover:bg-gray-50">
-          <td class="px-4 py-2">${p.title}</td>
-          <td class="px-4 py-2">${p.keywords || ''}</td>
-          <td class="px-4 py-2"><button class="claim-btn bg-[#3F72AF] hover:bg-[#345b8f] text-white px-3 py-1 rounded text-xs" data-id="${p.id}">Claim</button></td>
-        </tr>`).join('');
-        document.getElementById('poolEmpty').classList.toggle('hidden', list.length !== 0);
-        
-        // Add event listeners to claim buttons
-        document.querySelectorAll('.claim-btn').forEach(btn => {
-          btn.addEventListener('click', async (e) => {
-            const submissionId = e.target.dataset.id;
-            try {
-              const res = await fetch(`/api/claim-submission/${submissionId}`, {
-                method: 'POST',
-                credentials: 'include'
-              });
-              
-              if (res.ok) {
-                // Refresh the page to show updated assignments
-                window.location.reload();
-              } else {
-                alert('Failed to claim submission: ' + await res.text());
-              }
-            } catch (error) {
-              console.error('Error claiming submission:', error);
-              alert('Error claiming submission: ' + error.message);
-            }
-          });
-        });
-      };
-      renderPool(pool);
-      document.getElementById('poolSearch').addEventListener('input', (e) => {
-        const q = (e.target.value || '').toLowerCase();
-        renderPool(pool.filter(p => p.title.toLowerCase().includes(q) || (p.keywords && p.keywords.toLowerCase().includes(q))));
-      });
-      */
+      const listDiv = document.getElementById('assignedList');
+      if (assigned.length === 0) {
+        document.getElementById('assignedEmpty').classList.remove('hidden');
+      } else {
+        document.getElementById('assignedEmpty').classList.add('hidden');
+        listDiv.innerHTML = assigned.map(a => {
+          const review = a.reviews && a.reviews.length > 0 ? a.reviews[0] : null;
+          const status = review ? review.status.toLowerCase() : 'pending';
+          const dueDate = review ? review.due_date : null;
+          const paperFile = a.submission_files && a.submission_files.length > 0 ? a.submission_files[0] : null;
+          
+          const downloadBtn = paperFile 
+            ? `<a href="/api/reviewer/files/view/${paperFile.id}" target="_blank" class="px-4 py-2 border border-navy-200 hover:bg-navy-50 text-navy-700 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shrink-0">
+                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-navy-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                 </svg>
+                 View Manuscript
+               </a>`
+            : '<span class="text-xs text-navy-400 font-medium">No manuscript file</span>';
+
+          return `
+            <div class="bg-white border border-navy-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 space-y-4">
+              <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
+                <div class="space-y-1">
+                  <h3 class="text-lg font-bold font-editorial text-navy-900 leading-snug">${a.title}</h3>
+                  <p class="text-xs text-navy-400">ID: #${a.id} | Subject: ${a.keywords || '—'}</p>
+                </div>
+                <div class="flex items-center gap-3 shrink-0">
+                  ${statusBadge(status)}
+                </div>
+              </div>
+
+              <div class="border-y border-navy-50 py-3 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-medium">
+                <div class="flex items-center gap-2 text-navy-500">
+                  <span class="uppercase text-[10px] text-navy-400 tracking-wider">Due Date:</span>
+                  <span class="text-navy-900">${dueDate ? fmtDate(dueDate) : 'N/A'}</span>
+                </div>
+                <div class="flex items-center gap-2 text-navy-500">
+                  <span class="uppercase text-[10px] text-navy-400 tracking-wider">Review Progress:</span>
+                  <div class="w-28 bg-navy-100 rounded-full h-1.5 overflow-hidden shrink-0">
+                    <div class="h-1.5 bg-gold-500" style="width:${progressOf(status)}%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 pt-2">
+                <div class="text-xs text-navy-400 italic">
+                  ${status === 'completed' ? 'Review submitted. Thank you for your contribution!' : 'Please submit your scores and written remarks before the deadline.'}
+                </div>
+                <div class="flex gap-2 justify-end">
+                  ${downloadBtn}
+                  <a href="/review/${a.id}" class="bg-navy-900 hover:bg-navy-800 text-white px-5 py-2 rounded-lg text-xs font-semibold text-center transition-all shadow-sm">
+                    Open Review
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
     })();
   </script>
+
 </body>
 </html>
-
-

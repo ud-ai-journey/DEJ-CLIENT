@@ -6,46 +6,85 @@
   <title>Digital Evolution Journal</title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Roboto&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Merriweather', 'serif'],
+          },
+          colors: {
+            navy: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+            },
+            gold: {
+              50: '#fdfdf6',
+              100: '#fbf9eb',
+              500: '#d97706',
+              600: '#b45309',
+              700: '#78350f',
+            }
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    body { font-family: 'Roboto', sans-serif; }
-    h1, h2, h3, h4, .font-lato { font-family: 'Lato', sans-serif; }
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4, h5, h6, .font-editorial { font-family: 'Merriweather', serif; }
   </style>
 </head>
-<body class="text-[#1A1A2E] bg-white">
+<body class="text-navy-900 bg-[#f8fafc] min-h-screen flex flex-col">
 
   <!-- Navbar -->
-  <header class="sticky top-0 z-50 bg-white shadow-sm">
-    <div class="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-      <div class="text-xl font-bold font-lato">
-        <a href="/"><img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-12 sm:h-14 w-auto"></a>
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-navy-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <a href="/" class="transition-opacity hover:opacity-90">
+          <img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-10 sm:h-12 w-auto">
+        </a>
       </div>
 
       <!-- Desktop Navigation -->
-      <nav class="hidden md:flex items-center space-x-6 text-sm">
-        <a href="/" class="hover:text-[#3F72AF]">Home</a>
-        <a href="/researches" class="hover:text-[#3F72AF]">Published Papers</a>
-        <a href="/submit" class="hover:text-[#3F72AF]">Submit Research</a>
-        <a href="/reviewer" class="hover:text-[#3F72AF]">Review Paper</a>
-        <a href="/about.html" class="hover:text-[#3F72AF]">About</a>
-        <input type="text" placeholder="Search" class="border p-1 px-2 rounded text-sm hidden lg:block" />
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <a href="/" class="text-navy-800 hover:text-gold-500 transition-colors">Home</a>
+        <a href="/researches" class="text-navy-500 hover:text-gold-500 transition-colors">Published Papers</a>
+        <a href="/submit" class="text-navy-500 hover:text-gold-500 transition-colors">Submit Research</a>
+        <a href="/reviewer" class="text-navy-500 hover:text-gold-500 transition-colors">Review Paper</a>
+        <a href="/about.html" class="text-navy-500 hover:text-gold-500 transition-colors">About</a>
         <span id="dashboardTab" class="relative hidden">
-          <button class="inline-flex items-center gap-1 px-3 py-1 rounded hover:bg-gray-100">Dashboards
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/></svg>
+          <button class="inline-flex items-center gap-1 text-navy-500 hover:text-gold-500 transition-colors font-medium">
+            Dashboards
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
+            </svg>
           </button>
-          <div class="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg hidden" id="dashboardMenu">
-            <a href="/dashboard/author" class="block px-4 py-2 hover:bg-gray-100">Author</a>
-            <a href="/dashboard/reviewer" class="block px-4 py-2 hover:bg-gray-100">Reviewer</a>
+          <div class="absolute right-0 mt-2 w-44 bg-white border border-navy-100 rounded-md shadow-lg hidden py-1" id="dashboardMenu">
+            <a href="/dashboard/author" class="block px-4 py-2 text-navy-700 hover:bg-navy-50 hover:text-gold-500 transition-colors">Author</a>
+            <a href="/dashboard/reviewer" class="block px-4 py-2 text-navy-700 hover:bg-navy-50 hover:text-gold-500 transition-colors">Reviewer</a>
           </div>
         </span>
-        <span id="authLinks" class="flex items-center gap-2">
-          <a href="/login" class="bg-[#F9A826] hover:bg-[#e28e0c] text-white px-4 lg:px-6 py-1 rounded text-sm">Login</a>
-          <a href="/register" class="bg-[#3F72AF] hover:bg-[#345b8f] text-white text-sm px-3 lg:px-4 py-1 rounded">Register</a>
+        <span id="authLinks" class="flex items-center gap-4 border-l border-navy-100 pl-8">
+          <a href="/login" class="text-navy-600 hover:text-gold-500 transition-colors">Login</a>
+          <a href="/register" class="bg-navy-900 text-white hover:bg-navy-800 transition-colors px-4 py-2 rounded font-medium shadow-sm">Register</a>
         </span>
       </nav>
 
       <!-- Mobile Menu Button -->
-      <button id="mobileMenuButton" class="md:hidden p-2 text-gray-600 focus:outline-none">
+      <button id="mobileMenuButton" class="md:hidden p-2 text-navy-600 hover:text-navy-900 focus:outline-none transition-colors">
         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
@@ -53,202 +92,232 @@
     </div>
 
     <!-- Mobile Navigation Menu -->
-    <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
-      <div class="px-4 py-2 space-y-1">
-        <a href="/" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Home</a>
-        <a href="/researches" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Published Papers</a>
-        <a href="/submit" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Submit Research</a>
-        <a href="/reviewer" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Review Paper</a>
-        <a href="/about.html" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">About</a>
-        <div class="px-3 py-2">
-          <input type="text" placeholder="Search" class="w-full border p-2 rounded text-sm" />
-        </div>
-        <span id="mobileDashboardTab" class="hidden"></span>
-          <div class="px-3 py-2">
-            <div class="font-medium text-gray-900 mb-2">Dashboards</div>
-            <a href="/dashboard/author" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Author</a>
-            <a href="/dashboard/reviewer" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Reviewer</a>
-          </div>
+    <div id="mobileMenu" class="md:hidden hidden bg-white border-t border-navy-100">
+      <div class="px-4 py-4 space-y-2">
+        <a href="/" class="block px-3 py-2 text-base font-medium text-navy-900 hover:bg-navy-50 rounded">Home</a>
+        <a href="/researches" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">Published Papers</a>
+        <a href="/submit" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">Submit Research</a>
+        <a href="/reviewer" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">Review Paper</a>
+        <a href="/about.html" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">About</a>
+        <span id="mobileDashboardTab" class="hidden block border-t border-navy-50 pt-2">
+          <div class="px-3 py-1 font-semibold text-navy-900 text-sm tracking-wider uppercase">Dashboards</div>
+          <a href="/dashboard/author" class="block px-6 py-2 text-navy-600 hover:bg-navy-50 rounded">Author Dashboard</a>
+          <a href="/dashboard/reviewer" class="block px-6 py-2 text-navy-600 hover:bg-navy-50 rounded">Reviewer Dashboard</a>
         </span>
-        <div id="mobileAuthLinks" class="px-3 py-2 space-y-2">
-          <a href="/login" class="block w-full text-center bg-[#F9A826] hover:bg-[#e28e0c] text-white px-4 py-2 rounded">Login</a>
-          <a href="/register" class="block w-full text-center bg-[#3F72AF] hover:bg-[#345b8f] text-white px-4 py-2 rounded">Register</a>
+        <div id="mobileAuthLinks" class="border-t border-navy-100 pt-4 flex flex-col gap-2">
+          <a href="/login" class="block w-full text-center border border-navy-200 text-navy-700 px-4 py-2.5 rounded font-medium">Login</a>
+          <a href="/register" class="block w-full text-center bg-navy-900 text-white px-4 py-2.5 rounded font-medium">Register</a>
         </div>
       </div>
     </div>
   </header>
 
   <!-- Hero Section -->
-  <section class="bg-white text-center py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
-    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold font-lato leading-snug">
-      Advancing Technical Research <span class="text-[#F9A826]">Excellence</span>
-    </h1>
-    <p class="text-gray-600 max-w-xl mx-auto mt-4 text-sm sm:text-base">
-      Premier peer-reviewed publication platform for cutting-edge research. Join our community of scholars, reviewers, and institutions.
-    </p>
-    <div class="mt-6 flex flex-col sm:flex-row sm:justify-center gap-3 sm:gap-4">
-      <a href="/submit" class="bg-[#F9A826] hover:bg-[#e28e0c] text-white px-6 py-3 rounded text-center">Submit Research</a>
-      <a href="/reviewer" class="border border-gray-400 px-6 py-3 rounded text-center hover:bg-gray-50">Become Reviewer</a>
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 text-center flex-grow flex flex-col justify-center">
+    <div class="max-w-4xl mx-auto space-y-6">
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-navy-900 tracking-tight leading-tight">
+        Advancing Technical Research <span class="text-gold-500 italic font-normal">Excellence</span>
+      </h1>
+      <p class="text-navy-600 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed font-sans font-light">
+        A premier peer-reviewed platform dedicated to indexing and publishing next-generation technological advancements, guided by rigorous scientific standards.
+      </p>
+      <div class="pt-6 flex flex-col sm:flex-row justify-center gap-4">
+        <a href="/submit" class="bg-gold-500 hover:bg-gold-600 text-white px-8 py-4 rounded font-medium transition-all shadow-md shadow-gold-500/10 hover:shadow-lg hover:-translate-y-0.5">
+          Submit Manuscript
+        </a>
+        <a href="/reviewer" class="border border-navy-200 hover:border-navy-400 bg-white text-navy-700 px-8 py-4 rounded font-medium transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-md">
+          Join Reviewer Board
+        </a>
+      </div>
     </div>
   </section>
 
- <!-- Peer Review Process -->
-<section class="bg-[#F9FAFB] px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 text-center">
-  <h2 class="text-xl sm:text-2xl font-bold font-lato mb-4">Our Peer Review Process</h2>
-  <p class="text-gray-600 mb-8 sm:mb-12 max-w-xl mx-auto text-sm sm:text-base">
-    Rigorous 10-reviewer system ensuring the highest quality standards
-  </p>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8 max-w-6xl mx-auto">
-    <div>
-      <div class="w-12 h-12 mx-auto bg-[#3F72AF] text-white rounded-full flex items-center justify-center font-bold">1</div>
-      <h3 class="font-semibold mt-4 text-lg">Submission</h3>
-      <p class="text-sm text-gray-600 mt-2">Authors submit papers following our comprehensive guidelines with automated format validation.</p>
-    </div>
-    <div>
-      <div class="w-12 h-12 mx-auto bg-[#3F72AF] text-white rounded-full flex items-center justify-center font-bold">2</div>
-      <h3 class="font-semibold mt-4 text-lg">Smart Pre-Reviewer Screening</h3>
-      <p class="text-sm text-gray-600 mt-2">Advanced AI screening ensures papers meet baseline quality and relevance before reviewer assignment.</p>
-    </div>
-    <div>
-      <div class="w-12 h-12 mx-auto bg-[#3F72AF] text-white rounded-full flex items-center justify-center font-bold">3</div>
-      <h3 class="font-semibold mt-4 text-lg">AI Matching</h3>
-      <p class="text-sm text-gray-600 mt-2">Our algorithm assigns 10 expert reviewers based on expertise, keywords, and availability.</p>
-    </div>
-    <div>
-      <div class="w-12 h-12 mx-auto bg-[#3F72AF] text-white rounded-full flex items-center justify-center font-bold">4</div>
-      <h3 class="font-semibold mt-4 text-lg">Review</h3>
-      <p class="text-sm text-gray-600 mt-2">Reviewers evaluate papers on originality, methodology, clarity, impact, and relevance within 2 weeks.</p>
-    </div>
-    <div>
-      <div class="w-12 h-12 mx-auto bg-[#3F72AF] text-white rounded-full flex items-center justify-center font-bold">5</div>
-      <h3 class="font-semibold mt-4 text-lg">Publication</h3>
-      <p class="text-sm text-gray-600 mt-2">Papers scoring 8/10+ average are approved for publication with global distribution.</p>
-    </div>
-  </div>
-</section>
+  <!-- Peer Review Process -->
+  <section class="bg-white border-y border-navy-100 px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+    <div class="max-w-7xl mx-auto text-center space-y-12">
+      <div class="space-y-4">
+        <h2 class="text-3xl font-bold font-editorial text-navy-900">The Peer Review Standard</h2>
+        <p class="text-navy-500 max-w-xl mx-auto text-base">
+          Our specialized 10-reviewer verification workflow ensures the highest levels of scientific rigor and publication credibility.
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 max-w-7xl mx-auto pt-8">
+        <!-- Step 1 -->
+        <div class="bg-navy-50/50 border border-navy-100 p-8 rounded-xl text-left space-y-4 hover:shadow-md hover:border-navy-200 transition-all duration-300">
+          <div class="w-12 h-12 bg-navy-900 text-white rounded-lg flex items-center justify-center shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gold-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <h3 class="font-bold text-lg font-editorial text-navy-900">1. Submission</h3>
+          <p class="text-sm text-navy-600 leading-relaxed">
+            Authors upload raw manuscripts with comprehensive metadata, automatic formatting, and structure checks.
+          </p>
+        </div>
 
-  <!-- Stay Updated 
-  <section class="bg-[#1A1A2E] text-white text-center px-8 py-16">
-    <h3 class="text-xl font-semibold font-lato mb-2">Stay Updated</h3>
-    <p class="text-gray-300 mb-4">Get the latest research papers, reviews, and academic news delivered to your inbox</p>
-    <div class="flex justify-center max-w-md mx-auto space-x-2">
-      <input type="email" placeholder="Enter your email address" class="rounded text-black px-3 py-1 w-full" />
-      <button class="bg-[#F9A826] hover:bg-[#e28e0c] text-white px-4 py-1 rounded">Subscribe</button>
+        <!-- Step 2 -->
+        <div class="bg-navy-50/50 border border-navy-100 p-8 rounded-xl text-left space-y-4 hover:shadow-md hover:border-navy-200 transition-all duration-300">
+          <div class="w-12 h-12 bg-navy-900 text-white rounded-lg flex items-center justify-center shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gold-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+            </svg>
+          </div>
+          <h3 class="font-bold text-lg font-editorial text-navy-900">2. Screening</h3>
+          <p class="text-sm text-navy-600 leading-relaxed">
+            Pre-screening review handles baseline structural validations and filters papers before expert allocation.
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="bg-navy-50/50 border border-navy-100 p-8 rounded-xl text-left space-y-4 hover:shadow-md hover:border-navy-200 transition-all duration-300">
+          <div class="w-12 h-12 bg-navy-900 text-white rounded-lg flex items-center justify-center shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gold-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 9.172V5L8 4z"/>
+            </svg>
+          </div>
+          <h3 class="font-bold text-lg font-editorial text-navy-900">3. AI Matching</h3>
+          <p class="text-sm text-navy-600 leading-relaxed">
+            Advanced matching algorithm matches 10 matching peer-review experts based on keywords and backgrounds.
+          </p>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="bg-navy-50/50 border border-navy-100 p-8 rounded-xl text-left space-y-4 hover:shadow-md hover:border-navy-200 transition-all duration-300">
+          <div class="w-12 h-12 bg-navy-900 text-white rounded-lg flex items-center justify-center shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gold-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+          </div>
+          <h3 class="font-bold text-lg font-editorial text-navy-900">4. Evaluation</h3>
+          <p class="text-sm text-navy-600 leading-relaxed">
+            Assigned reviewers evaluate manuscripts on clarity, structure, methodology, and technical novelty.
+          </p>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="bg-navy-50/50 border border-navy-100 p-8 rounded-xl text-left space-y-4 hover:shadow-md hover:border-navy-200 transition-all duration-300">
+          <div class="w-12 h-12 bg-navy-900 text-white rounded-lg flex items-center justify-center shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gold-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+            </svg>
+          </div>
+          <h3 class="font-bold text-lg font-editorial text-navy-900">5. Publication</h3>
+          <p class="text-sm text-navy-600 leading-relaxed">
+            Approved papers scoring 8/10+ average are published and distributed internationally under open-access.
+          </p>
+        </div>
+      </div>
     </div>
-    <p class="text-xs mt-2 text-gray-400">No spam, unsubscribe at any time</p>
   </section>
-  -->
 
   <!-- Footer -->
-  <footer class="bg-gray-100 text-sm text-[#1A1A2E] px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 max-w-6xl mx-auto">
-      <div class="sm:col-span-2 lg:col-span-1">
-        <h4 class="font-bold mb-2 font-lato">Digital Evolution Journal</h4>
-        <p class="text-gray-600 mb-2 text-sm">
-          Premier peer-reviewed publication platform advancing technical research excellence through rigorous review processes and global collaboration.
+  <footer class="bg-navy-900 text-navy-300 text-sm px-4 sm:px-6 lg:px-8 py-12 border-t border-navy-800">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div class="space-y-4">
+        <h4 class="font-bold text-white font-editorial text-lg">Digital Evolution Journal</h4>
+        <p class="text-navy-400 leading-relaxed">
+          An international academic journal platform focused on publishing high-impact technological innovations with absolute rigor, transparency, and peer review standards.
         </p>
       </div>
       <div>
-        <h4 class="font-bold mb-2 font-lato">For Authors</h4>
-        <ul class="space-y-1 text-gray-600">
-          <li><a href="/submit" class="hover:text-[#3F72AF]">Submit Paper</a></li>
-          <li><a href="/author-guidelines.html" class="hover:text-[#3F72AF]">Author Guidelines</a></li>
-          <li><a href="/formatting-guide.html" class="hover:text-[#3F72AF]">Formatting Guide</a></li>
-          <li><a href="/publication-ethics.html" class="hover:text-[#3F72AF]">Publication Ethics</a></li>
+        <h4 class="font-bold text-white font-editorial text-lg mb-4">For Authors</h4>
+        <ul class="space-y-2 text-navy-400">
+          <li><a href="/submit" class="hover:text-gold-500 transition-colors">Submit Manuscript</a></li>
+          <li><a href="/author-guidelines.html" class="hover:text-gold-500 transition-colors">Author Guidelines</a></li>
+          <li><a href="/formatting-guide.html" class="hover:text-gold-500 transition-colors">Formatting Guide</a></li>
+          <li><a href="/publication-ethics.html" class="hover:text-gold-500 transition-colors">Publication Ethics</a></li>
         </ul>
       </div>
       <div>
-        <h4 class="font-bold mb-2 font-lato">For Reviewers</h4>
-        <ul class="space-y-1 text-gray-600">
-          <li><a href="/reviewer" class="hover:text-[#3F72AF]">Become Reviewer</a></li>
-          <li><a href="/review-guidelines.html" class="hover:text-[#3F72AF]">Review Guidelines</a></li>
-          <!-- <li><a href="/training-materials.html">Training Materials</a></li> -->
-          <li><a href="/reviewer-ethics.html" class="hover:text-[#3F72AF]">Reviewer Ethics</a></li>
+        <h4 class="font-bold text-white font-editorial text-lg mb-4">For Reviewers</h4>
+        <ul class="space-y-2 text-navy-400">
+          <li><a href="/reviewer" class="hover:text-gold-500 transition-colors">Join Reviewer Board</a></li>
+          <li><a href="/review-guidelines.html" class="hover:text-gold-500 transition-colors">Review Guidelines</a></li>
+          <li><a href="/reviewer-ethics.html" class="hover:text-gold-500 transition-colors">Reviewer Ethics</a></li>
         </ul>
       </div>
     </div>
-    <div class="text-center text-xs text-gray-500 mt-8 sm:mt-12">
-      <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
-        <a href="#" class="hover:text-[#3F72AF]">Privacy Policy</a>
+    <div class="max-w-7xl mx-auto border-t border-navy-800 mt-12 pt-6 text-center text-xs text-navy-500 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex gap-4">
+        <a href="#" class="hover:text-navy-300">Privacy Policy</a>
         <span>·</span>
-        <a href="#" class="hover:text-[#3F72AF]">Terms of Service</a>
+        <a href="#" class="hover:text-navy-300">Terms of Service</a>
         <span>·</span>
-        <a href="#" class="hover:text-[#3F72AF]">Accessibility</a>
-        <span>·</span>
-        <a href="#" class="hover:text-[#3F72AF]">Contact</a>
+        <a href="#" class="hover:text-navy-300">Accessibility</a>
       </div>
-      <div class="mt-2">© 2025 Digital Evolution Journal. All rights reserved.</div>
+      <div>© 2026 Digital Evolution Journal. All rights reserved.</div>
     </div>
   </footer>
 
-<script>
-(async () => {
-  try {
-    const res = await fetch('/api/me', { credentials: 'include' });
-    const data = await res.json();
-    const el = document.getElementById('authLinks');
-    const mobileEl = document.getElementById('mobileAuthLinks');
-    const dashTab = document.getElementById('dashboardTab');
-    const mobileDashTab = document.getElementById('mobileDashboardTab');
-    
-    if (data && data.isAuthenticated) {
-      const u = data.user || {};
-      const displayName = u.name || u.email || 'User';
-      const authContent = `
-        <span class="text-sm text-gray-700">Hello, ${displayName}</span>
-        <a href="/logout" class="border px-3 py-1 rounded hover:bg-gray-100">Logout</a>
-      `;
-      const mobileAuthContent = `
-        <div class="text-sm text-gray-700 mb-2">Hello, ${displayName}</div>
-        <a href="/logout" class="block w-full text-center border px-4 py-2 rounded hover:bg-gray-100">Logout</a>
-      `;
+  <script>
+  (async () => {
+    try {
+      const res = await fetch('/api/me', { credentials: 'include' });
+      const data = await res.json();
+      const el = document.getElementById('authLinks');
+      const mobileEl = document.getElementById('mobileAuthLinks');
+      const dashTab = document.getElementById('dashboardTab');
+      const mobileDashTab = document.getElementById('mobileDashboardTab');
       
-      if (el) el.innerHTML = authContent;
-      if (mobileEl) mobileEl.innerHTML = mobileAuthContent;
-      
-      if (dashTab) {
-        dashTab.classList.remove('hidden');
-        const btn = dashTab.querySelector('button');
-        const menu = document.getElementById('dashboardMenu');
-        let open = false;
-        const toggle = (e) => { e?.preventDefault?.(); open = !open; menu.classList.toggle('hidden', !open); };
-        btn.addEventListener('click', toggle);
-        document.addEventListener('click', (e) => { if (!dashTab.contains(e.target)) { open = false; menu.classList.add('hidden'); } });
+      if (data && data.isAuthenticated) {
+        const u = data.user || {};
+        const displayName = u.name || u.email || 'User';
+        const authContent = `
+          <span class="text-sm text-navy-600">Hello, ${displayName}</span>
+          <a href="/logout" class="border border-navy-200 hover:border-navy-400 px-3 py-1.5 rounded text-navy-700 transition-colors bg-white">Logout</a>
+        `;
+        const mobileAuthContent = `
+          <div class="text-sm text-navy-600 mb-2 font-medium">Hello, ${displayName}</div>
+          <a href="/logout" class="block w-full text-center border border-navy-200 px-4 py-2.5 rounded hover:bg-navy-50 transition-colors">Logout</a>
+        `;
+        
+        if (el) el.innerHTML = authContent;
+        if (mobileEl) mobileEl.innerHTML = mobileAuthContent;
+        
+        if (dashTab) {
+          dashTab.classList.remove('hidden');
+          const btn = dashTab.querySelector('button');
+          const menu = document.getElementById('dashboardMenu');
+          let open = false;
+          const toggle = (e) => { e?.preventDefault?.(); open = !open; menu.classList.toggle('hidden', !open); };
+          btn.addEventListener('click', toggle);
+          document.addEventListener('click', (e) => { if (!dashTab.contains(e.target)) { open = false; menu.classList.add('hidden'); } });
+        }
+        
+        if (mobileDashTab) {
+          mobileDashTab.classList.remove('hidden');
+        }
       }
-      
-      if (mobileDashTab) {
-        mobileDashTab.classList.remove('hidden');
-      }
-    }
-  } catch (e) { /* noop */ }
-})();
+    } catch (e) { /* noop */ }
+  })();
 
-// Mobile menu functionality
-document.addEventListener('DOMContentLoaded', () => {
-  const mobileMenuButton = document.getElementById('mobileMenuButton');
-  const mobileMenu = document.getElementById('mobileMenu');
-  
-  if (mobileMenuButton && mobileMenu) {
-    mobileMenuButton.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
+  // Mobile menu functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
     
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
-        mobileMenu.classList.add('hidden');
-      }
-    });
-    
-    // Close mobile menu when window is resized to desktop
-    window.addEventListener('resize', () => {
-      if (window.innerWidth >= 768) { // md breakpoint
-        mobileMenu.classList.add('hidden');
-      }
-    });
-  }
-});
-</script>
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+      
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+          mobileMenu.classList.add('hidden');
+        }
+      });
+      
+      // Close mobile menu when window is resized to desktop
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) { // md breakpoint
+          mobileMenu.classList.add('hidden');
+        }
+      });
+    }
+  });
+  </script>
 
 </body>
 </html>

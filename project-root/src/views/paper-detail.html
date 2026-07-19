@@ -6,706 +6,459 @@
   <title>Paper Details - Digital Evolution Journal</title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Roboto&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Merriweather', 'serif'],
+          },
+          colors: {
+            navy: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+            },
+            gold: {
+              50: '#fdfdf6',
+              100: '#fbf9eb',
+              500: '#d97706',
+              600: '#b45309',
+              700: '#78350f',
+            }
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    body { font-family: 'Roboto', sans-serif; }
-    h1, h2, h3, h4 { font-family: 'Lato', sans-serif; }
-    
-    /* Improve text rendering and word wrapping */
-    .prose p {
-      text-align: justify;
-      hyphens: auto;
-      word-break: break-word;
-    }
-    
-    /* Better line height for readability */
-    .prose {
-      line-height: 1.7;
-    }
-    
-    /* Ensure long URLs break properly */
-    .break-all {
-      word-break: break-all;
-    }
-    
-    /* Better spacing for monospace text */
-    .font-mono {
-      font-feature-settings: "liga" 0, "calt" 0;
-    }
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4, h5, h6, .font-editorial { font-family: 'Merriweather', serif; }
   </style>
 </head>
-<body class="text-[#1A1A2E] bg-white">
+<body class="text-navy-900 bg-[#f8fafc] min-h-screen flex flex-col justify-between">
+
   <!-- Navbar -->
-  <header class="sticky top-0 z-50 bg-white shadow-sm">
-    <div class="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-      <div class="text-xl font-bold font-lato">
-        <a href="/"><img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-12 sm:h-14 w-auto"></a>
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-navy-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <a href="/" class="transition-opacity hover:opacity-90">
+          <img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-10 sm:h-12 w-auto">
+        </a>
       </div>
 
       <!-- Desktop Navigation -->
-      <nav class="hidden md:flex items-center space-x-6 text-sm">
-        <a href="/" class="hover:text-[#3F72AF]">Home</a>
-        <a href="/researches" class="hover:text-[#3F72AF]">Published Papers</a>
-        <a href="/submit" class="hover:text-[#3F72AF]">Submit Research</a>
-        <a href="/reviewer" class="hover:text-[#3F72AF]">Review Paper</a>
-        <a href="/about.html" class="hover:text-[#3F72AF]">About</a>
-        <input type="text" placeholder="Search" class="border p-1 px-2 rounded text-sm hidden lg:block" />
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <a href="/" class="text-navy-500 hover:text-gold-500 transition-colors">Home</a>
+        <a href="/researches" class="text-navy-800 hover:text-gold-500 transition-colors">Published Papers</a>
+        <a href="/submit" class="text-navy-500 hover:text-gold-500 transition-colors">Submit Research</a>
+        <a href="/reviewer" class="text-navy-500 hover:text-gold-500 transition-colors">Review Paper</a>
         <span id="dashboardTab" class="relative hidden">
-          <button class="inline-flex items-center gap-1 px-3 py-1 rounded hover:bg-gray-100">Dashboards
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/></svg>
+          <button class="inline-flex items-center gap-1 text-navy-500 hover:text-gold-500 transition-colors font-medium">
+            Dashboards
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
+            </svg>
           </button>
-          <div class="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg hidden" id="dashboardMenu">
-            <a href="/dashboard/author" class="block px-4 py-2 hover:bg-gray-100">Author</a>
-            <a href="/dashboard/reviewer" class="block px-4 py-2 hover:bg-gray-100">Reviewer</a>
+          <div class="absolute right-0 mt-2 w-44 bg-white border border-navy-100 rounded-md shadow-lg hidden py-1" id="dashboardMenu">
+            <a href="/dashboard/author" class="block px-4 py-2 text-navy-700 hover:bg-navy-50 hover:text-gold-500 transition-colors">Author</a>
+            <a href="/dashboard/reviewer" class="block px-4 py-2 text-navy-700 hover:bg-navy-50 hover:text-gold-500 transition-colors">Reviewer</a>
           </div>
         </span>
-        <span id="authLinks" class="flex items-center gap-2">
-          <a href="/login" class="bg-[#F9A826] hover:bg-[#e28e0c] text-white px-4 lg:px-6 py-1 rounded text-sm">Login</a>
-          <a href="/register" class="bg-[#3F72AF] hover:bg-[#345b8f] text-white text-sm px-3 lg:px-4 py-1 rounded">Register</a>
+        <span id="authLinks" class="flex items-center gap-4 border-l border-navy-100 pl-8">
+          <a href="/login" class="text-navy-600 hover:text-gold-500 transition-colors">Login</a>
+          <a href="/register" class="bg-navy-900 text-white hover:bg-navy-800 transition-colors px-4 py-2 rounded font-medium shadow-sm">Register</a>
         </span>
       </nav>
 
       <!-- Mobile Menu Button -->
-      <button id="mobileMenuButton" class="md:hidden p-2 text-gray-600 focus:outline-none">
+      <button id="mobileMenuButton" class="md:hidden p-2 text-navy-600 hover:text-navy-900 focus:outline-none transition-colors">
         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
       </button>
     </div>
 
-    <!-- Mobile Navigation Menu -->
-    <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
-      <div class="px-4 py-2 space-y-1">
-        <a href="/" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Home</a>
-        <a href="/researches" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Published Papers</a>
-        <a href="/submit" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Submit Research</a>
-        <a href="/reviewer" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Review Paper</a>
-        <a href="/about.html" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">About</a>
-        <div class="px-3 py-2">
-          <input type="text" placeholder="Search" class="w-full border p-2 rounded text-sm" />
-        </div>
-        <span id="mobileDashboardTab" class="hidden">
-          <div class="px-3 py-2">
-            <div class="font-medium text-gray-900 mb-2">Dashboards</div>
-            <a href="/dashboard/author" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Author</a>
-            <a href="/dashboard/reviewer" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Reviewer</a>
-          </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden hidden bg-white border-t border-navy-100">
+      <div class="px-4 py-4 space-y-2">
+        <a href="/" class="block px-3 py-2 text-base font-medium text-navy-900 hover:bg-navy-50 rounded">Home</a>
+        <a href="/researches" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">Published Papers</a>
+        <a href="/submit" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">Submit Research</a>
+        <span id="mobileDashboardTab" class="hidden block border-t border-navy-50 pt-2">
+          <a href="/dashboard/author" class="block px-6 py-2 text-navy-600 hover:bg-navy-50 rounded">Author Dashboard</a>
+          <a href="/dashboard/reviewer" class="block px-6 py-2 text-navy-600 hover:bg-navy-50 rounded">Reviewer Dashboard</a>
         </span>
-        <div id="mobileAuthLinks" class="px-3 py-2 space-y-2">
-          <a href="/login" class="block w-full text-center bg-[#F9A826] hover:bg-[#e28e0c] text-white px-4 py-2 rounded">Login</a>
-          <a href="/register" class="block w-full text-center bg-[#3F72AF] hover:bg-[#345b8f] text-white px-4 py-2 rounded">Register</a>
+        <div id="mobileAuthLinks" class="border-t border-navy-100 pt-4 flex flex-col gap-2">
+          <a href="/login" class="block w-full text-center border border-navy-200 text-navy-700 px-4 py-2.5 rounded font-medium">Login</a>
+          <a href="/register" class="block w-full text-center bg-navy-900 text-white px-4 py-2.5 rounded font-medium">Register</a>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Paper Details Section -->
-  <section class="py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <!-- Breadcrumb -->
-      <nav class="mb-12 mt-8">
-        <ol class="flex items-center space-x-2 text-sm text-gray-500">
-          <li><a href="/" class="hover:text-[#3F72AF]">Home</a></li>
-          <li><span>/</span></li>
-          <li><a href="/researches.html" class="hover:text-[#3F72AF]">Research Papers</a></li>
-          <li><span>/</span></li>
-          <li class="text-gray-900 font-medium">Paper Details</li>
-        </ol>
-      </nav>
-
-      <!-- Paper Header -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
-        <div class="relative">
-          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#3F72AF] to-[#F9A826]"></div>
-          <div class="p-8">
-            <!-- Paper Type & Status -->
-            <div class="flex items-center justify-between mb-6">
-              <div class="flex items-center gap-3">
-                <span class="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-emerald-100 to-emerald-50 text-emerald-700 text-sm font-medium rounded-full">
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
-                  </svg>
-                  Research Article
-                </span>
-                <span class="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-100 to-green-50 text-green-700 text-sm font-medium rounded-full">
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                  </svg>
-                  Published
-                </span>
-              </div>
-            
-            </div>
-
-            <!-- Title -->
-            <h1 class="text-3xl font-bold font-lato text-gray-900 mb-4 leading-tight break-words hyphens-auto">
-              <!-- TODO: Replace with dynamic title from submissions.title -->
-             Loading...
-            </h1>
-
-            <!-- DOI & Citation -->
-            <div class="flex items-center gap-4 mb-6 text-sm text-gray-600">
-              <div class="flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-                </svg>
-                <!-- TODO: Replace with dynamic DOI from submissions.doi -->
-                
-              </div>
-              <div class="flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-                <!-- TODO: Replace with dynamic volume/issue/pages from submissions table -->
-                Vol. 1, Issue 1, Pages 1-25
-              </div>
-            </div>
-
-            <!-- Keywords -->
-            <div class="mb-6">
-              <h3 class="text-sm font-semibold text-gray-900 mb-3">Keywords</h3>
-              <div class="flex flex-wrap gap-2 justify-start">
-                <!-- TODO: Replace with dynamic keywords from submissions.keywords_text (split by comma) -->
-                <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full whitespace-nowrap">loading..</span>
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Two Column Layout -->
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
-
-        <!-- Main Content -->
-        <div class="lg:col-span-3 space-y-12">
-
-          <!-- Abstract -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-2xl font-bold font-lato text-gray-900 mb-6">Abstract</h2>
-            <div class="prose prose-gray max-w-none leading-relaxed">
-              <!-- TODO: Replace with dynamic abstract from submissions.abstract -->
-              <p class="text-gray-700 leading-relaxed text-justify mb-4">
-   loading...
-              </p>
-             
-            </div>
-          </div>
-
-          <!-- Download Section -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-2xl font-bold font-lato text-gray-900 mb-6">Download Full Paper</h2>
-            <div class="space-y-6">
-              <!-- TODO: Replace with dynamic file information from submission_files table -->
-              <!-- TODO: Generate download URLs from storage_bucket and storage_key -->
-              <div class="flex items-center justify-between p-6 border border-gray-200 rounded-lg gap-4">
-                <div class="flex items-center gap-4 flex-1 min-w-0">
-                  <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <div class="font-medium text-gray-900 break-words">
-                      <!-- TODO: Replace with original_filename from submission_files -->
-                      loading..
-                    </div>
-                    <div class="text-sm text-gray-500 mt-1">
-                      <!-- TODO: Replace with byte_size and mime_type from submission_files -->
-                      loading..
-                    </div>
-                  </div>
-                </div>
-                <button class="inline-flex items-center gap-2 px-6 py-3 bg-[#3F72AF] text-white font-medium rounded-lg hover:bg-[#345b8f] transition-colors flex-shrink-0">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                  </svg>
-                  Download
-                </button>
-              </div>
-
-              <!-- Additional Formats (if available) -->
-              <div class="text-sm text-gray-600 leading-relaxed">
-                <p>This paper is available in Microsoft Word format. For other formats or accessibility options, please contact the journal administration.</p>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Sidebar -->
-        <div class="space-y-10">
-
-          <!-- Author Information -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 class="text-lg font-bold font-lato text-gray-900 mb-6">Author Information</h3>
-            <div class="space-y-6">
-              <!-- TODO: Replace with dynamic author data from authors table -->
-              <div class="flex items-start gap-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-[#3F72AF] to-[#16213E] rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-                  </svg>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <div class="font-semibold text-gray-900 mb-2 break-words">
-                    <!-- TODO: Replace with full_name from authors table -->
-                    Loading..
-                  </div>
-                  <div class="text-sm text-gray-600 mb-2 leading-relaxed break-words">
-                    <!-- TODO: Replace with affiliation from authors table -->
-                    Loading..
-                  </div>
-                  <div id="authorLocation" class="text-sm text-gray-600 mb-3 break-words">
-                    <!-- Dynamic location -->
-                    Loading location...
-                  </div>
-            
-               
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Publication Info -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 class="text-lg font-bold font-lato text-gray-900 mb-6">Publication Details</h3>
-            <div class="space-y-4 text-sm">
-              <div class="flex justify-between items-start gap-4">
-                <span class="text-gray-600 font-medium flex-shrink-0 w-20">Journal:</span>
-                <span class="font-medium text-gray-900 text-right break-words">Digital Evolution Journal</span>
-              </div>
-              <div class="flex justify-between items-center gap-4">
-                <span class="text-gray-600 font-medium flex-shrink-0 w-20">Volume:</span>
-                <!-- TODO: Replace with volume from submissions table -->
-                <span class="font-medium text-gray-900 text-right">1</span>
-              </div>
-              <div class="flex justify-between items-center gap-4">
-                <span class="text-gray-600 font-medium flex-shrink-0 w-20">Issue:</span>
-                <!-- TODO: Replace with issue from submissions table -->
-                <span class="font-medium text-gray-900 text-right">1</span>
-              </div>
-              <div class="flex justify-between items-center gap-4">
-                <span class="text-gray-600 font-medium flex-shrink-0 w-20">Pages:</span>
-                <!-- TODO: Replace with pages from submissions table -->
-                <span class="font-medium text-gray-900 text-right">1-25</span>
-              </div>
-            
-              <div class="flex justify-between items-center gap-4">
-                <span class="text-gray-600 font-medium flex-shrink-0 w-20">Published:</span>
-                <!-- TODO: Replace with published_at from submissions table -->
-                <span class="font-medium text-gray-900 text-right">
+  <!-- Content Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow space-y-8">
     
+    <!-- Breadcrumbs -->
+    <nav class="text-xs font-semibold text-navy-400 uppercase tracking-wider">
+      <ol class="flex items-center space-x-2">
+        <li><a href="/" class="hover:text-gold-500 transition-colors">Home</a></li>
+        <li><span>/</span></li>
+        <li><a href="/researches" class="hover:text-gold-500 transition-colors">Research Catalog</a></li>
+        <li><span>/</span></li>
+        <li class="text-navy-800">Paper Details</li>
+      </ol>
+    </nav>
 
-                </span>
-              </div>
-            </div>
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      
+      <!-- Left: Article Content -->
+      <section class="lg:col-span-3 space-y-8">
+        
+        <!-- Header Card -->
+        <div class="bg-white border border-navy-100 rounded-xl p-6 sm:p-8 shadow-sm space-y-4">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2.5 py-1 bg-gold-50 border border-gold-200 text-gold-700 text-[10px] font-bold uppercase tracking-wider rounded">
+              Research Article
+            </span>
+            <span class="px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold uppercase tracking-wider rounded">
+              Published
+            </span>
           </div>
 
-          <!-- Related Papers -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 class="text-lg font-bold font-lato text-gray-900 mb-4">Related Papers</h3>
-            <div class="space-y-3">
-              <!-- TODO: Implement related papers based on keywords, author, or similar topics -->
-              <div class="text-sm text-gray-500 italic">
-                Related papers will be suggested based on keywords and research topics.
-              </div>
+          <h1 class="text-2xl sm:text-3xl font-bold font-editorial text-navy-900 leading-snug">
+            <!-- Dynamic title inserted here -->
+            Loading manuscript title...
+          </h1>
+
+          <div class="flex flex-wrap gap-4 text-xs font-medium text-navy-500 border-t border-navy-50 pt-4">
+            <div class="flex items-center gap-1.5">
+              <span>📅</span>
+              <span id="publishedDateLabel">Volume 1, Issue 1</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span>🔖</span>
+              <span>Open Access Archive</span>
             </div>
           </div>
-
         </div>
-      </div>
+
+        <!-- Abstract Card -->
+        <div class="bg-white border border-navy-100 rounded-xl p-6 sm:p-8 shadow-sm space-y-4">
+          <h2 class="text-lg font-bold font-editorial text-navy-900 border-b border-navy-50 pb-2">Abstract</h2>
+          <div class="prose max-w-none text-navy-700 text-sm leading-relaxed font-light text-justify" id="abstractText">
+            <!-- Dynamic abstract inserted here -->
+            <div class="animate-pulse space-y-2">
+              <div class="h-4 bg-navy-50 rounded"></div>
+              <div class="h-4 bg-navy-50 rounded w-5/6"></div>
+              <div class="h-4 bg-navy-50 rounded w-2/3"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Download Card -->
+        <div class="bg-white border border-navy-100 rounded-xl p-6 sm:p-8 shadow-sm space-y-6">
+          <h2 class="text-lg font-bold font-editorial text-navy-900 border-b border-navy-50 pb-2">Download Document</h2>
+          
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between border border-navy-200 rounded-xl p-4 sm:p-6 bg-navy-50/50 gap-4">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-white border border-navy-200 rounded-lg flex items-center justify-center shrink-0 shadow-sm text-2xl">
+                📄
+              </div>
+              <div class="min-w-0">
+                <div class="text-sm font-semibold text-navy-900 truncate" id="fileNameLabel">
+                  Loading filename...
+                </div>
+                <div class="text-xs text-navy-400 mt-1" id="fileMetaLabel">
+                  Verifying manuscript details...
+                </div>
+              </div>
+            </div>
+            <button id="downloadBtn" class="bg-navy-900 hover:bg-navy-800 text-white px-6 py-3 rounded-lg text-sm font-semibold transition-all shadow-sm shrink-0 flex items-center gap-2 justify-center">
+              <span>Download Paper</span>
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right: Author & Citation Sidebar -->
+      <aside class="space-y-6">
+        
+        <!-- Author Card -->
+        <div class="bg-white border border-navy-100 rounded-xl p-6 shadow-sm space-y-6">
+          <h3 class="text-sm font-bold font-editorial text-navy-900 border-b border-navy-50 pb-2">Author Information</h3>
+          
+          <div class="space-y-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-navy-100 rounded-full flex items-center justify-center text-lg text-navy-700 font-bold shrink-0">
+                👤
+              </div>
+              <div class="min-w-0">
+                <div class="font-semibold text-navy-900 text-sm break-words">
+                  <!-- Dynamic author name -->
+                  Loading...
+                </div>
+                <div class="text-xs text-navy-500 break-words">
+                  <!-- Dynamic author affiliation -->
+                  Loading...
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-2 border-t border-navy-50 pt-4 text-xs">
+              <div class="flex justify-between items-baseline gap-2">
+                <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px]">Location:</span>
+                <span class="text-navy-700 font-medium text-right" id="authorLocation">Loading...</span>
+              </div>
+              <div class="flex justify-between items-baseline gap-2">
+                <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px]">Email:</span>
+                <span class="text-navy-700 font-medium text-right truncate max-w-[150px]" id="authorEmail">Loading...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Citation/Metadata Card -->
+        <div class="bg-white border border-navy-100 rounded-xl p-6 shadow-sm space-y-4">
+          <h3 class="text-sm font-bold font-editorial text-navy-900 border-b border-navy-50 pb-2">Publication Details</h3>
+          
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between items-baseline gap-2">
+              <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px]">Journal:</span>
+              <span class="text-navy-900 font-semibold text-right">Digital Evolution Journal</span>
+            </div>
+            <div class="flex justify-between items-baseline gap-2 border-t border-navy-50/50 pt-2">
+              <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px]">Volume:</span>
+              <span class="text-navy-900 font-medium text-right" id="detailVolume">1</span>
+            </div>
+            <div class="flex justify-between items-baseline gap-2 border-t border-navy-50/50 pt-2">
+              <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px]">Issue:</span>
+              <span class="text-navy-900 font-medium text-right" id="detailIssue">1</span>
+            </div>
+            <div class="flex justify-between items-baseline gap-2 border-t border-navy-50/50 pt-2">
+              <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px]">Pages:</span>
+              <span class="text-navy-900 font-medium text-right" id="detailPages">1-25</span>
+            </div>
+            <div class="flex justify-between items-baseline gap-2 border-t border-navy-50/50 pt-2">
+              <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px]">Published:</span>
+              <span class="text-navy-900 font-medium text-right" id="detailPublished">Loading...</span>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
     </div>
-  </section>
+  </main>
 
   <!-- Footer -->
-  <footer class="bg-gray-100 text-sm text-[#1A1A2E] px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 max-w-6xl mx-auto">
-      <div class="sm:col-span-2 lg:col-span-1">
-        <h4 class="font-bold mb-2 font-lato">Digital Evolution Journal</h4>
-        <p class="text-gray-600 mb-2 text-sm">
-          Premier peer-reviewed publication platform advancing technical research excellence through rigorous review processes and global collaboration.
-        </p>
-      </div>
-      <div>
-        <h4 class="font-bold mb-2 font-lato">For Authors</h4>
-        <ul class="space-y-1 text-gray-600">
-          <li><a href="/submit" class="hover:text-[#3F72AF]">Submit Paper</a></li>
-          <li><a href="/author-guidelines.html" class="hover:text-[#3F72AF]">Author Guidelines</a></li>
-          <li><a href="/formatting-guide.html" class="hover:text-[#3F72AF]">Formatting Guide</a></li>
-          <li><a href="/publication-ethics.html" class="hover:text-[#3F72AF]">Publication Ethics</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-bold mb-2 font-lato">For Reviewers</h4>
-        <ul class="space-y-1 text-gray-600">
-          <li><a href="/reviewer" class="hover:text-[#3F72AF]">Become Reviewer</a></li>
-          <li><a href="/review-guidelines.html" class="hover:text-[#3F72AF]">Review Guidelines</a></li>
-          <li><a href="/reviewer-ethics.html" class="hover:text-[#3F72AF]">Reviewer Ethics</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="text-center text-xs text-gray-500 mt-8 sm:mt-12">
-      <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
-        <a href="#" class="hover:text-[#3F72AF]">Privacy Policy</a>
+  <footer class="bg-navy-900 text-navy-400 text-xs py-8 border-t border-navy-800 text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex gap-4">
+        <a href="#" class="hover:text-navy-300">Privacy Policy</a>
         <span>·</span>
-        <a href="#" class="hover:text-[#3F72AF]">Terms of Service</a>
-        <span>·</span>
-        <a href="#" class="hover:text-[#3F72AF]">Accessibility</a>
-        <span>·</span>
-        <a href="#" class="hover:text-[#3F72AF]">Contact</a>
+        <a href="#" class="hover:text-navy-300">Terms of Service</a>
       </div>
-      <div class="mt-2">© 2025 Digital Evolution Journal. All rights reserved.</div>
+      <div>© 2026 Digital Evolution Journal. All rights reserved.</div>
     </div>
   </footer>
 
-<script>
-(async () => {
-  try {
-    const res = await fetch('/api/me', { credentials: 'include' });
-    const data = await res.json();
-    const el = document.getElementById('authLinks');
-    const mobileEl = document.getElementById('mobileAuthLinks');
-    const dashTab = document.getElementById('dashboardTab');
-    const mobileDashTab = document.getElementById('mobileDashboardTab');
-
-    if (data && data.isAuthenticated) {
-      const u = data.user || {};
-      const displayName = u.name || u.email || 'User';
-      const authContent = `
-        <span class="text-sm text-gray-700">Hello, ${displayName}</span>
-        <a href="/logout" class="border px-3 py-1 rounded hover:bg-gray-100">Logout</a>
-      `;
-      const mobileAuthContent = `
-        <div class="text-sm text-gray-700 mb-2">Hello, ${displayName}</div>
-        <a href="/logout" class="block w-full text-center border px-4 py-2 rounded hover:bg-gray-100">Logout</a>
-      `;
-
-      if (el) el.innerHTML = authContent;
-      if (mobileEl) mobileEl.innerHTML = mobileAuthContent;
-
-      if (dashTab) {
-        dashTab.classList.remove('hidden');
-        const btn = dashTab.querySelector('button');
-        const menu = document.getElementById('dashboardMenu');
-        let open = false;
-        const toggle = (e) => { e?.preventDefault?.(); open = !open; menu.classList.toggle('hidden', !open); };
-        btn.addEventListener('click', toggle);
-        document.addEventListener('click', (e) => { if (!dashTab.contains(e.target)) { open = false; menu.classList.add('hidden'); } });
-      }
-
-      if (mobileDashTab) {
-        mobileDashTab.classList.remove('hidden');
-      }
-    }
-  } catch (e) { /* noop */ }
-})();
-
-// Function to get URL parameter
-function getUrlParameter(name) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(name);
-}
-
-// Function to format date
-function formatPublishedDate(dateString) {
-  if (!dateString) return 'Date not available';
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return 'Invalid date';
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                     'July', 'August', 'September', 'October', 'November', 'December'];
-  return `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
-}
-
-// Function to format file size
-function formatFileSize(bytes) {
-  if (!bytes) return 'Unknown size';
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  if (bytes === 0) return '0 Bytes';
-  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-  return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
-}
-
-// Function to load paper details
-async function loadPaperDetails() {
-  const paperId = getUrlParameter('id');
-  if (!paperId) {
-    showError('Paper ID is required');
-    return;
-  }
-
-  try {
-    const response = await fetch(`/api/paper/${paperId}`);
-    const data = await response.json();
-
-    if (!data.success || !data.paper) {
-      throw new Error(data.error || 'Paper not found');
+  <script>
+    // URL search parsing
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
     }
 
-    const paper = data.paper;
-    updatePaperDetails(paper);
-
-  } catch (error) {
-    console.error('Error loading paper details:', error);
-    showError('Failed to load paper details. Please try again later.');
-  }
-}
-
-// Function to update paper details in the DOM
-function updatePaperDetails(paper) {
-  // Update title
-  const titleElement = document.querySelector('h1');
-  if (titleElement) {
-    titleElement.textContent = paper.title || 'Untitled Paper';
-  }
-
-  // Update document title
-  document.title = `${paper.title || 'Paper Details'} - Digital Evolution Journal`;
-
-  // Update paper type badge
-  const paperTypeElement = document.querySelector('.inline-flex.items-center.gap-2.px-3.py-1.bg-gradient-to-r.from-emerald-100.to-emerald-50.text-emerald-700');
-  if (paperTypeElement) {
-    // Clear existing content and add new text after the SVG
-    const svg = paperTypeElement.querySelector('svg');
-    if (svg) {
-      // Remove all text nodes and other elements after the SVG
-      let child = svg.nextSibling;
-      while (child) {
-        const nextChild = child.nextSibling;
-        paperTypeElement.removeChild(child);
-        child = nextChild;
+    function formatPublishedDate(dateStr) {
+      if (!dateStr) return 'N/A';
+      try {
+        return new Date(dateStr).toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+      } catch (e) {
+        return dateStr;
       }
+    }
+
+    async function loadPaperDetails() {
+      const paperId = getQueryParam('id');
+      if (!paperId) {
+        showError('Invalid paper reference. Please return to catalog.');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/published/details?id=${paperId}`);
+        if (!response.ok) {
+          throw new Error('Paper details not found.');
+        }
+        
+        const data = await response.json();
+        if (data.success && data.paper) {
+          renderPaper(data.paper);
+        } else {
+          throw new Error(data.error || 'Invalid metadata format');
+        }
+      } catch (err) {
+        showError(err.message || 'Error syncing paper details.');
+      }
+    }
+
+    function renderPaper(paper) {
+      // Set titles
+      document.title = `${paper.title} - Digital Evolution Journal`;
+      document.querySelector('h1.text-2xl').textContent = paper.title;
       
-      // Add the new text
-      const typeText = paper.paper_type ? paper.paper_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Research Article';
-      paperTypeElement.appendChild(document.createTextNode(typeText));
-    }
-  }
-
-  // Update published date
-  const dateElement = document.querySelector('.text-sm.text-gray-500');
-  if (dateElement) {
-    dateElement.textContent = `Published: ${formatPublishedDate(paper.published_at)}`;
-  }
-
-  // Update DOI
-  const doiContainer = document.querySelector('.flex.items-center.gap-4.mb-6.text-sm.text-gray-600 .flex.items-center.gap-2');
-  if (doiContainer && paper.doi) {
-    doiContainer.textContent = `DOI: ${paper.doi}`;
-  }
-
-  // Update volume/issue/pages
-  const vipContainer = document.querySelector('.flex.items-center.gap-4.mb-6.text-sm.text-gray-600 .flex.items-center.gap-2 + .flex.items-center.gap-2');
-  if (vipContainer) {
-    const vipText = [];
-    if (paper.volume) vipText.push(`Vol. ${paper.volume}`);
-    if (paper.issue) vipText.push(`Issue ${paper.issue}`);
-    if (paper.pages) vipText.push(`Pages ${paper.pages}`);
-    vipContainer.textContent = vipText.length > 0 ? vipText.join(', ') : 'Vol. 1, Issue 1, Pages 1-25';
-  }
-
-  // Update keywords
-  const keywordsContainer = document.querySelector('.flex.flex-wrap.gap-2.justify-start');
-  if (keywordsContainer && paper.keywords && paper.keywords.length > 0) {
-    keywordsContainer.innerHTML = paper.keywords.map(keyword => `
-      <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full whitespace-nowrap">${keyword}</span>
-    `).join('');
-  }
-
-  // Update abstract
-  const abstractElement = document.querySelector('.prose.prose-gray.max-w-none.leading-relaxed p');
-  if (abstractElement) {
-    abstractElement.textContent = paper.abstract || 'No abstract available.';
-  }
-
-  // Update download section
-  const downloadContainer = document.querySelector('.flex.items-center.justify-between.p-6.border.border-gray-200.rounded-lg.gap-4');
-  if (downloadContainer && paper.submission_files && paper.submission_files.length > 0) {
-    const mainFile = paper.submission_files[0]; // Use first file as main download
-    const fileInfo = downloadContainer.querySelector('.flex-1.min-w-0');
-    if (fileInfo) {
-      const fileNameElement = fileInfo.querySelector('.font-medium.text-gray-900.break-words');
-      const fileSizeElement = fileInfo.querySelector('.text-sm.text-gray-500.mt-1');
-
-      if (fileNameElement) {
-        fileNameElement.textContent = mainFile.original_filename || 'paper.docx';
-      }
-      if (fileSizeElement) {
-        fileSizeElement.textContent = `${formatFileSize(mainFile.byte_size)} • ${mainFile.mime_type || 'Document'}`;
-      }
-    }
-
-    // Update download button
-    const downloadButton = downloadContainer.querySelector('button');
-    if (downloadButton) {
-      downloadButton.onclick = async () => {
-        try {
-          // Check authentication status
-          const authResponse = await fetch('/api/me', { credentials: 'include' });
-          const authData = await authResponse.json();
-
-          if (!authData || !authData.isAuthenticated) {
-            // User is not logged in, show login prompt
-            const loginModal = document.createElement('div');
-            loginModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-            loginModal.innerHTML = `
-              <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-                <div class="text-center">
-                  <svg class="w-16 h-16 text-[#3F72AF] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                  </svg>
-                  <h3 class="text-lg font-bold text-gray-900 mb-2">Login Required</h3>
-                  <p class="text-gray-600 mb-6">Please log in to download published papers.</p>
-                  <div class="flex gap-3 justify-center">
-                    <a href="/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}"
-                       class="inline-flex items-center px-4 py-2 bg-[#3F72AF] text-white rounded-lg hover:bg-[#345b8f] transition-colors">
-                      Login
-                    </a>
-                    <button onclick="document.body.removeChild(this.closest('.fixed'))"
-                            class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                      Cancel
-                    </button>
+      // Set abstract
+      const absText = document.getElementById('abstractText');
+      absText.textContent = paper.abstract || 'No abstract provided.';
+      
+      // Select files
+      const mainFile = paper.submission_files && paper.submission_files[0];
+      if (mainFile) {
+        document.getElementById('fileNameLabel').textContent = mainFile.original_filename || 'manuscript.docx';
+        document.getElementById('fileMetaLabel').textContent = `${((mainFile.byte_size || 0) / 1048576).toFixed(2)} MB · Microsoft Word`;
+        
+        // Wire up download trigger
+        const downloadBtn = document.getElementById('downloadBtn');
+        downloadBtn.onclick = async () => {
+          try {
+            const authRes = await fetch('/api/me');
+            const auth = await authRes.json();
+            
+            if (!auth.isAuthenticated) {
+              // Trigger login modal
+              const modal = document.createElement('div');
+              modal.className = 'fixed inset-0 bg-navy-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4';
+              modal.innerHTML = `
+                <div class="bg-white border border-navy-100 rounded-xl p-6 max-w-md w-full shadow-lg text-center space-y-6">
+                  <div class="text-4xl">🔒</div>
+                  <div class="space-y-2">
+                    <h3 class="text-lg font-bold font-editorial text-navy-900">Authentication Required</h3>
+                    <p class="text-xs text-navy-500">Please sign in to access and download published manuscripts.</p>
+                  </div>
+                  <div class="flex gap-3 justify-center pt-2">
+                    <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 border border-navy-200 hover:bg-navy-50 rounded-lg text-xs font-semibold text-navy-700">Cancel</button>
+                    <a href="/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}" class="bg-navy-900 hover:bg-navy-800 text-white px-6 py-2 rounded-lg text-xs font-semibold">Sign In</a>
                   </div>
                 </div>
-              </div>
-            `;
-            document.body.appendChild(loginModal);
-            return;
-          }
+              `;
+              document.body.appendChild(modal);
+              return;
+            }
 
-          // User is authenticated, proceed with download
-          if (mainFile.storage_key) {
-            window.open(mainFile.storage_key, '_blank');
-          } else {
-            alert('Download link not available');
+            if (mainFile.storage_key) {
+              window.open(mainFile.storage_key, '_blank');
+            } else {
+              alert('Download link currently unavailable.');
+            }
+          } catch (e) {
+            alert('Failed to authorize download.');
           }
-        } catch (error) {
-          console.error('Error checking authentication:', error);
-          alert('Unable to verify login status. Please try again.');
+        };
+      }
+
+      // Sidebar author details
+      const nameDiv = document.querySelector('.font-semibold.text-navy-900');
+      const affDiv = document.querySelector('.text-xs.text-navy-500');
+      
+      if (nameDiv) nameDiv.textContent = paper.author_name || 'Unknown Author';
+      if (affDiv) affDiv.textContent = paper.affiliation || 'No affiliation logged';
+      
+      document.getElementById('authorLocation').textContent = paper.author_location || paper.location || 'N/A';
+      document.getElementById('authorEmail').textContent = paper.author_email || 'N/A';
+
+      // Sidebar publication details
+      document.getElementById('detailVolume').textContent = paper.volume || '1';
+      document.getElementById('detailIssue').textContent = paper.issue || '1';
+      document.getElementById('detailPages').textContent = paper.pages || '1-25';
+      document.getElementById('detailPublished').textContent = formatPublishedDate(paper.published_at);
+      
+      // Header details label
+      document.getElementById('publishedDateLabel').textContent = `Volume ${paper.volume || 1}, Issue ${paper.issue || 1} · ${formatPublishedDate(paper.published_at)}`;
+    }
+
+    function showError(msg) {
+      const container = document.querySelector('.grid');
+      if (container) {
+        container.innerHTML = `
+          <div class="col-span-4 bg-red-50 border border-red-200 rounded-xl p-8 text-center space-y-4">
+            <div class="text-4xl">⚠️</div>
+            <h2 class="text-lg font-bold text-red-800">Error Accessing Manuscript</h2>
+            <p class="text-xs text-red-600 max-w-md mx-auto leading-relaxed">${msg}</p>
+            <a href="/researches" class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-lg text-xs font-semibold transition-colors">
+              Return to Catalog
+            </a>
+          </div>
+        `;
+      }
+    }
+
+    // Auth state navbar sync
+    (async () => {
+      try {
+        const res = await fetch('/api/me', { credentials: 'include' });
+        const data = await res.json();
+        const el = document.getElementById('authLinks');
+        const mobileEl = document.getElementById('mobileAuthLinks');
+        const dashTab = document.getElementById('dashboardTab');
+        const mobileDashTab = document.getElementById('mobileDashboardTab');
+        
+        if (data && data.isAuthenticated) {
+          const u = data.user || {};
+          const displayName = u.name || u.email || 'User';
+          const authContent = `
+            <span class="text-sm text-navy-600">Hello, ${displayName}</span>
+            <a href="/logout" class="border border-navy-200 hover:border-navy-400 px-3 py-1.5 rounded text-navy-700 transition-colors bg-white">Logout</a>
+          `;
+          const mobileAuthContent = `
+            <div class="text-sm text-navy-600 mb-2 font-medium">Hello, ${displayName}</div>
+            <a href="/logout" class="block w-full text-center border border-navy-200 px-4 py-2.5 rounded hover:bg-navy-50 transition-colors">Logout</a>
+          `;
+          
+          if (el) el.innerHTML = authContent;
+          if (mobileEl) mobileEl.innerHTML = mobileAuthContent;
+          
+          if (dashTab) {
+            dashTab.classList.remove('hidden');
+            const btn = dashTab.querySelector('button');
+            const menu = document.getElementById('dashboardMenu');
+            let open = false;
+            const toggle = (e) => { e?.preventDefault?.(); open = !open; menu.classList.toggle('hidden', !open); };
+            btn.addEventListener('click', toggle);
+            document.addEventListener('click', (e) => { if (!dashTab.contains(e.target)) { open = false; menu.classList.add('hidden'); } });
+          }
+          if (mobileDashTab) mobileDashTab.classList.remove('hidden');
         }
-      };
+      } catch (e) {}
+    })();
+
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
     }
-  }
 
-  // Update author information
-  const authorNameElement = document.querySelector('.font-semibold.text-gray-900.mb-2.break-words');
-  const authorAffiliationElement = document.querySelector('.text-sm.text-gray-600.mb-2.leading-relaxed.break-words');
-  const authorEmailElement = document.getElementById('authorEmail');
-  const authorLocationElement = document.getElementById('authorLocation');
-  const authorInterestsElement = document.getElementById('authorInterests');
+    loadPaperDetails();
+  </script>
 
-  if (authorNameElement) {
-    authorNameElement.textContent = paper.author_name || 'Unknown Author';
-  }
-  if (authorAffiliationElement) {
-    authorAffiliationElement.textContent = paper.affiliation || 'No affiliation';
-  }
-  if (authorEmailElement) {
-    authorEmailElement.textContent = paper.author_email || paper.author?.email || 'Email not provided';
-  }
-  if (authorLocationElement) {
-    const loc = paper.author_location || paper.location || paper.author?.location;
-    authorLocationElement.textContent = loc || 'Location not provided';
-  }
-  if (authorInterestsElement) {
-    let interests = paper.author_research_interests || paper.research_interests || paper.author?.research_interests;
-    if (Array.isArray(interests)) {
-      interests = interests.join(', ');
-    }
-    if (typeof interests === 'string') {
-      authorInterestsElement.textContent = interests.trim() || 'No research interests provided';
-    } else {
-      authorInterestsElement.textContent = 'No research interests provided';
-    }
-  }
-
-  // Update publication details
-  const publicationDetails = document.querySelector('.space-y-4.text-sm');
-  if (publicationDetails) {
-    const detailRows = publicationDetails.querySelectorAll('.flex.justify-between');
-    
-    // Volume (2nd row)
-    if (detailRows[1]) {
-      const volumeSpan = detailRows[1].querySelector('.font-medium.text-gray-900.text-right');
-      if (volumeSpan) volumeSpan.textContent = paper.volume || '1';
-    }
-    
-    // Issue (3rd row)
-    if (detailRows[2]) {
-      const issueSpan = detailRows[2].querySelector('.font-medium.text-gray-900.text-right');
-      if (issueSpan) issueSpan.textContent = paper.issue || '1';
-    }
-    
-    // Pages (4th row)
-    if (detailRows[3]) {
-      const pagesSpan = detailRows[3].querySelector('.font-medium.text-gray-900.text-right');
-      if (pagesSpan) pagesSpan.textContent = paper.pages || '1-25';
-    }
-    
-    // Published (5th row)
-    if (detailRows[4]) {
-      const publishedSpan = detailRows[4].querySelector('.font-medium.text-gray-900.text-right');
-      if (publishedSpan) publishedSpan.textContent = formatPublishedDate(paper.published_at);
-    }
-  }
-
-  // Hide loading state
-  const loadingElements = document.querySelectorAll('.animate-pulse, .bg-gray-200');
-  loadingElements.forEach(el => el.classList.remove('animate-pulse', 'bg-gray-200'));
-}
-
-// Function to show error message
-function showError(message) {
-  const mainContent = document.querySelector('.grid.grid-cols-1.lg\\:grid-cols-4.gap-12');
-  if (mainContent) {
-    mainContent.innerHTML = `
-      <div class="lg:col-span-3">
-        <div class="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
-          <svg class="w-16 h-16 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
-          </svg>
-          <h2 class="text-xl font-semibold text-red-800 mb-2">Error Loading Paper</h2>
-          <p class="text-red-600">${message}</p>
-          <a href="/researches" class="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-            </svg>
-            Back to Research Papers
-          </a>
-        </div>
-      </div>
-    `;
-  }
-}
-
-// Mobile menu functionality
-document.addEventListener('DOMContentLoaded', () => {
-  const mobileMenuButton = document.getElementById('mobileMenuButton');
-  const mobileMenu = document.getElementById('mobileMenu');
-
-  if (mobileMenuButton && mobileMenu) {
-    mobileMenuButton.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
-        mobileMenu.classList.add('hidden');
-      }
-    });
-
-    // Close mobile menu when window is resized to desktop
-    window.addEventListener('resize', () => {
-      if (window.innerWidth >= 768) { // md breakpoint
-        mobileMenu.classList.add('hidden');
-      }
-    });
-  }
-
-  // Load paper details when page loads
-  loadPaperDetails();
-});
-</script></body>
+</body>
 </html>

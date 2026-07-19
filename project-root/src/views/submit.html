@@ -3,297 +3,484 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Submit Research Paper</title>
+  <title>Submit Research Paper - Digital Evolution Journal</title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Roboto&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Merriweather', 'serif'],
+          },
+          colors: {
+            navy: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+            },
+            gold: {
+              50: '#fdfdf6',
+              100: '#fbf9eb',
+              500: '#d97706',
+              600: '#b45309',
+              700: '#78350f',
+            }
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #f9fafb;
-    }
-    h1, h2, h3, h4 {
-      font-family: 'Lato', sans-serif;
-    }
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4, h5, h6, .font-editorial { font-family: 'Merriweather', serif; }
   </style>
 </head>
-<body class="text-[#1A1A2E]">
+<body class="text-navy-900 bg-[#f8fafc] min-h-screen flex flex-col justify-between">
 
-
-  <header class="sticky top-0 z-50 bg-white shadow-sm">
-    <div class="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-      <div class="text-xl font-bold font-lato">
-        <a href="/"><img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-12 sm:h-14 w-auto"></a>
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-navy-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <a href="/" class="transition-opacity hover:opacity-90">
+          <img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-10 sm:h-12 w-auto">
+        </a>
       </div>
 
       <!-- Desktop Navigation -->
-      <nav class="hidden md:flex items-center space-x-6 text-sm">
-        <a href="/" class="hover:text-[#3F72AF]">Home</a>
-        <a href="/researches" class="hover:text-[#3F72AF]">Published Papers</a>
-        <a href="/submit" class="hover:text-[#3F72AF]">Submit your Research</a>
-        <a href="/reviewer" class="hover:text-[#3F72AF]">Apply as Reviewer</a>
-        <a href="/about" class="hover:text-[#3F72AF]">About</a>
-        <input type="text" placeholder="Search" class="border p-1 px-2 rounded text-sm hidden lg:block" />
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <a href="/" class="text-navy-500 hover:text-gold-500 transition-colors">Home</a>
+        <a href="/researches" class="text-navy-500 hover:text-gold-500 transition-colors">Published Papers</a>
+        <a href="/submit" class="text-navy-800 hover:text-gold-500 transition-colors">Submit Research</a>
+        <a href="/reviewer" class="text-navy-500 hover:text-gold-500 transition-colors">Review Paper</a>
         <span id="dashboardTab" class="relative hidden">
-          <button class="inline-flex items-center gap-1 px-3 py-1 rounded hover:bg-gray-100">Dashboards
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/></svg>
+          <button class="inline-flex items-center gap-1 text-navy-500 hover:text-gold-500 transition-colors font-medium">
+            Dashboards
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
+            </svg>
           </button>
-          <div class="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg hidden" id="dashboardMenu">
-            <a href="/dashboard/author" class="block px-4 py-2 hover:bg-gray-100">Author</a>
-            <a href="/dashboard/reviewer" class="block px-4 py-2 hover:bg-gray-100">Reviewer</a>
+          <div class="absolute right-0 mt-2 w-44 bg-white border border-navy-100 rounded-md shadow-lg hidden py-1" id="dashboardMenu">
+            <a href="/dashboard/author" class="block px-4 py-2 text-navy-700 hover:bg-navy-50 hover:text-gold-500 transition-colors">Author</a>
+            <a href="/dashboard/reviewer" class="block px-4 py-2 text-navy-700 hover:bg-navy-50 hover:text-gold-500 transition-colors">Reviewer</a>
           </div>
         </span>
-        <span id="authLinks" class="flex items-center gap-2">
-          <a href="/login" class="bg-[#F9A826] hover:bg-[#e28e0c] text-white px-4 lg:px-6 py-1 rounded text-sm">Login</a>
-          <a href="/register" class="bg-[#3F72AF] hover:bg-[#345b8f] text-white text-sm px-3 lg:px-4 py-1 rounded">Register</a>
+        <span id="authLinks" class="flex items-center gap-4 border-l border-navy-100 pl-8">
+          <a href="/login" class="text-navy-600 hover:text-gold-500 transition-colors">Login</a>
+          <a href="/register" class="bg-navy-900 text-white hover:bg-navy-800 transition-colors px-4 py-2 rounded font-medium shadow-sm">Register</a>
         </span>
       </nav>
 
       <!-- Mobile Menu Button -->
-      <button id="mobileMenuButton" class="md:hidden p-2 text-gray-600 focus:outline-none">
+      <button id="mobileMenuButton" class="md:hidden p-2 text-navy-600 hover:text-navy-900 focus:outline-none transition-colors">
         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
       </button>
     </div>
 
-    <!-- Mobile Navigation Menu -->
-    <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
-      <div class="px-4 py-2 space-y-1">
-        <a href="/" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Home</a>
-        <a href="/submit" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Submit your Research</a>
-        <a href="/reviewer" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Apply as Reviewer</a>
-        <a href="/about" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">About</a>
-        <div class="px-3 py-2">
-          <input type="text" placeholder="Search" class="w-full border p-2 rounded text-sm" />
-        </div>
-        <span id="mobileDashboardTab" class="hidden">
-          <div class="px-3 py-2">
-            <div class="font-medium text-gray-900 mb-2">Dashboards</div>
-            <a href="/dashboard/author" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Author</a>
-            <a href="/dashboard/reviewer" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Reviewer</a>
-          </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden hidden bg-white border-t border-navy-100">
+      <div class="px-4 py-4 space-y-2">
+        <a href="/" class="block px-3 py-2 text-base font-medium text-navy-900 hover:bg-navy-50 rounded">Home</a>
+        <a href="/researches" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">Published Papers</a>
+        <a href="/submit" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">Submit Research</a>
+        <a href="/reviewer" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">Review Paper</a>
+        <span id="mobileDashboardTab" class="hidden block border-t border-navy-50 pt-2">
+          <a href="/dashboard/author" class="block px-6 py-2 text-navy-600 hover:bg-navy-50 rounded">Author Dashboard</a>
+          <a href="/dashboard/reviewer" class="block px-6 py-2 text-navy-600 hover:bg-navy-50 rounded">Reviewer Dashboard</a>
         </span>
-        <div id="mobileAuthLinks" class="px-3 py-2 space-y-2">
-          <a href="/login" class="block w-full text-center bg-[#F9A826] hover:bg-[#e28e0c] text-white px-4 py-2 rounded">Login</a>
-          <a href="/register" class="block w-full text-center bg-[#3F72AF] hover:bg-[#345b8f] text-white px-4 py-2 rounded">Register</a>
+        <div id="mobileAuthLinks" class="border-t border-navy-100 pt-4 flex flex-col gap-2">
+          <a href="/login" class="block w-full text-center border border-navy-200 text-navy-700 px-4 py-2.5 rounded font-medium">Login</a>
+          <a href="/register" class="block w-full text-center bg-navy-900 text-white px-4 py-2.5 rounded font-medium">Register</a>
         </div>
       </div>
     </div>
   </header>
 
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8 sm:space-y-10">
-    <div class="bg-blue-50 border border-blue-200 p-4 sm:p-6 rounded-2xl shadow-sm">
-      <h2 class="text-lg sm:text-xl font-semibold mb-3 text-[#3F72AF]">Submission Guidelines</h2>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 text-sm text-gray-700">
-        <ul class="space-y-1">
-          <li class="font-semibold text-[#1A1A2E]">Paper Types & Length</li>
-          <li>• Research Papers: 3,000–5,000 words</li>
-          <li>• White Papers: 1,000–2,000 words</li>
-          <li>• Word format (max 25MB)</li>
-        </ul>
-        <ul class="space-y-1">
-          <li class="font-semibold text-[#1A1A2E]">Review Process</li>
-          <li>• 10 expert reviewers per paper</li>
-          <li>• 2-week review period</li>
-          <li>• 8/10+ average score required</li>
-        </ul>
-      </div>
+  <!-- Submit Container -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-12 flex-grow space-y-8">
+    <div class="space-y-2 text-center">
+      <h1 class="text-3xl sm:text-4xl font-bold font-editorial text-navy-900">Submit Manuscript</h1>
+      <p class="text-sm text-navy-500">Publish your research with our 10-reviewer academic pipeline</p>
     </div>
 
+    <!-- Multi-Step Progress Tracker -->
+    <nav aria-label="Progress" class="py-4">
+      <ol class="flex items-center justify-between w-full max-w-2xl mx-auto text-xs sm:text-sm font-medium">
+        <li class="flex items-center text-gold-500 gap-2 step-indicator" id="ind-1">
+          <span class="w-8 h-8 rounded-full border-2 border-gold-500 flex items-center justify-center font-bold bg-white" id="ind-bubble-1">1</span>
+          <span class="hidden sm:inline">Upload</span>
+        </li>
+        <li class="w-full border-t-2 border-navy-200 mx-2 flex-grow step-divider" id="div-1"></li>
+        <li class="flex items-center text-navy-400 gap-2 step-indicator" id="ind-2">
+          <span class="w-8 h-8 rounded-full border-2 border-navy-200 flex items-center justify-center font-bold bg-white" id="ind-bubble-2">2</span>
+          <span class="hidden sm:inline">Details</span>
+        </li>
+        <li class="w-full border-t-2 border-navy-200 mx-2 flex-grow step-divider" id="div-2"></li>
+        <li class="flex items-center text-navy-400 gap-2 step-indicator" id="ind-3">
+          <span class="w-8 h-8 rounded-full border-2 border-navy-200 flex items-center justify-center font-bold bg-white" id="ind-bubble-3">3</span>
+          <span class="hidden sm:inline">Authors</span>
+        </li>
+        <li class="w-full border-t-2 border-navy-200 mx-2 flex-grow step-divider" id="div-3"></li>
+        <li class="flex items-center text-navy-400 gap-2 step-indicator" id="ind-4">
+          <span class="w-8 h-8 rounded-full border-2 border-navy-200 flex items-center justify-center font-bold bg-white" id="ind-bubble-4">4</span>
+          <span class="hidden sm:inline">Review</span>
+        </li>
+      </ol>
+    </nav>
+
     <!-- Submission Form -->
-    <form class="bg-white shadow-md p-4 sm:p-6 lg:p-8 rounded-2xl space-y-6 sm:space-y-8" id="paperForm">
-      
-      <!-- Paper Details -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        <div>
-          <label class="block font-semibold mb-2 text-sm sm:text-base">Paper Title*</label>
-          <input type="text" required class="w-full border border-gray-300 rounded-lg p-3 text-sm sm:text-base focus:ring-2 focus:ring-[#3F72AF] focus:outline-none" placeholder="Enter your paper title" />
-        </div>
-        <div>
-          <label class="block font-semibold mb-2 text-sm sm:text-base">Paper Type*</label>
-          <select id="paperType" class="w-full border border-gray-300 rounded-lg p-3 text-sm sm:text-base focus:ring-2 focus:ring-[#3F72AF] focus:outline-none">
-            <option value="Research Paper">Research Paper (3,000–5,000 words)</option>
-            <option value="White Paper">White Paper (1,000–2,000 words)</option>
-          </select>
-        </div>
-      </div>
+    <form class="bg-white border border-navy-100 p-6 sm:p-10 rounded-xl shadow-sm space-y-6" id="paperForm">
 
-      <!-- Abstract -->
-      <div>
-        <label class="block font-semibold mb-2 text-sm sm:text-base">Abstract*</label>
-        <textarea required class="w-full border border-gray-300 rounded-lg p-3 text-sm sm:text-base focus:ring-2 focus:ring-[#3F72AF] focus:outline-none" rows="4" placeholder="Provide a comprehensive abstract (200–300 words)"></textarea>
-      </div>
+      <!-- STEP 1: UPLOAD MANUSCRIPT -->
+      <div id="step-1-content" class="space-y-6">
+        <div class="space-y-2">
+          <h2 class="text-xl font-bold font-editorial text-navy-900">Upload Manuscript File</h2>
+          <p class="text-xs text-navy-500">Provide your research document in Word (.doc or .docx) format. Max size: 25MB.</p>
+        </div>
 
-      <!-- Author Fields -->
-      <div>
-        <label class="block font-semibold mb-3 text-sm sm:text-base">Author(s)*</label>
-        <div class="text-xs text-gray-500 mb-3">Add co-authors and select who should receive email communications.</div>
-        <div id="authorFields" class="space-y-4">
-          <div class="author-row border border-gray-200 rounded-xl bg-white p-4 shadow-sm">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              <input type="text" class="border border-gray-300 rounded-lg p-3 text-sm" placeholder="Author Name*" required />
-              <input type="text" class="border border-gray-300 rounded-lg p-3 text-sm" placeholder="Affiliation*" required />
-              <input type="text" class="border border-gray-300 rounded-lg p-3" placeholder="Location (City, Country)*" required />
-              <div class="flex flex-col">
-                <input type="email" class="border border-gray-300 rounded-lg p-3" placeholder="Author Email*" required />
-                 </div>
+        <div class="border-2 border-dashed border-navy-200 rounded-xl p-8 sm:p-12 text-center text-navy-500 bg-navy-50/50 hover:border-gold-500 transition-colors relative cursor-pointer" id="dropZoneContainer">
+          <div class="flex flex-col items-center justify-center space-y-3" id="fileDrop">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-navy-400 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16a4 4 0 004-4V6a4 4 0 00-8 0v6a4 4 0 004 4zm0 0v4m0 0H8m4 0h4" />
+            </svg>
+            <p class="text-sm font-medium">Drag and drop your manuscript here, or <button type="button" id="browseBtn" class="text-gold-500 hover:underline font-semibold">browse files</button></p>
+            <p class="text-xs text-navy-400">Microsoft Word files only</p>
+          </div>
+          <input id="paperFile" name="file" type="file" accept=".doc,.docx" class="hidden" />
+          
+          <div id="paperFileStatus" class="mt-4 hidden max-w-md mx-auto">
+            <div class="flex items-center justify-between bg-white border border-navy-200 rounded-lg p-3 shadow-sm">
+              <div class="flex items-center gap-3 truncate">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gold-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <span id="paperFileName" class="text-sm text-navy-800 font-medium truncate"></span>
+              </div>
+              <button type="button" id="paperFileRemove" class="text-xs text-red-600 hover:underline font-semibold px-2">Remove</button>
             </div>
           </div>
         </div>
-        <button type="button" id="addAuthor" class="mt-3 text-[#3F72AF] hover:text-[#345b8f] font-medium text-sm">+ Add Co-Author</button>
-      </div>
 
-      <!-- Keywords -->
-      <div>
-        <label class="block text-sm font-medium mb-2">Paper Keywords* (Select up to 3)</label>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm text-gray-800" id="keywordChoices">
-          <label class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"><input type="checkbox" value="Artificial Intelligence" /> Artificial Intelligence</label>
-          <label class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"><input type="checkbox" value="Blockchain" /> Blockchain</label>
-          <label class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"><input type="checkbox" value="Cybersecurity" /> Cybersecurity</label>
-          <label class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"><input type="checkbox" value="Data Science" /> Data Science</label>
-          <label class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"><input type="checkbox" value="Internet of Things" /> Internet of Things</label>
-          <label class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"><input type="checkbox" value="Cloud Computing" /> Cloud Computing</label>
-          <label class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"><input type="checkbox" value="Machine Learning" /> Machine Learning</label>
-          <label class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"><input type="checkbox" value="Software Engineering" /> Software Engineering</label>
-          <label class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"><input type="checkbox" value="Computer Networks" /> Computer Networks</label>
-          <label class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"><input type="checkbox" value="Database Systems" /> Database Systems</label>
-          <label class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"><input type="checkbox" value="Mobile Computing" /> Mobile Computing</label>
-          <label class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"><input type="checkbox" value="Robotics" /> Robotics</label>
-          <label class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"><input type="checkbox" value="Virtual Reality" /> Virtual Reality</label>
-          <label class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"><input type="checkbox" value="Other" /> Other</label>
+        <div class="flex justify-end pt-4">
+          <button type="button" id="btn-next-1" class="bg-navy-900 hover:bg-navy-800 text-white px-6 py-3 rounded-lg font-medium transition-all shadow-sm">
+            Continue to Details
+          </button>
         </div>
-        <div class="text-xs text-gray-500 mt-1">Selected: <span id="kwCount">0</span>/3</div>
       </div>
 
+      <!-- STEP 2: METADATA -->
+      <div id="step-2-content" class="space-y-6 hidden">
+        <div class="space-y-2">
+          <h2 class="text-xl font-bold font-editorial text-navy-900">Manuscript Metadata</h2>
+          <p class="text-xs text-navy-500">Provide the title, publication type, and comprehensive abstract for index parsing.</p>
+        </div>
 
-      <!-- File Upload -->
-      <div>
-        <label class="block font-semibold mb-2 text-sm sm:text-base">Paper Upload*</label>
-        <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 sm:p-10 text-center text-gray-500 hover:border-[#3F72AF] transition duration-200">
-          <div class="flex flex-col items-center justify-center" id="fileDrop">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 sm:h-12 sm:w-12 mb-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h3m10-4v1a2 2 0 01-2 2h-3m-4-2l4-4m0 0l4 4m-4-4v12" />
-            </svg>
-            <p class="text-sm sm:text-base">Drag and drop your paper here, or <button type="button" id="browseBtn" class="text-[#3F72AF] hover:underline">browse files</button></p>
-            <p class="text-xs text-gray-400">Word format, max 25MB</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="md:col-span-2 space-y-1">
+            <label class="block text-xs font-semibold text-navy-700 uppercase tracking-wider">Paper Title*</label>
+            <input type="text" id="paperTitle" class="w-full border border-navy-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 bg-white" placeholder="Enter paper title" />
           </div>
-          <input id="paperFile" name="file" type="file" accept=".doc,.docx" class="hidden" />
-          <div id="paperFileStatus" class="mt-4 hidden">
-            <div class="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-lg px-4 py-2">
-              <span id="paperFileName" class="text-sm text-[#1A1A2E] truncate"></span>
-              <div class="flex items-center gap-3">
-                <button type="button" id="paperFileChange" class="text-xs text-[#3F72AF] hover:underline">Change</button>
-                <button type="button" id="paperFileRemove" class="text-xs text-red-600 hover:underline">Remove</button>
+          <div class="space-y-1">
+            <label class="block text-xs font-semibold text-navy-700 uppercase tracking-wider">Publication Type*</label>
+            <select id="paperType" class="w-full border border-navy-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 bg-white">
+              <option value="Research Paper">Research Paper (3,000-5,000 words)</option>
+              <option value="White Paper">White Paper (1,000-2,000 words)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-xs font-semibold text-navy-700 uppercase tracking-wider">Abstract*</label>
+          <textarea id="paperAbstract" class="w-full border border-navy-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 bg-white" rows="6" placeholder="Provide a detailed abstract summarizing the manuscript scope (200-300 words)..."></textarea>
+        </div>
+
+        <div class="flex justify-between pt-4 border-t border-navy-100">
+          <button type="button" id="btn-back-2" class="border border-navy-200 hover:bg-navy-50 text-navy-700 px-6 py-3 rounded-lg font-medium transition-all">Back</button>
+          <button type="button" id="btn-next-2" class="bg-navy-900 hover:bg-navy-800 text-white px-6 py-3 rounded-lg font-medium transition-all shadow-sm">Continue to Authors</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: AUTHORS & KEYWORDS -->
+      <div id="step-3-content" class="space-y-6 hidden">
+        <div class="space-y-2">
+          <h2 class="text-xl font-bold font-editorial text-navy-900">Authors & Keywords</h2>
+          <p class="text-xs text-navy-500">Provide researcher profiles and select key subject categories for reviewer assignment.</p>
+        </div>
+
+        <div class="space-y-4">
+          <label class="block text-xs font-semibold text-navy-700 uppercase tracking-wider">Authors*</label>
+          <div id="authorFields" class="space-y-4">
+            <div class="author-row border border-navy-100 rounded-xl bg-navy-50/50 p-4 space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                  <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Author Name*</label>
+                  <input type="text" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="Dr. Jane Doe" required />
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Affiliation*</label>
+                  <input type="text" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="Department, University / Institution" required />
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Location (City, Country)*</label>
+                  <input type="text" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="Boston, USA" required />
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Email Address*</label>
+                  <input type="email" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="jane.doe@university.edu" required />
+                </div>
               </div>
             </div>
           </div>
+          <button type="button" id="addAuthor" class="inline-flex items-center text-sm text-gold-500 hover:text-gold-600 font-semibold transition-colors mt-2">
+            + Add Co-Author
+          </button>
         </div>
-      </div>
 
-      <!-- Terms -->
-      <div class="flex flex-col gap-3 text-sm">
-        <div class="flex items-start gap-3">
-          <input type="checkbox" required class="mt-1" />
-          <label>
-            I agree to the <a href="/publication-ethics.html" class="text-[#3F72AF] hover:underline">publication terms</a> and
-            <a href="/author-guidelines.html" class="text-[#3F72AF] hover:underline">ethical guidelines</a>.
-          </label>
-        </div>
-      
-        <div class="flex items-start gap-3">
-          <input type="checkbox" required class="mt-1" />
-          <label>
-            The submission has not been previously published, nor is it before another journal for consideration
-            (or an explanation has been provided in Comments to the Editor).
-          </label>
-        </div>
-      
-        <div class="flex items-start gap-3">
-          <input type="checkbox" required class="mt-1" />
-          <label>The submission file is in Microsoft Word file format.</label>
-        </div>
-      
-        <div class="flex items-start gap-3">
-          <input type="checkbox" required class="mt-1" />
-          <label>Where available, URLs for the references have been provided.</label>
-        </div>
-      
-        <div class="flex items-start gap-3">
-          <input type="checkbox" required class="mt-1" />
-          <label>
-            The text is single-spaced; uses a 12-point font; employs italics, rather than underlining (except with URL addresses);
-            and all illustrations, figures, and tables are placed within the text at the appropriate points, rather than at the end.
-          </label>
-        </div>
-      
-        <div class="flex items-start gap-3">
-          <input type="checkbox" required class="mt-1" />
-          <label>
-            The text adheres to the stylistic and bibliographic requirements outlined in the Author Guidelines.
-          </label>
-        </div>
-      </div>
-      
-
-      <!-- Buttons -->
-      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 pt-4 border-t">
-        <button type="submit" id="submitButton" class="bg-[#3F72AF] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#345b8f] transition flex items-center justify-center gap-2 order-2 sm:order-1">
-          <span>📄 Submit Paper</span>
-          <div id="loadingSpinner" class="hidden">
-            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
+        <div class="space-y-3 pt-4 border-t border-navy-100">
+          <div class="flex justify-between items-baseline">
+            <label class="block text-xs font-semibold text-navy-700 uppercase tracking-wider">Subject Keywords*</label>
+            <span class="text-xs text-navy-400">Select exactly 3: <span id="kwCount" class="font-bold text-gold-500">0</span>/3</span>
           </div>
-        </button>
-        <button type="reset" class="border px-6 py-3 rounded-lg hover:bg-gray-100 transition order-1 sm:order-2">Clear Form</button>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm text-navy-700" id="keywordChoices">
+            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
+              <input type="checkbox" value="Artificial Intelligence" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Artificial Intelligence
+            </label>
+            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
+              <input type="checkbox" value="Blockchain" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Blockchain
+            </label>
+            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
+              <input type="checkbox" value="Cybersecurity" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Cybersecurity
+            </label>
+            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
+              <input type="checkbox" value="Data Science" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Data Science
+            </label>
+            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
+              <input type="checkbox" value="Internet of Things" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Internet of Things
+            </label>
+            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
+              <input type="checkbox" value="Cloud Computing" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Cloud Computing
+            </label>
+            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
+              <input type="checkbox" value="Machine Learning" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Machine Learning
+            </label>
+            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
+              <input type="checkbox" value="Software Engineering" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Software Engineering
+            </label>
+            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
+              <input type="checkbox" value="Computer Networks" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Computer Networks
+            </label>
+            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
+              <input type="checkbox" value="Database Systems" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Database Systems
+            </label>
+            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
+              <input type="checkbox" value="Mobile Computing" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Mobile Computing
+            </label>
+            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
+              <input type="checkbox" value="Robotics" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Robotics
+            </label>
+            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
+              <input type="checkbox" value="Virtual Reality" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Virtual Reality
+            </label>
+            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
+              <input type="checkbox" value="Other" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Other
+            </label>
+          </div>
+        </div>
+
+        <div class="flex justify-between pt-4 border-t border-navy-100">
+          <button type="button" id="btn-back-3" class="border border-navy-200 hover:bg-navy-50 text-navy-700 px-6 py-3 rounded-lg font-medium transition-all">Back</button>
+          <button type="button" id="btn-next-3" class="bg-navy-900 hover:bg-navy-800 text-white px-6 py-3 rounded-lg font-medium transition-all shadow-sm">Continue to Review</button>
+        </div>
       </div>
+
+      <!-- STEP 4: REVIEW & CONFIRM -->
+      <div id="step-4-content" class="space-y-6 hidden">
+        <div class="space-y-2">
+          <h2 class="text-xl font-bold font-editorial text-navy-900">Review & Ethical Terms</h2>
+          <p class="text-xs text-navy-500">Agree to the ethical code and declare manuscript validity prior to submission.</p>
+        </div>
+
+        <div class="bg-navy-50 border border-navy-100 rounded-lg p-5 text-sm space-y-4 max-h-72 overflow-y-auto">
+          <h4 class="font-bold text-navy-900">Ethical Commitments</h4>
+          <div class="flex items-start gap-3">
+            <input type="checkbox" id="term-1" class="mt-1 rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" />
+            <label for="term-1" class="text-navy-600 leading-relaxed cursor-pointer select-none">
+              I agree to the <a href="/publication-ethics.html" target="_blank" class="text-gold-500 hover:underline">publication terms</a> and
+              <a href="/author-guidelines.html" target="_blank" class="text-gold-500 hover:underline">ethical guidelines</a>.
+            </label>
+          </div>
+        
+          <div class="flex items-start gap-3">
+            <input type="checkbox" id="term-2" class="mt-1 rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" />
+            <label for="term-2" class="text-navy-600 leading-relaxed cursor-pointer select-none">
+              The submission has not been previously published, nor is it before another journal for consideration.
+            </label>
+          </div>
+        
+          <div class="flex items-start gap-3">
+            <input type="checkbox" id="term-3" class="mt-1 rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" />
+            <label for="term-3" class="text-navy-600 leading-relaxed cursor-pointer select-none">The submission file is in Microsoft Word format.</label>
+          </div>
+        
+          <div class="flex items-start gap-3">
+            <input type="checkbox" id="term-4" class="mt-1 rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" />
+            <label for="term-4" class="text-navy-600 leading-relaxed cursor-pointer select-none">Where available, URLs for all references have been provided.</label>
+          </div>
+        
+          <div class="flex items-start gap-3">
+            <input type="checkbox" id="term-5" class="mt-1 rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" />
+            <label for="term-5" class="text-navy-600 leading-relaxed cursor-pointer select-none">
+              The text is single-spaced; uses 12-point font; and all illustrations and tables are placed in-text.
+            </label>
+          </div>
+        
+          <div class="flex items-start gap-3">
+            <input type="checkbox" id="term-6" class="mt-1 rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" />
+            <label for="term-6" class="text-navy-600 leading-relaxed cursor-pointer select-none">
+              The text adheres to the stylistic and bibliographic requirements outlined in the Author Guidelines.
+            </label>
+          </div>
+        </div>
+
+        <div class="flex justify-between pt-6 border-t border-navy-100 items-center">
+          <button type="button" id="btn-back-4" class="border border-navy-200 hover:bg-navy-50 text-navy-700 px-6 py-3 rounded-lg font-medium transition-all">Back</button>
+          
+          <button type="submit" id="submitButton" class="bg-gold-500 hover:bg-gold-600 text-white px-8 py-3.5 rounded-lg font-semibold transition-all shadow-md flex items-center justify-center gap-2">
+            <span>Submit Manuscript</span>
+            <div id="loadingSpinner" class="hidden">
+              <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </div>
+          </button>
+        </div>
+      </div>
+
     </form>
-  </div>
-   <!-- Footer -->
-  <footer class="bg-gray-100 text-sm text-[#1A1A2E] px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 max-w-6xl mx-auto">
-      <div class="sm:col-span-2 lg:col-span-1">
-        <h4 class="font-bold mb-2 font-lato">Digital Evolution Journal</h4>
-        <p class="text-gray-600 mb-2 text-sm">
-          Premier peer-reviewed publication platform advancing technical research excellence through rigorous review processes and global collaboration.
-        </p>
-      </div>
-      <div>
-        <h4 class="font-bold mb-2 font-lato">For Authors</h4>
-        <ul class="space-y-1 text-gray-600">
-          <li><a href="/submit" class="hover:text-[#3F72AF]">Submit Paper</a></li>
-          <li><a href="/author-guidelines.html" class="hover:text-[#3F72AF]">Author Guidelines</a></li>
-          <li><a href="/formatting-guide.html" class="hover:text-[#3F72AF]">Formatting Guide</a></li>
-          <li><a href="/publication-ethics.html" class="hover:text-[#3F72AF]">Publication Ethics</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-bold mb-2 font-lato">For Reviewers</h4>
-        <ul class="space-y-1 text-gray-600">
-          <li><a href="/reviewer" class="hover:text-[#3F72AF]">Become Reviewer</a></li>
-          <li><a href="/review-guidelines.html" class="hover:text-[#3F72AF]">Review Guidelines</a></li>
-          <!-- <li><a href="/training-materials.html">Training Materials</a></li> -->
-          <li><a href="/reviewer-ethics.html" class="hover:text-[#3F72AF]">Reviewer Ethics</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="text-center text-xs text-gray-500 mt-8 sm:mt-12">
-      <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
-        <a href="/privacy-policy.html" class="hover:text-[#3F72AF]">Privacy Policy</a>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-navy-900 text-navy-400 text-xs py-8 border-t border-navy-800 text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex gap-4">
+        <a href="#" class="hover:text-navy-300">Privacy Policy</a>
         <span>·</span>
-        <a href="/terms-of-service.html" class="hover:text-[#3F72AF]">Terms of Service</a>
-        <span>·</span>
-        <a href="/accessibility.html" class="hover:text-[#3F72AF]">Accessibility</a>
-        <span>·</span>
-        <a href="/contact.html" class="hover:text-[#3F72AF]">Contact</a>
+        <a href="#" class="hover:text-navy-300">Terms of Service</a>
       </div>
-      <div class="mt-2">© 2025 Digital Evolution Journal. All rights reserved.</div>
+      <div>© 2026 Digital Evolution Journal. All rights reserved.</div>
     </div>
   </footer>
-  <!-- Author Field Logic -->
+
   <script>
+    // Navigation workflow logic
+    let activeStep = 1;
+
+    function setStep(step) {
+      if (step < 1 || step > 4) return;
+      
+      // Update UI panels
+      document.getElementById('step-1-content').classList.toggle('hidden', step !== 1);
+      document.getElementById('step-2-content').classList.toggle('hidden', step !== 2);
+      document.getElementById('step-3-content').classList.toggle('hidden', step !== 3);
+      document.getElementById('step-4-content').classList.toggle('hidden', step !== 4);
+      
+      // Update header indicators
+      for (let i = 1; i <= 4; i++) {
+        const ind = document.getElementById(`ind-${i}`);
+        const bubble = document.getElementById(`ind-bubble-${i}`);
+        const div = document.getElementById(`div-${i}`);
+        
+        if (i < step) {
+          // Completed
+          ind.classList.remove('text-navy-400', 'text-gold-500');
+          ind.classList.add('text-navy-800');
+          bubble.classList.remove('border-navy-200', 'border-gold-500');
+          bubble.classList.add('border-navy-800', 'bg-navy-100');
+          bubble.textContent = '✓';
+        } else if (i === step) {
+          // Active
+          ind.classList.remove('text-navy-400', 'text-navy-800');
+          ind.classList.add('text-gold-500');
+          bubble.classList.remove('border-navy-200', 'border-navy-800', 'bg-navy-100');
+          bubble.classList.add('border-gold-500');
+          bubble.textContent = i;
+        } else {
+          // Future
+          ind.classList.remove('text-navy-800', 'text-gold-500');
+          ind.classList.add('text-navy-400');
+          bubble.classList.remove('border-navy-800', 'border-gold-500', 'bg-navy-100');
+          bubble.classList.add('border-navy-200');
+          bubble.textContent = i;
+        }
+      }
+      activeStep = step;
+    }
+
+    // Step 1 check
+    document.getElementById('btn-next-1').addEventListener('click', () => {
+      const fileInput = document.getElementById('paperFile');
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alert('Please choose or drop a Microsoft Word file to continue.');
+        return;
+      }
+      setStep(2);
+    });
+
+    // Step 2 checks
+    document.getElementById('btn-back-2').addEventListener('click', () => setStep(1));
+    document.getElementById('btn-next-2').addEventListener('click', () => {
+      const title = document.getElementById('paperTitle').value.trim();
+      const abstract = document.getElementById('paperAbstract').value.trim();
+      if (!title || !abstract) {
+        alert('Please complete the paper title and abstract fields.');
+        return;
+      }
+      setStep(3);
+    });
+
+    // Step 3 checks
+    document.getElementById('btn-back-3').addEventListener('click', () => setStep(2));
+    document.getElementById('btn-next-3').addEventListener('click', () => {
+      // Validate authors
+      const authorRows = document.querySelectorAll('#authorFields .author-row');
+      let validAuthors = true;
+      authorRows.forEach(row => {
+        const inputs = row.querySelectorAll('input[required]');
+        inputs.forEach(input => {
+          if (!input.value.trim()) validAuthors = false;
+        });
+      });
+      if (!validAuthors) {
+        alert('Please enter names, affiliations, locations, and email addresses for all authors.');
+        return;
+      }
+      // Validate keywords
+      const kwBoxes = Array.from(document.querySelectorAll('#keywordChoices input[type="checkbox"]:checked'));
+      if (kwBoxes.length !== 3) {
+        alert('Please select exactly 3 keywords for reviewer matching.');
+        return;
+      }
+      setStep(4);
+    });
+
+    // Step 4 back
+    document.getElementById('btn-back-4').addEventListener('click', () => setStep(3));
+
+    // Dynamic co-author addition
     const maxAuthors = 6;
     const addBtn = document.getElementById('addAuthor');
     const authorFields = document.getElementById('authorFields');
@@ -303,136 +490,45 @@
       if (current >= maxAuthors) return;
 
       const row = document.createElement('div');
-      row.className = "author-row border border-gray-200 rounded-xl bg-white p-4 md:p-5 shadow-sm";
+      row.className = "author-row border border-navy-100 rounded-xl bg-navy-50/50 p-4 space-y-4";
       row.innerHTML = `
-        <div class=\"grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-5\">
-          <input type=\"text\" class=\"border border-gray-300 rounded-lg p-3\" placeholder=\"Author Name*\" required />
-          <input type=\"text\" class=\"border border-gray-300 rounded-lg p-3\" placeholder=\"Affiliation*\" required />
-          <input type=\"text\" class=\"border border-gray-300 rounded-lg p-3\" placeholder=\"Location (City, Country)*\" required />
-          <div class=\"flex flex-col\">
-            <input type=\"email\" class=\"border border-gray-300 rounded-lg p-3\" placeholder=\"Author Email*\" required />
-            <div class=\"flex items-center justify-between mt-2\">
-              <label class=\"text-sm flex items-center gap-2\"><input type=\"checkbox\" class=\"comm-checkbox\" /> Receive communication</label>
-              <button type=\"button\" class=\"text-red-600 text-xs hover:underline remove-author\">Remove</button>
-            </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Author Name*</label>
+            <input type="text" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="Author Name*" required />
+          </div>
+          <div class="space-y-1">
+            <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Affiliation*</label>
+            <input type="text" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="Affiliation*" required />
+          </div>
+          <div class="space-y-1">
+            <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Location*</label>
+            <input type="text" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="Location (City, Country)*" required />
+          </div>
+          <div class="space-y-1">
+            <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Email Address*</label>
+            <input type="email" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="Author Email*" required />
           </div>
         </div>
+        <div class="flex items-center justify-between">
+          <label class="text-xs flex items-center gap-2 text-navy-600 cursor-pointer">
+            <input type="checkbox" class="comm-checkbox rounded border-navy-300 text-gold-500" />
+            Receive communications
+          </label>
+          <button type="button" class="text-red-600 text-xs hover:underline remove-author font-semibold">Remove Co-Author</button>
+        </div>
       `;
-      const removeBtn = row.querySelector('.remove-author');
-      removeBtn.addEventListener('click', () => row.remove());
+      row.querySelector('.remove-author').addEventListener('click', () => row.remove());
       authorFields.appendChild(row);
     });
-    async function uploadFileToR2(file) {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('type', 'paper'); // Specify this is a paper upload
-      const res = await fetch('/api/upload', { method: 'POST', body: formData });
-      if (!res.ok) throw new Error(await res.text());
-      return res.json();
-    }
 
-    async function postSubmission(e) {
-      e.preventDefault();
-      
-      // Show loading spinner
-      const submitButton = document.getElementById('submitButton');
-      const loadingSpinner = document.getElementById('loadingSpinner');
-      const buttonText = submitButton.querySelector('span');
-      
-      // Disable button and show spinner
-      submitButton.disabled = true;
-      loadingSpinner.classList.remove('hidden');
-      
-      const form = document.getElementById('paperForm');
-      const title = form.querySelector('input[placeholder="Enter your paper title"]').value.trim();
-      const paper_type = document.getElementById('paperType').value;
-      const abstract = form.querySelector('textarea').value.trim();
-      const kwBoxes = Array.from(document.querySelectorAll('#keywordChoices input[type="checkbox"]:checked'));
-      const keywords = kwBoxes.map(b => b.value).join(', ');
-      const authors = Array.from(document.querySelectorAll('#authorFields .author-row')).map((row, idx) => {
-        const g = row.querySelector('.grid');
-        const nameEl = g?.querySelector('input[placeholder^="Author Name"]');
-        const affiliationEl = g?.querySelector('input[placeholder^="Affiliation"]');
-        const locationEl = g?.querySelector('input[placeholder^="Location"]');
-        const emailEl = g?.querySelector('input[type="email"]');
-        const commEl = g?.querySelector('input.comm-checkbox');
-        return {
-          fullName: (nameEl?.value || '').trim(),
-          affiliation: (affiliationEl?.value || '').trim(),
-          location: (locationEl?.value || '').trim(),
-          email: (emailEl?.value || '').trim(),
-          receiveCommunications: idx === 0 ? true : Boolean(commEl?.checked)
-        };
-      });
-  const termsAccepted = form.querySelector('input[type="checkbox"]').checked ? true : false;
-      const fileInput = document.getElementById('paperFile');
-      if (!fileInput.files || fileInput.files.length === 0) {
-        alert('Please choose a .doc or .docx file to upload.');
-        // Reset button state
-        submitButton.disabled = false;
-        loadingSpinner.classList.add('hidden');
-        return;
-      }
-      const chosenFile = fileInput.files[0];
-      try {
-        const upload = await uploadFileToR2(chosenFile);
-        const file_url = upload?.url || upload?.key;
-        // Include first author fields to help backend create author records
-        const payload = {
-          title,
-          paper_type,
-          abstract,
-          keywords,
-          authors,
-          termsAccepted,
-          file_url,
-          firstAuthorEmail: (authors[0] && authors[0].email) || undefined,
-          firstAuthorName: (authors[0] && authors[0].fullName) || undefined
-        };
-        const res = await fetch('/api/submissions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        
-        if (!res.ok) {
-          const t = await res.text();
-          alert('Failed: ' + t);
-          // Reset button state on failure
-          submitButton.disabled = false;
-          loadingSpinner.classList.add('hidden');
-          return;
-        }
-        const data = await res.json();
-        
-        // Change button text to "Submitted" on success
-        buttonText.textContent = '✅ Submitted';
-        loadingSpinner.classList.add('hidden');
-        
-        // Short delay before redirecting to dashboard
-        setTimeout(() => {
-          window.location.href = '/dashboard/author';
-        }, 1500);
-      } catch (error) {
-        alert('Error: ' + error.message);
-        // Reset button state on error
-        submitButton.disabled = false;
-        loadingSpinner.classList.add('hidden');
-        buttonText.textContent = '📄 Submit Paper';
-      }
-    }
-
-    const paperForm = document.getElementById('paperForm');
-    paperForm.addEventListener('submit', postSubmission);
-
-    // Wire up browse and drag-drop + status UI
+    // File Upload Handlers
     const hiddenInput = document.getElementById('paperFile');
     const browseBtn = document.getElementById('browseBtn');
-    const dropZone = document.getElementById('fileDrop');
+    const dropZone = document.getElementById('dropZoneContainer');
     const statusWrap = document.getElementById('paperFileStatus');
     const nameEl = document.getElementById('paperFileName');
     const removeBtn = document.getElementById('paperFileRemove');
-    const changeBtn = document.getElementById('paperFileChange');
 
     function isValidPaper(file) {
       const maxBytes = 25 * 1024 * 1024;
@@ -443,51 +539,156 @@
     function showSelected(file) {
       nameEl.textContent = `${file.name} (${(file.size / 1048576).toFixed(2)} MB)`;
       statusWrap.classList.remove('hidden');
+      document.getElementById('fileDrop').classList.add('hidden');
     }
 
     function clearSelected() {
       hiddenInput.value = '';
       statusWrap.classList.add('hidden');
+      document.getElementById('fileDrop').classList.remove('hidden');
       nameEl.textContent = '';
     }
 
-    browseBtn.addEventListener('click', () => hiddenInput.click());
+    browseBtn.addEventListener('click', (e) => { e.stopPropagation(); hiddenInput.click(); });
+    dropZone.addEventListener('click', () => { if (hiddenInput.value === '') hiddenInput.click(); });
+
     hiddenInput.addEventListener('change', () => {
       const f = hiddenInput.files && hiddenInput.files[0];
       if (!f) return clearSelected();
       if (!isValidPaper(f)) {
-        alert('Please select a .doc or .docx file up to 25MB.');
+        alert('Please select a valid .doc or .docx file up to 25MB.');
         return clearSelected();
       }
       showSelected(f);
     });
 
-    removeBtn.addEventListener('click', clearSelected);
-    changeBtn.addEventListener('click', () => hiddenInput.click());
+    removeBtn.addEventListener('click', (e) => { e.stopPropagation(); clearSelected(); });
 
-    ['dragenter', 'dragover'].forEach(evt => dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.add('border-[#3F72AF]'); }));
-    ;['dragleave', 'drop'].forEach(evt => dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.remove('border-[#3F72AF]'); }));
+    ['dragenter', 'dragover'].forEach(evt => dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.add('border-gold-500', 'bg-gold-50/10'); }));
+    ;['dragleave', 'drop'].forEach(evt => dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.remove('border-gold-500', 'bg-gold-50/10'); }));
     dropZone.addEventListener('drop', e => {
       const files = e.dataTransfer.files;
       if (files && files.length) {
         const dt = new DataTransfer();
-        Array.from(files).forEach(f => dt.items.add(f));
+        dt.items.add(files[0]);
         hiddenInput.files = dt.files;
         const f = dt.files[0];
         if (!isValidPaper(f)) {
-          alert('Please select a .doc or .docx file up to 25MB.');
+          alert('Please drop a valid .doc or .docx file up to 25MB.');
           return clearSelected();
         }
         showSelected(f);
       }
     });
 
-    paperForm.addEventListener('reset', () => {
-      // Allow native reset, then clear UI state
-      setTimeout(clearSelected, 0);
-    });
+    // Enforce 3 keywords choice limit
+    (function () {
+      const container = document.getElementById('keywordChoices');
+      const counter = document.getElementById('kwCount');
+      const limit = 3;
+      const update = () => {
+        const boxes = container.querySelectorAll('input[type="checkbox"]');
+        const checked = Array.from(boxes).filter(b => b.checked);
+        counter.textContent = String(checked.length);
+        const disable = checked.length >= limit;
+        Array.from(boxes).forEach(b => { if (!b.checked) b.disabled = disable; });
+      };
+      container.addEventListener('change', update);
+    })();
 
-    // Update navbar auth state with Auth0
+    // Upload & Post logic
+    async function uploadFileToR2(file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', 'paper');
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }
+
+    async function postSubmission(e) {
+      e.preventDefault();
+      
+      // Confirm all terms checked
+      for (let i = 1; i <= 6; i++) {
+        if (!document.getElementById(`term-${i}`).checked) {
+          alert('Please read and agree to all ethical submission terms.');
+          return;
+        }
+      }
+
+      const submitButton = document.getElementById('submitButton');
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      const buttonText = submitButton.querySelector('span');
+      
+      submitButton.disabled = true;
+      loadingSpinner.classList.remove('hidden');
+      
+      const title = document.getElementById('paperTitle').value.trim();
+      const paper_type = document.getElementById('paperType').value;
+      const abstract = document.getElementById('paperAbstract').value.trim();
+      const kwBoxes = Array.from(document.querySelectorAll('#keywordChoices input[type="checkbox"]:checked'));
+      const keywords = kwBoxes.map(b => b.value).join(', ');
+      const authors = Array.from(document.querySelectorAll('#authorFields .author-row')).map((row, idx) => {
+        const nameEl = row.querySelector('input[placeholder^="Author Name"]');
+        const affiliationEl = row.querySelector('input[placeholder^="Affiliation"]');
+        const locationEl = row.querySelector('input[placeholder^="Location"]');
+        const emailEl = row.querySelector('input[type="email"]');
+        const commEl = row.querySelector('input.comm-checkbox');
+        return {
+          fullName: (nameEl?.value || '').trim(),
+          affiliation: (affiliationEl?.value || '').trim(),
+          location: (locationEl?.value || '').trim(),
+          email: (emailEl?.value || '').trim(),
+          receiveCommunications: idx === 0 ? true : Boolean(commEl?.checked)
+        };
+      });
+      const fileInput = document.getElementById('paperFile');
+      const chosenFile = fileInput.files[0];
+      try {
+        const upload = await uploadFileToR2(chosenFile);
+        const file_url = upload?.url || upload?.key;
+        const payload = {
+          title,
+          paper_type,
+          abstract,
+          keywords,
+          authors,
+          termsAccepted: true,
+          file_url,
+          firstAuthorEmail: authors[0].email,
+          firstAuthorName: authors[0].fullName
+        };
+        const res = await fetch('/api/submissions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        
+        if (!res.ok) {
+          const t = await res.text();
+          alert('Failed: ' + t);
+          submitButton.disabled = false;
+          loadingSpinner.classList.add('hidden');
+          return;
+        }
+        
+        buttonText.textContent = 'Submitted Successfully';
+        loadingSpinner.classList.add('hidden');
+        
+        setTimeout(() => {
+          window.location.href = '/dashboard/author';
+        }, 1500);
+      } catch (error) {
+        alert('Submission Error: ' + error.message);
+        submitButton.disabled = false;
+        loadingSpinner.classList.add('hidden');
+      }
+    }
+
+    document.getElementById('paperForm').addEventListener('submit', postSubmission);
+
+    // Auth state verification
     (async () => {
       try {
         const res = await fetch('/api/me', { credentials: 'include' });
@@ -501,12 +702,12 @@
           const u = data.user || {};
           const displayName = u.name || u.email || 'User';
           const authContent = `
-            <span class="text-sm text-gray-700">Hello, ${displayName}</span>
-            <a href="/logout" class="border px-3 py-1 rounded hover:bg-gray-100">Logout</a>
+            <span class="text-sm text-navy-600">Hello, ${displayName}</span>
+            <a href="/logout" class="border border-navy-200 hover:border-navy-400 px-3 py-1.5 rounded text-navy-700 transition-colors bg-white">Logout</a>
           `;
           const mobileAuthContent = `
-            <div class="text-sm text-gray-700 mb-2">Hello, ${displayName}</div>
-            <a href="/logout" class="block w-full text-center border px-4 py-2 rounded hover:bg-gray-100">Logout</a>
+            <div class="text-sm text-navy-600 mb-2 font-medium">Hello, ${displayName}</div>
+            <a href="/logout" class="block w-full text-center border border-navy-200 px-4 py-2.5 rounded hover:bg-navy-50 transition-colors">Logout</a>
           `;
           
           if (el) el.innerHTML = authContent;
@@ -526,67 +727,27 @@
             mobileDashTab.classList.remove('hidden');
           }
           
-          // Prefill first author's email and name (first author is always communication recipient)
+          // Prefill author details
           try {
-            const firstRow = document.querySelector('#authorFields .grid');
-            if (firstRow && data.user) {
-              const nameInput = firstRow.querySelector('input[placeholder^="Author Name"]');
-              const emailInput = firstRow.querySelector('input[type="email"]');
-            
-              if (emailInput && data.user.email) {
-                if (!emailInput.value) emailInput.value = data.user.email;
-              }
-            }
-          } catch (_) { /* noop */ }
+            const nameInput = document.querySelector('#authorFields input[placeholder^="Dr. John Doe"]');
+            const emailInput = document.querySelector('#authorFields input[type="email"]');
+            if (nameInput && data.user.name) nameInput.value = data.user.name;
+            if (emailInput && data.user.email) emailInput.value = data.user.email;
+          } catch (_) {}
+
         } else {
           window.location.href = '/api/auth/login?returnTo=/submit';
-          return;
         }
-      } catch (e) { /* noop */ }
+      } catch (e) {}
     })();
 
-    // Mobile menu functionality
-    document.addEventListener('DOMContentLoaded', () => {
-      const mobileMenuButton = document.getElementById('mobileMenuButton');
-      const mobileMenu = document.getElementById('mobileMenu');
-      
-      if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', () => {
-          mobileMenu.classList.toggle('hidden');
-        });
-        
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', (e) => {
-          if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
-            mobileMenu.classList.add('hidden');
-          }
-        });
-        
-        // Close mobile menu when window is resized to desktop
-        window.addEventListener('resize', () => {
-          if (window.innerWidth >= 768) { // md breakpoint
-            mobileMenu.classList.add('hidden');
-          }
-        });
-      }
-    });
-
-    // Enforce max 3 keywords
-    (function () {
-      const container = document.getElementById('keywordChoices');
-      const counter = document.getElementById('kwCount');
-      if (!container || !counter) return;
-      const limit = 3;
-      const update = () => {
-        const boxes = container.querySelectorAll('input[type="checkbox"]');
-        const checked = Array.from(boxes).filter(b => b.checked);
-        counter.textContent = String(checked.length);
-        const disable = checked.length >= limit;
-        Array.from(boxes).forEach(b => { if (!b.checked) b.disabled = disable; });
-      };
-      container.addEventListener('change', update);
-      update();
-    })();
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+    }
   </script>
+
 </body>
 </html>
