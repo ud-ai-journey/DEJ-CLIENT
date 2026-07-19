@@ -3,40 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login - Digital Evolution Journal</title>
+  <meta name="description" content="Sign in to the Digital Evolution Journal to manage your manuscript submissions and peer review assignments."/>
+  <title>Sign In — Digital Evolution Journal</title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            serif: ['Merriweather', 'serif'],
-          },
+          fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Merriweather', 'serif'] },
           colors: {
-            navy: {
-              50: '#f8fafc',
-              100: '#f1f5f9',
-              200: '#e2e8f0',
-              300: '#cbd5e1',
-              400: '#94a3b8',
-              500: '#64748b',
-              600: '#475569',
-              700: '#334155',
-              800: '#1e293b',
-              900: '#0f172a',
-            },
-            gold: {
-              50: '#fdfdf6',
-              100: '#fbf9eb',
-              500: '#d97706',
-              600: '#b45309',
-              700: '#78350f',
-            }
+            navy: { 50:'#f0f4ff',100:'#e0e9ff',200:'#c0d2ff',300:'#93b0f8',400:'#6088ee',500:'#3d63d8',600:'#2949bc',700:'#1f3799',800:'#1e2e7a',900:'#0f1f5c',950:'#080f30' },
+            gold: { 50:'#fffbeb',100:'#fef3c7',400:'#fbbf24',500:'#f59e0b',600:'#d97706' },
+            cream: { 50:'#fdfdf6', 100:'#f9f8f0' }
           }
         }
       }
@@ -44,106 +26,290 @@
   </script>
   <style>
     body { font-family: 'Inter', sans-serif; }
-    h1, h2, h3, h4, h5, h6, .font-editorial { font-family: 'Merriweather', serif; }
+    h1, h2, h3, .font-editorial { font-family: 'Merriweather', serif; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; } }
+    *:focus-visible { outline: 2px solid #f59e0b; outline-offset: 3px; border-radius: 6px; }
+
+    /* Left panel gradient */
+    .auth-left { background: linear-gradient(150deg, #080f30 0%, #0f1f5c 45%, #1f3799 80%, #2949bc 100%); }
+
+    /* Floating input label */
+    .form-group { position: relative; }
+    .form-input { width: 100%; border: 1.5px solid #c0d2ff; border-radius: 12px; padding: 14px 16px 6px; font-size: 14px; background: white; transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
+    .form-input:focus { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,0.12); }
+    .form-input.error { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
+    .form-label { position: absolute; left: 16px; top: 12px; font-size: 13px; color: #6088ee; font-weight: 500; transition: all 0.18s ease; pointer-events: none; }
+    .form-input:focus ~ .form-label,
+    .form-input:not(:placeholder-shown) ~ .form-label { top: 5px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #f59e0b; }
+
+    /* Decorative orb */
+    .orb { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.2; }
+
+    /* Submit button loading state */
+    .btn-primary { background: linear-gradient(135deg, #1f3799 0%, #0f1f5c 100%); transition: all 0.2s; }
+    .btn-primary:hover { background: linear-gradient(135deg, #2949bc 0%, #1f3799 100%); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(15,31,92,0.3); }
+    .btn-primary:active { transform: translateY(0); }
   </style>
 </head>
-<body class="text-navy-900 bg-[#f8fafc] min-h-screen flex flex-col justify-between">
+<body class="bg-cream-100 text-navy-950 min-h-screen">
 
-  <!-- Navbar -->
-  <header class="bg-white border-b border-navy-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-      <div class="flex items-center">
-        <a href="/" class="transition-opacity hover:opacity-90">
-          <img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-10 sm:h-12 w-auto">
+  <div class="min-h-screen grid lg:grid-cols-2">
+
+    <!-- ══ LEFT PANEL — Editorial Brand Panel ══ -->
+    <div class="auth-left hidden lg:flex flex-col justify-between p-12 relative overflow-hidden">
+      <!-- Orbs -->
+      <div class="orb w-64 h-64 bg-gold-400 top-16 left-8" style="animation: float 7s ease-in-out infinite;"></div>
+      <div class="orb w-80 h-80 bg-navy-400 bottom-20 right-4" style="animation: float 9s ease-in-out infinite reverse;"></div>
+
+      <style>
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+        @media (prefers-reduced-motion: reduce) { .orb { animation: none !important; } }
+      </style>
+
+      <!-- Logo -->
+      <div class="relative z-10">
+        <a href="/" aria-label="Go to home page">
+          <img src="/images/Logo.png" alt="Digital Evolution Journal" class="h-10 w-auto" loading="eager">
         </a>
       </div>
-      <nav class="space-x-6 text-sm font-medium">
-        <a href="/" class="text-navy-500 hover:text-gold-500 transition-colors">Home</a>
-        <a href="/researches" class="text-navy-500 hover:text-gold-500 transition-colors">Published Papers</a>
-      </nav>
-    </div>
-  </header>
 
-  <!-- Login Card Section -->
-  <main class="flex-grow flex items-center justify-center py-16 px-4">
-    <div class="bg-white p-8 sm:p-10 rounded-xl border border-navy-100 shadow-sm w-full max-w-md space-y-6">
-      <div class="text-center space-y-2">
-        <h2 class="text-2xl font-bold font-editorial text-navy-900">Welcome Back</h2>
-        <p class="text-sm text-navy-500">Sign in to manage your submissions and reviews</p>
-      </div>
-
-      <form id="loginForm" class="space-y-4">
-        <div class="space-y-1">
-          <label class="block text-xs font-semibold text-navy-700 uppercase tracking-wider">Email Address</label>
-          <input id="email" type="email" class="w-full border border-navy-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 bg-white" placeholder="email@journal.com" required />
+      <!-- Editorial Quote / Value Prop -->
+      <div class="relative z-10 space-y-8">
+        <div class="space-y-2">
+          <p class="text-xs font-bold text-gold-400 uppercase tracking-widest">Welcome back</p>
+          <h2 class="text-4xl font-editorial font-bold text-white leading-tight">
+            Advancing the frontier of<br><em class="font-light text-gold-300">scientific knowledge</em>
+          </h2>
         </div>
-        <div class="space-y-1">
-          <div class="flex justify-between items-center">
-            <label class="block text-xs font-semibold text-navy-700 uppercase tracking-wider">Password</label>
-            <a href="/forgot-password" class="text-xs text-gold-500 hover:underline">Forgot password?</a>
+        <p class="text-white/50 leading-relaxed text-sm max-w-sm">
+          Sign in to manage your manuscript submissions, track review progress, and collaborate with the global research community.
+        </p>
+
+        <!-- Social Proof -->
+        <div class="flex gap-8">
+          <div>
+            <div class="text-2xl font-bold font-editorial text-white">500+</div>
+            <div class="text-xs text-white/40 mt-0.5">Published Papers</div>
           </div>
-          <input id="password" type="password" class="w-full border border-navy-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 bg-white" placeholder="••••••••" required />
+          <div>
+            <div class="text-2xl font-bold font-editorial text-white">120+</div>
+            <div class="text-xs text-white/40 mt-0.5">Expert Reviewers</div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold font-editorial text-white">48+</div>
+            <div class="text-xs text-white/40 mt-0.5">Countries</div>
+          </div>
         </div>
 
-        <div class="flex items-center text-sm">
-          <label class="flex items-center gap-2 text-navy-600 cursor-pointer">
-            <input type="checkbox" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" />
-            Keep me signed in
-          </label>
+        <!-- Testimonial -->
+        <div class="border-l-2 border-gold-500/40 pl-5 space-y-2">
+          <p class="text-white/60 text-sm italic leading-relaxed">
+            "The DEJ platform provided the most transparent and constructive review process I've experienced in 12 years of academic publishing."
+          </p>
+          <div class="text-xs text-white/30 font-medium">— Corresponding Author, 2025</div>
         </div>
-
-        <div id="loginError" class="text-red-600 text-xs text-center font-medium bg-red-50 py-2 rounded-lg empty:hidden"></div>
-
-        <button type="submit" class="w-full bg-navy-900 hover:bg-navy-800 text-white py-3 rounded-lg font-medium transition-all shadow-sm">
-          Sign In
-        </button>
-      </form>
-
-      <p class="text-sm text-center text-navy-500">
-        New to the journal?
-        <a href="/register" class="text-gold-500 hover:underline font-medium">Create an account</a>
-      </p>
-    </div>
-  </main>
-
-  <!-- Footer -->
-  <footer class="bg-navy-900 text-navy-400 text-xs py-8 border-t border-navy-800 text-center">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <div class="flex gap-4">
-        <a href="#" class="hover:text-navy-300">Privacy Policy</a>
-        <span>·</span>
-        <a href="#" class="hover:text-navy-300">Terms of Service</a>
       </div>
-      <div>© 2026 Digital Evolution Journal. All rights reserved.</div>
+
+      <!-- Bottom Links -->
+      <div class="relative z-10 flex gap-6 text-xs text-white/30">
+        <a href="/researches" class="hover:text-white/60 transition-colors">Browse Papers</a>
+        <a href="/about.html" class="hover:text-white/60 transition-colors">About DEJ</a>
+        <a href="#" class="hover:text-white/60 transition-colors">Privacy</a>
+      </div>
     </div>
-  </footer>
+
+    <!-- ══ RIGHT PANEL — Login Form ══ -->
+    <div class="flex flex-col min-h-screen lg:min-h-0">
+
+      <!-- Mobile header -->
+      <header class="lg:hidden bg-navy-950 border-b border-white/5 px-6 py-4">
+        <a href="/" aria-label="Digital Evolution Journal — Home">
+          <img src="/images/Logo.png" alt="Digital Evolution Journal" class="h-8 w-auto">
+        </a>
+      </header>
+
+      <main class="flex-1 flex items-center justify-center px-6 py-12 bg-cream-50" id="main-content">
+        <div class="w-full max-w-md">
+
+          <!-- Form Header -->
+          <div class="mb-8">
+            <h1 class="text-2xl font-editorial font-bold text-navy-900 mb-2">Sign in to your account</h1>
+            <p class="text-sm text-navy-500">
+              New to the journal?
+              <a href="/register" class="text-gold-600 hover:text-gold-700 font-semibold underline-offset-2 hover:underline">Create a free account</a>
+            </p>
+          </div>
+
+          <!-- Login Form -->
+          <form id="loginForm" novalidate class="space-y-5">
+
+            <!-- Email -->
+            <div class="form-group">
+              <input type="email" id="email" name="email" class="form-input" placeholder=" " required autocomplete="email">
+              <label for="email" class="form-label">Email address</label>
+              <p id="emailError" class="text-xs text-red-500 mt-1.5 hidden flex items-center gap-1">
+                <svg class="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                <span></span>
+              </p>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+              <input type="password" id="password" name="password" class="form-input pr-12" placeholder=" " required autocomplete="current-password">
+              <label for="password" class="form-label">Password</label>
+              <button type="button" id="togglePassword" aria-label="Toggle password visibility"
+                class="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-navy-400 hover:text-navy-700 transition-colors rounded">
+                <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+              </button>
+              <p id="passwordError" class="text-xs text-red-500 mt-1.5 hidden flex items-center gap-1">
+                <svg class="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                <span></span>
+              </p>
+            </div>
+
+            <!-- Remember + Forgot -->
+            <div class="flex items-center justify-between">
+              <label class="flex items-center gap-2 text-sm text-navy-600 cursor-pointer select-none">
+                <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-navy-300 text-gold-500 focus:ring-gold-500/20 cursor-pointer" style="accent-color:#f59e0b">
+                <span>Keep me signed in</span>
+              </label>
+              <a href="/forgot-password" class="text-sm text-gold-600 hover:text-gold-700 font-medium underline-offset-2 hover:underline">Forgot password?</a>
+            </div>
+
+            <!-- Server Error -->
+            <div id="loginError" role="alert" aria-live="assertive"
+              class="hidden items-center gap-2 bg-red-50 border border-red-100 text-red-700 text-sm px-4 py-3 rounded-xl">
+              <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              <span id="loginErrorText"></span>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" id="submitBtn"
+              class="btn-primary w-full text-white py-3.5 rounded-xl font-semibold text-sm shadow-lg min-h-[52px] flex items-center justify-center gap-2">
+              <span id="submitText">Sign In</span>
+              <svg id="submitSpinner" class="w-4 h-4 animate-spin hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+            </button>
+          </form>
+
+          <!-- Divider -->
+          <div class="relative my-6">
+            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-navy-100"></div></div>
+            <div class="relative flex justify-center"><span class="px-4 bg-cream-50 text-xs text-navy-400 font-medium">or continue as</span></div>
+          </div>
+
+          <!-- Alternative Links -->
+          <div class="grid grid-cols-2 gap-3">
+            <a href="/researches" class="flex items-center justify-center gap-2 py-3 border border-navy-200 rounded-xl text-sm text-navy-700 font-medium hover:bg-navy-50 transition-colors min-h-[48px]">
+              <svg class="w-4 h-4 text-navy-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              Browse Papers
+            </a>
+            <a href="/submit" class="flex items-center justify-center gap-2 py-3 border border-navy-200 rounded-xl text-sm text-navy-700 font-medium hover:bg-navy-50 transition-colors min-h-[48px]">
+              <svg class="w-4 h-4 text-navy-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+              Submit Paper
+            </a>
+          </div>
+
+        </div>
+      </main>
+
+      <!-- Right panel footer -->
+      <footer class="lg:hidden bg-cream-100 border-t border-navy-100 px-6 py-4 text-center text-xs text-navy-400">
+        © 2026 Digital Evolution Journal
+      </footer>
+    </div>
+  </div>
 
   <script>
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const errorDiv = document.getElementById('loginError');
-      errorDiv.textContent = '';
-      try {
-        const res = await fetch('/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
-        if (res.ok && data.status === 'ok') {
-          const params = new URLSearchParams(window.location.search);
-          const next = params.get('next') || '/dashboard/author';
-          window.location.href = next;
-        } else {
-          errorDiv.textContent = data.error || 'Login failed. Please check your credentials.';
-        }
-      } catch (err) {
-        errorDiv.textContent = 'A connection error occurred. Please try again.';
-      }
-    });
-  </script>
+  // ── Password toggle ──
+  document.getElementById('togglePassword').addEventListener('click', () => {
+    const pw = document.getElementById('password');
+    const isText = pw.type === 'text';
+    pw.type = isText ? 'password' : 'text';
+    document.getElementById('eyeIcon').innerHTML = isText
+      ? `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>`
+      : `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>`;
+  });
 
+  // ── Form validation & submit ──
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const errorDiv = document.getElementById('loginError');
+    const errorText = document.getElementById('loginErrorText');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const submitSpinner = document.getElementById('submitSpinner');
+
+    // Clear errors
+    errorDiv.classList.add('hidden');
+    errorDiv.classList.remove('flex');
+    [email, password].forEach(el => el.classList.remove('error'));
+
+    // Client validation
+    let hasError = false;
+    if (!email.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+      email.classList.add('error');
+      const ep = document.getElementById('emailError');
+      ep.classList.remove('hidden'); ep.classList.add('flex');
+      ep.querySelector('span').textContent = 'Please enter a valid email address.';
+      hasError = true;
+    }
+    if (!password.value || password.value.length < 6) {
+      password.classList.add('error');
+      const pp = document.getElementById('passwordError');
+      pp.classList.remove('hidden'); pp.classList.add('flex');
+      pp.querySelector('span').textContent = 'Password must be at least 6 characters.';
+      hasError = true;
+    }
+    if (hasError) return;
+
+    // Loading state
+    submitBtn.disabled = true;
+    submitText.textContent = 'Signing in…';
+    submitSpinner.classList.remove('hidden');
+
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.value, password: password.value })
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'ok') {
+        submitText.textContent = 'Redirecting…';
+        const params = new URLSearchParams(window.location.search);
+        window.location.href = params.get('next') || '/dashboard/author';
+      } else {
+        errorText.textContent = data.error || 'Login failed. Please check your credentials.';
+        errorDiv.classList.remove('hidden');
+        errorDiv.classList.add('flex');
+      }
+    } catch (err) {
+      errorText.textContent = 'A connection error occurred. Please try again.';
+      errorDiv.classList.remove('hidden');
+      errorDiv.classList.add('flex');
+    } finally {
+      if (!document.querySelector('html').classList.contains('redirecting')) {
+        submitBtn.disabled = false;
+        submitText.textContent = 'Sign In';
+        submitSpinner.classList.add('hidden');
+      }
+    }
+  });
+
+  // Clear field errors on input
+  ['email', 'password'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      document.getElementById(id).classList.remove('error');
+      document.getElementById(id + 'Error')?.classList.add('hidden');
+    });
+  });
+  </script>
 </body>
 </html>

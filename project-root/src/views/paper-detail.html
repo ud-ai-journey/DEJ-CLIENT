@@ -3,462 +3,537 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Paper Details - Digital Evolution Journal</title>
+  <meta name="description" content="Read the full peer-reviewed paper on the Digital Evolution Journal. Open access research publication."/>
+  <title id="pageTitle">Paper Details — Digital Evolution Journal</title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            serif: ['Merriweather', 'serif'],
-          },
+          fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Merriweather', 'serif'] },
           colors: {
-            navy: {
-              50: '#f8fafc',
-              100: '#f1f5f9',
-              200: '#e2e8f0',
-              300: '#cbd5e1',
-              400: '#94a3b8',
-              500: '#64748b',
-              600: '#475569',
-              700: '#334155',
-              800: '#1e293b',
-              900: '#0f172a',
-            },
-            gold: {
-              50: '#fdfdf6',
-              100: '#fbf9eb',
-              500: '#d97706',
-              600: '#b45309',
-              700: '#78350f',
-            }
+            navy: { 50:'#f0f4ff',100:'#e0e9ff',200:'#c0d2ff',300:'#93b0f8',400:'#6088ee',500:'#3d63d8',600:'#2949bc',700:'#1f3799',800:'#1e2e7a',900:'#0f1f5c',950:'#080f30' },
+            gold: { 50:'#fffbeb',100:'#fef3c7',400:'#fbbf24',500:'#f59e0b',600:'#d97706' },
+            cream: { 50:'#fdfdf6', 100:'#f9f8f0' }
           }
         }
       }
     }
   </script>
   <style>
+    .skip-link { position:absolute; left:-9999px; }
+    .skip-link:focus { position:fixed; top:1rem; left:1rem; padding:.75rem 1.5rem; background:#0f1f5c; color:white; border-radius:8px; font-weight:600; z-index:9999; }
     body { font-family: 'Inter', sans-serif; }
-    h1, h2, h3, h4, h5, h6, .font-editorial { font-family: 'Merriweather', serif; }
+    h1, h2, h3, .font-editorial { font-family: 'Merriweather', serif; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration:0.01ms !important; transition-duration:0.01ms !important; } }
+    *:focus-visible { outline: 2px solid #f59e0b; outline-offset: 3px; border-radius: 4px; }
+
+    /* Reading Progress Bar */
+    #readingProgress { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #f59e0b, #d97706); transform-origin: left; transform: scaleX(0); transition: transform 0.1s ease; z-index: 100; }
+
+    /* Skeleton shimmer */
+    .skeleton { background: linear-gradient(90deg, #e0e9ff 25%, #f0f4ff 50%, #e0e9ff 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* Article body typography */
+    .article-body { font-size: 16px; line-height: 1.8; color: #1e2e7a; font-family: 'Merriweather', serif; font-weight: 300; }
+    .article-body p { margin-bottom: 1.25rem; text-align: justify; hyphens: auto; }
+
+    /* Sticky sidebar */
+    .sidebar-sticky { position: sticky; top: 80px; }
+
+    /* Breadcrumb */
+    .breadcrumb-item + .breadcrumb-item::before { content: "›"; margin: 0 6px; color: #c0d2ff; }
+
+    /* Citation box */
+    .citation-box { font-family: 'Inter', monospace; font-size: 11px; line-height: 1.6; background: #f0f4ff; border-radius: 8px; padding: 12px; color: #1f3799; border: 1px solid #c0d2ff; }
+
+    /* Scroll-reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Author avatar gradient */
+    .author-avatar { background: linear-gradient(135deg, #1f3799, #0f1f5c); }
   </style>
 </head>
-<body class="text-navy-900 bg-[#f8fafc] min-h-screen flex flex-col justify-between">
+<body class="bg-cream-100 text-navy-950 min-h-screen flex flex-col">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <!-- Navbar -->
-  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-navy-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-      <div class="flex items-center">
-        <a href="/" class="transition-opacity hover:opacity-90">
-          <img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-10 sm:h-12 w-auto">
-        </a>
-      </div>
+  <!-- Reading Progress Bar -->
+  <div id="readingProgress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
 
-      <!-- Desktop Navigation -->
-      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
-        <a href="/" class="text-navy-500 hover:text-gold-500 transition-colors">Home</a>
-        <a href="/researches" class="text-navy-800 hover:text-gold-500 transition-colors">Published Papers</a>
-        <a href="/submit" class="text-navy-500 hover:text-gold-500 transition-colors">Submit Research</a>
-        <a href="/reviewer" class="text-navy-500 hover:text-gold-500 transition-colors">Review Paper</a>
+  <!-- ══ NAVBAR ══ -->
+  <header class="sticky top-0 z-50 bg-navy-950/95 backdrop-blur-md border-b border-white/5" role="banner">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+      <a href="/" aria-label="Digital Evolution Journal — Home" class="hover:opacity-80 transition-opacity">
+        <img src="/images/Logo.png" alt="Digital Evolution Journal" class="h-9 w-auto">
+      </a>
+      <nav class="hidden md:flex items-center space-x-1 text-sm font-medium" aria-label="Main navigation">
+        <a href="/" class="px-3 py-2 text-white/60 hover:text-gold-400 rounded-md transition-colors">Home</a>
+        <a href="/researches" class="px-3 py-2 text-white/60 hover:text-gold-400 rounded-md transition-colors">Published Papers</a>
+        <a href="/submit" class="px-3 py-2 text-white/60 hover:text-gold-400 rounded-md transition-colors">Submit Research</a>
+        <a href="/reviewer" class="px-3 py-2 text-white/60 hover:text-gold-400 rounded-md transition-colors">Reviewer Board</a>
         <span id="dashboardTab" class="relative hidden">
-          <button class="inline-flex items-center gap-1 text-navy-500 hover:text-gold-500 transition-colors font-medium">
+          <button id="dashboardBtn" aria-expanded="false" aria-haspopup="true" aria-controls="dashboardMenu"
+            class="px-3 py-2 text-white/60 hover:text-gold-400 rounded-md transition-colors inline-flex items-center gap-1 cursor-pointer min-h-[44px]">
             Dashboards
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <svg id="dashChevron" class="h-3.5 w-3.5 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
             </svg>
           </button>
-          <div class="absolute right-0 mt-2 w-44 bg-white border border-navy-100 rounded-md shadow-lg hidden py-1" id="dashboardMenu">
-            <a href="/dashboard/author" class="block px-4 py-2 text-navy-700 hover:bg-navy-50 hover:text-gold-500 transition-colors">Author</a>
-            <a href="/dashboard/reviewer" class="block px-4 py-2 text-navy-700 hover:bg-navy-50 hover:text-gold-500 transition-colors">Reviewer</a>
+          <div id="dashboardMenu" role="menu" class="absolute right-0 mt-2 w-48 bg-navy-900 border border-white/10 rounded-xl shadow-2xl hidden py-1.5" aria-labelledby="dashboardBtn">
+            <a href="/dashboard/author" role="menuitem" class="block px-4 py-2.5 text-white/70 hover:text-gold-400 hover:bg-white/5 text-sm transition-colors">Author Dashboard</a>
+            <a href="/dashboard/reviewer" role="menuitem" class="block px-4 py-2.5 text-white/70 hover:text-gold-400 hover:bg-white/5 text-sm transition-colors">Reviewer Dashboard</a>
           </div>
         </span>
-        <span id="authLinks" class="flex items-center gap-4 border-l border-navy-100 pl-8">
-          <a href="/login" class="text-navy-600 hover:text-gold-500 transition-colors">Login</a>
-          <a href="/register" class="bg-navy-900 text-white hover:bg-navy-800 transition-colors px-4 py-2 rounded font-medium shadow-sm">Register</a>
+        <span id="authLinks" class="flex items-center gap-2 pl-4 ml-2 border-l border-white/10">
+          <a href="/login" class="px-4 py-2 text-white/70 hover:text-white rounded-md text-sm transition-colors min-h-[44px] inline-flex items-center">Login</a>
+          <a href="/register" class="px-4 py-2 bg-gold-500 hover:bg-gold-600 text-white rounded-lg text-sm font-semibold transition-all min-h-[44px] inline-flex items-center">Register</a>
         </span>
       </nav>
-
-      <!-- Mobile Menu Button -->
-      <button id="mobileMenuButton" class="md:hidden p-2 text-navy-600 hover:text-navy-900 focus:outline-none transition-colors">
-        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
+      <button id="mobileMenuButton" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open navigation menu"
+        class="md:hidden p-2 text-white/70 hover:text-white rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
     </div>
-
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="md:hidden hidden bg-white border-t border-navy-100">
-      <div class="px-4 py-4 space-y-2">
-        <a href="/" class="block px-3 py-2 text-base font-medium text-navy-900 hover:bg-navy-50 rounded">Home</a>
-        <a href="/researches" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">Published Papers</a>
-        <a href="/submit" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">Submit Research</a>
-        <span id="mobileDashboardTab" class="hidden block border-t border-navy-50 pt-2">
-          <a href="/dashboard/author" class="block px-6 py-2 text-navy-600 hover:bg-navy-50 rounded">Author Dashboard</a>
-          <a href="/dashboard/reviewer" class="block px-6 py-2 text-navy-600 hover:bg-navy-50 rounded">Reviewer Dashboard</a>
+    <div id="mobileMenu" class="md:hidden hidden bg-navy-950 border-t border-white/5">
+      <div class="px-4 py-4 space-y-1">
+        <a href="/" class="block px-3 py-3 text-white/70 rounded-lg hover:bg-white/5">Home</a>
+        <a href="/researches" class="block px-3 py-3 text-white/70 rounded-lg hover:bg-white/5">Published Papers</a>
+        <a href="/submit" class="block px-3 py-3 text-white/70 rounded-lg hover:bg-white/5">Submit Research</a>
+        <span id="mobileDashboardTab" class="hidden block border-t border-white/10 pt-3 mt-3">
+          <a href="/dashboard/author" class="block px-3 py-2.5 text-white/70 rounded-lg hover:bg-white/5">Author Dashboard</a>
+          <a href="/dashboard/reviewer" class="block px-3 py-2.5 text-white/70 rounded-lg hover:bg-white/5">Reviewer Dashboard</a>
         </span>
-        <div id="mobileAuthLinks" class="border-t border-navy-100 pt-4 flex flex-col gap-2">
-          <a href="/login" class="block w-full text-center border border-navy-200 text-navy-700 px-4 py-2.5 rounded font-medium">Login</a>
-          <a href="/register" class="block w-full text-center bg-navy-900 text-white px-4 py-2.5 rounded font-medium">Register</a>
+        <div id="mobileAuthLinks" class="border-t border-white/10 pt-4 mt-3 flex flex-col gap-2">
+          <a href="/login" class="block w-full text-center border border-white/10 text-white/80 px-4 py-3 rounded-xl font-medium hover:bg-white/5">Login</a>
+          <a href="/register" class="block w-full text-center bg-gold-500 hover:bg-gold-600 text-white px-4 py-3 rounded-xl font-semibold">Register</a>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Content Container -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow space-y-8">
-    
-    <!-- Breadcrumbs -->
-    <nav class="text-xs font-semibold text-navy-400 uppercase tracking-wider">
-      <ol class="flex items-center space-x-2">
-        <li><a href="/" class="hover:text-gold-500 transition-colors">Home</a></li>
-        <li><span>/</span></li>
-        <li><a href="/researches" class="hover:text-gold-500 transition-colors">Research Catalog</a></li>
-        <li><span>/</span></li>
-        <li class="text-navy-800">Paper Details</li>
+  <!-- ══ MAIN ══ -->
+  <main id="main-content" class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center text-xs text-navy-400 font-medium" role="list">
+        <li class="breadcrumb-item"><a href="/" class="hover:text-navy-700 transition-colors">Home</a></li>
+        <li class="breadcrumb-item"><a href="/researches" class="hover:text-navy-700 transition-colors">Research Catalog</a></li>
+        <li class="breadcrumb-item text-navy-600" aria-current="page">Paper Details</li>
       </ol>
     </nav>
 
-    <!-- Main Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-      
-      <!-- Left: Article Content -->
-      <section class="lg:col-span-3 space-y-8">
-        
-        <!-- Header Card -->
-        <div class="bg-white border border-navy-100 rounded-xl p-6 sm:p-8 shadow-sm space-y-4">
-          <div class="flex flex-wrap items-center gap-2">
-            <span class="px-2.5 py-1 bg-gold-50 border border-gold-200 text-gold-700 text-[10px] font-bold uppercase tracking-wider rounded">
-              Research Article
-            </span>
-            <span class="px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold uppercase tracking-wider rounded">
-              Published
-            </span>
-          </div>
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
 
-          <h1 class="text-2xl sm:text-3xl font-bold font-editorial text-navy-900 leading-snug">
-            <!-- Dynamic title inserted here -->
-            Loading manuscript title...
-          </h1>
+      <!-- ═ LEFT: Article ═ -->
+      <section aria-labelledby="paper-title">
 
-          <div class="flex flex-wrap gap-4 text-xs font-medium text-navy-500 border-t border-navy-50 pt-4">
-            <div class="flex items-center gap-1.5">
-              <span>📅</span>
-              <span id="publishedDateLabel">Volume 1, Issue 1</span>
+        <!-- Article Header Card -->
+        <div class="bg-white border border-navy-100 rounded-2xl overflow-hidden shadow-sm mb-6 reveal">
+          <div class="h-1 bg-gradient-to-r from-navy-700 via-navy-600 to-gold-500"></div>
+          <div class="p-6 sm:p-8 space-y-5">
+            <!-- Badges -->
+            <div class="flex flex-wrap gap-2" id="paperBadges">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gold-50 border border-gold-200 text-gold-700 text-[10px] font-bold uppercase tracking-wider rounded-lg">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
+                Research Article
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold uppercase tracking-wider rounded-lg">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                Peer Reviewed
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-bold uppercase tracking-wider rounded-lg">
+                Open Access
+              </span>
             </div>
-            <div class="flex items-center gap-1.5">
-              <span>🔖</span>
-              <span>Open Access Archive</span>
+
+            <!-- Title -->
+            <h1 id="paper-title" class="text-2xl sm:text-3xl font-bold font-editorial text-navy-900 leading-tight">
+              <div class="skeleton h-8 rounded-lg mb-2 w-full" id="titleSkeleton"></div>
+              <div class="skeleton h-8 rounded-lg w-3/4 hidden" id="titleSkeleton2"></div>
+            </h1>
+
+            <!-- Meta row -->
+            <div id="paperMeta" class="flex flex-wrap gap-5 text-xs text-navy-500 pt-4 border-t border-navy-50">
+              <div class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-navy-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                <span id="publishedDateLabel">Loading publication date…</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-navy-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span id="readTimeLabel">Calculating read time…</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-navy-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span>Open Access Archive</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Abstract Card -->
-        <div class="bg-white border border-navy-100 rounded-xl p-6 sm:p-8 shadow-sm space-y-4">
-          <h2 class="text-lg font-bold font-editorial text-navy-900 border-b border-navy-50 pb-2">Abstract</h2>
-          <div class="prose max-w-none text-navy-700 text-sm leading-relaxed font-light text-justify" id="abstractText">
-            <!-- Dynamic abstract inserted here -->
-            <div class="animate-pulse space-y-2">
-              <div class="h-4 bg-navy-50 rounded"></div>
-              <div class="h-4 bg-navy-50 rounded w-5/6"></div>
-              <div class="h-4 bg-navy-50 rounded w-2/3"></div>
+        <!-- Abstract -->
+        <div class="bg-white border border-navy-100 rounded-2xl p-6 sm:p-8 shadow-sm mb-6 reveal" style="transition-delay:.1s">
+          <div class="flex items-center gap-3 mb-5 pb-4 border-b border-navy-50">
+            <div class="w-7 h-7 bg-navy-900 rounded-lg flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             </div>
+            <h2 class="text-lg font-bold font-editorial text-navy-900" id="abstractHeading">Abstract</h2>
+          </div>
+
+          <div id="abstractText" class="article-body space-y-2" aria-labelledby="abstractHeading">
+            <!-- Skeleton -->
+            <div class="skeleton h-4 rounded w-full mb-2"></div>
+            <div class="skeleton h-4 rounded w-11/12 mb-2"></div>
+            <div class="skeleton h-4 rounded w-4/5 mb-2"></div>
+            <div class="skeleton h-4 rounded w-full mb-2"></div>
+            <div class="skeleton h-4 rounded w-3/4"></div>
           </div>
         </div>
 
-        <!-- Download Card -->
-        <div class="bg-white border border-navy-100 rounded-xl p-6 sm:p-8 shadow-sm space-y-6">
-          <h2 class="text-lg font-bold font-editorial text-navy-900 border-b border-navy-50 pb-2">Download Document</h2>
-          
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between border border-navy-200 rounded-xl p-4 sm:p-6 bg-navy-50/50 gap-4">
+        <!-- Download Section -->
+        <div class="bg-white border border-navy-100 rounded-2xl p-6 sm:p-8 shadow-sm mb-6 reveal" style="transition-delay:.15s">
+          <div class="flex items-center gap-3 mb-5 pb-4 border-b border-navy-50">
+            <div class="w-7 h-7 bg-navy-900 rounded-lg flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <h2 class="text-lg font-bold font-editorial text-navy-900">Full Manuscript</h2>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-navy-50/60 border border-navy-100 rounded-xl p-5 gap-4">
             <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-white border border-navy-200 rounded-lg flex items-center justify-center shrink-0 shadow-sm text-2xl">
-                📄
+              <div class="w-12 h-12 bg-white border border-navy-200 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                <svg class="w-6 h-6 text-navy-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
               </div>
-              <div class="min-w-0">
-                <div class="text-sm font-semibold text-navy-900 truncate" id="fileNameLabel">
-                  Loading filename...
-                </div>
-                <div class="text-xs text-navy-400 mt-1" id="fileMetaLabel">
-                  Verifying manuscript details...
-                </div>
+              <div>
+                <div class="text-sm font-semibold text-navy-900" id="fileNameLabel">Loading manuscript file…</div>
+                <div class="text-xs text-navy-400 mt-0.5" id="fileMetaLabel">Verifying document details…</div>
               </div>
             </div>
-            <button id="downloadBtn" class="bg-navy-900 hover:bg-navy-800 text-white px-6 py-3 rounded-lg text-sm font-semibold transition-all shadow-sm shrink-0 flex items-center gap-2 justify-center">
-              <span>Download Paper</span>
+            <button id="downloadBtn"
+              class="inline-flex items-center justify-center gap-2 bg-navy-900 hover:bg-navy-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-navy-900/20 hover:shadow-navy-900/30 hover:-translate-y-0.5 min-h-[48px] cursor-pointer flex-shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+              Download Paper
             </button>
           </div>
         </div>
 
+        <!-- Citation Box -->
+        <div class="bg-white border border-navy-100 rounded-2xl p-6 sm:p-8 shadow-sm reveal" style="transition-delay:.2s">
+          <div class="flex items-center justify-between mb-5 pb-4 border-b border-navy-50">
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 bg-navy-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              </div>
+              <h2 class="text-lg font-bold font-editorial text-navy-900">Cite This Paper</h2>
+            </div>
+            <button id="copyCitation" aria-label="Copy citation to clipboard"
+              class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-navy-600 hover:text-navy-900 border border-navy-200 hover:border-navy-400 rounded-lg transition-colors min-h-[36px] cursor-pointer">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+              Copy
+            </button>
+          </div>
+          <div id="citationBox" class="citation-box" aria-label="Citation text">Loading citation…</div>
+        </div>
+
       </section>
 
-      <!-- Right: Author & Citation Sidebar -->
-      <aside class="space-y-6">
-        
-        <!-- Author Card -->
-        <div class="bg-white border border-navy-100 rounded-xl p-6 shadow-sm space-y-6">
-          <h3 class="text-sm font-bold font-editorial text-navy-900 border-b border-navy-50 pb-2">Author Information</h3>
-          
-          <div class="space-y-4">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-navy-100 rounded-full flex items-center justify-center text-lg text-navy-700 font-bold shrink-0">
-                👤
-              </div>
-              <div class="min-w-0">
-                <div class="font-semibold text-navy-900 text-sm break-words">
-                  <!-- Dynamic author name -->
-                  Loading...
-                </div>
-                <div class="text-xs text-navy-500 break-words">
-                  <!-- Dynamic author affiliation -->
-                  Loading...
-                </div>
-              </div>
-            </div>
+      <!-- ═ RIGHT: Sidebar ═ -->
+      <aside class="sidebar-sticky space-y-5" aria-label="Paper details sidebar">
 
-            <div class="space-y-2 border-t border-navy-50 pt-4 text-xs">
-              <div class="flex justify-between items-baseline gap-2">
-                <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px]">Location:</span>
-                <span class="text-navy-700 font-medium text-right" id="authorLocation">Loading...</span>
-              </div>
-              <div class="flex justify-between items-baseline gap-2">
-                <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px]">Email:</span>
-                <span class="text-navy-700 font-medium text-right truncate max-w-[150px]" id="authorEmail">Loading...</span>
-              </div>
+        <!-- Author Card -->
+        <div class="bg-white border border-navy-100 rounded-2xl p-5 shadow-sm reveal">
+          <h3 class="text-xs font-bold text-navy-400 uppercase tracking-widest mb-4 pb-3 border-b border-navy-50">Author</h3>
+          <div class="flex items-start gap-3 mb-4">
+            <div id="authorInitials" class="author-avatar w-12 h-12 rounded-xl flex items-center justify-center text-white text-lg font-bold flex-shrink-0" aria-hidden="true">?</div>
+            <div class="min-w-0">
+              <div id="authorName" class="font-semibold text-navy-900 text-sm break-words">Loading…</div>
+              <div id="authorAffiliation" class="text-xs text-navy-500 break-words mt-0.5">Loading…</div>
+            </div>
+          </div>
+          <div class="space-y-2 text-xs border-t border-navy-50 pt-4">
+            <div class="flex justify-between items-baseline gap-2">
+              <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px]">Location</span>
+              <span class="text-navy-700 font-medium text-right" id="authorLocation">—</span>
+            </div>
+            <div class="flex justify-between items-start gap-2">
+              <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px] flex-shrink-0">Email</span>
+              <span class="text-navy-700 font-medium text-right break-all" id="authorEmail">—</span>
             </div>
           </div>
         </div>
 
-        <!-- Citation/Metadata Card -->
-        <div class="bg-white border border-navy-100 rounded-xl p-6 shadow-sm space-y-4">
-          <h3 class="text-sm font-bold font-editorial text-navy-900 border-b border-navy-50 pb-2">Publication Details</h3>
-          
-          <div class="space-y-2 text-xs">
+        <!-- Publication Details -->
+        <div class="bg-white border border-navy-100 rounded-2xl p-5 shadow-sm reveal" style="transition-delay:.05s">
+          <h3 class="text-xs font-bold text-navy-400 uppercase tracking-widest mb-4 pb-3 border-b border-navy-50">Publication</h3>
+          <div class="space-y-3 text-xs">
             <div class="flex justify-between items-baseline gap-2">
-              <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px]">Journal:</span>
-              <span class="text-navy-900 font-semibold text-right">Digital Evolution Journal</span>
+              <span class="text-navy-400 font-semibold uppercase tracking-wider text-[9px]">Journal</span>
+              <span class="text-navy-900 font-semibold text-right text-[11px]">Digital Evolution Journal</span>
             </div>
-            <div class="flex justify-between items-baseline gap-2 border-t border-navy-50/50 pt-2">
-              <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px]">Volume:</span>
-              <span class="text-navy-900 font-medium text-right" id="detailVolume">1</span>
+            <div class="flex justify-between items-baseline gap-2 border-t border-navy-50 pt-3">
+              <span class="text-navy-400 font-semibold uppercase tracking-wider text-[9px]">Volume</span>
+              <span class="text-navy-800 font-medium" id="detailVolume">—</span>
             </div>
-            <div class="flex justify-between items-baseline gap-2 border-t border-navy-50/50 pt-2">
-              <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px]">Issue:</span>
-              <span class="text-navy-900 font-medium text-right" id="detailIssue">1</span>
+            <div class="flex justify-between items-baseline gap-2 border-t border-navy-50 pt-3">
+              <span class="text-navy-400 font-semibold uppercase tracking-wider text-[9px]">Issue</span>
+              <span class="text-navy-800 font-medium" id="detailIssue">—</span>
             </div>
-            <div class="flex justify-between items-baseline gap-2 border-t border-navy-50/50 pt-2">
-              <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px]">Pages:</span>
-              <span class="text-navy-900 font-medium text-right" id="detailPages">1-25</span>
+            <div class="flex justify-between items-baseline gap-2 border-t border-navy-50 pt-3">
+              <span class="text-navy-400 font-semibold uppercase tracking-wider text-[9px]">Pages</span>
+              <span class="text-navy-800 font-medium" id="detailPages">—</span>
             </div>
-            <div class="flex justify-between items-baseline gap-2 border-t border-navy-50/50 pt-2">
-              <span class="text-navy-400 uppercase tracking-wider font-semibold text-[9px]">Published:</span>
-              <span class="text-navy-900 font-medium text-right" id="detailPublished">Loading...</span>
+            <div class="flex justify-between items-baseline gap-2 border-t border-navy-50 pt-3">
+              <span class="text-navy-400 font-semibold uppercase tracking-wider text-[9px]">Published</span>
+              <span class="text-navy-800 font-medium text-right" id="detailPublished">—</span>
             </div>
+          </div>
+        </div>
+
+        <!-- Share Actions -->
+        <div class="bg-white border border-navy-100 rounded-2xl p-5 shadow-sm reveal" style="transition-delay:.1s">
+          <h3 class="text-xs font-bold text-navy-400 uppercase tracking-widest mb-4 pb-3 border-b border-navy-50">Share</h3>
+          <div class="flex flex-col gap-2">
+            <button onclick="navigator.share ? navigator.share({title:document.title,url:location.href}) : navigator.clipboard.writeText(location.href).then(()=>alert('Link copied!'))"
+              class="inline-flex items-center gap-2 px-4 py-2.5 bg-navy-50 hover:bg-navy-100 text-navy-700 rounded-xl text-xs font-semibold transition-colors min-h-[40px] cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+              Share This Paper
+            </button>
+            <a href="/researches" class="inline-flex items-center gap-2 px-4 py-2.5 border border-navy-200 hover:border-navy-300 text-navy-600 rounded-xl text-xs font-semibold transition-colors min-h-[40px]">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
+              Back to Catalog
+            </a>
           </div>
         </div>
 
       </aside>
-
     </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-navy-900 text-navy-400 text-xs py-8 border-t border-navy-800 text-center">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <div class="flex gap-4">
-        <a href="#" class="hover:text-navy-300">Privacy Policy</a>
-        <span>·</span>
-        <a href="#" class="hover:text-navy-300">Terms of Service</a>
+  <!-- ══ FOOTER ══ -->
+  <footer class="bg-navy-950 border-t border-white/5 mt-16" role="contentinfo">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="flex gap-6 text-xs text-white/25">
+          <a href="#" class="hover:text-white/50 transition-colors">Privacy Policy</a>
+          <span>·</span>
+          <a href="#" class="hover:text-white/50 transition-colors">Terms of Service</a>
+        </div>
+        <div class="text-xs text-white/25">© 2026 Digital Evolution Journal. All rights reserved.</div>
       </div>
-      <div>© 2026 Digital Evolution Journal. All rights reserved.</div>
     </div>
   </footer>
 
   <script>
-    // URL search parsing
-    function getQueryParam(param) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(param);
+  // ── Reading progress bar ──
+  const progressBar = document.getElementById('readingProgress');
+  window.addEventListener('scroll', () => {
+    const doc = document.documentElement;
+    const progress = doc.scrollTop / (doc.scrollHeight - doc.clientHeight);
+    progressBar.style.transform = `scaleX(${Math.min(progress, 1)})`;
+    progressBar.setAttribute('aria-valuenow', Math.round(progress * 100));
+  }, { passive: true });
+
+  // ── Scroll reveal ──
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // ── Helpers ──
+  function getQueryParam(k) { return new URLSearchParams(window.location.search).get(k); }
+  function formatDate(d) {
+    if (!d) return '—';
+    try { return new Date(d).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }); }
+    catch (e) { return d; }
+  }
+
+  // ── Paper loader ──
+  async function loadPaperDetails() {
+    const paperId = getQueryParam('id');
+    if (!paperId) { showError('Invalid paper reference. Please return to the catalog.'); return; }
+
+    try {
+      const res = await fetch(`/api/published/details?id=${paperId}`);
+      if (!res.ok) throw new Error('Paper not found.');
+      const data = await res.json();
+      if (data.success && data.paper) renderPaper(data.paper);
+      else throw new Error(data.error || 'Invalid paper data');
+    } catch (err) {
+      showError(err.message || 'Could not load paper details.');
+    }
+  }
+
+  function renderPaper(paper) {
+    const authorName = paper.author_name || 'Anonymous';
+    const affiliation = paper.affiliation || 'Institution not listed';
+    const abstract = paper.abstract || 'No abstract provided.';
+    const readMin = Math.max(5, Math.round(abstract.split(' ').length / 200) + 8);
+
+    // Title
+    document.title = `${paper.title} — Digital Evolution Journal`;
+    document.getElementById('titleSkeleton').outerHTML = `<span>${paper.title || 'Untitled'}</span>`;
+
+    // Meta
+    document.getElementById('publishedDateLabel').textContent =
+      `Volume ${paper.volume || 1}, Issue ${paper.issue || 1} · ${formatDate(paper.published_at)}`;
+    document.getElementById('readTimeLabel').textContent = `${readMin} min read`;
+
+    // Abstract
+    document.getElementById('abstractText').innerHTML = `<p>${abstract.replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br>')}</p>`;
+
+    // Author sidebar
+    const initials = authorName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+    document.getElementById('authorInitials').textContent = initials;
+    document.getElementById('authorName').textContent = authorName;
+    document.getElementById('authorAffiliation').textContent = affiliation;
+    document.getElementById('authorLocation').textContent = paper.author_location || paper.location || '—';
+    document.getElementById('authorEmail').textContent = paper.author_email || '—';
+
+    // Publication sidebar
+    document.getElementById('detailVolume').textContent = paper.volume || '1';
+    document.getElementById('detailIssue').textContent = paper.issue || '1';
+    document.getElementById('detailPages').textContent = paper.pages || '—';
+    document.getElementById('detailPublished').textContent = formatDate(paper.published_at);
+
+    // File
+    const mainFile = paper.submission_files && paper.submission_files[0];
+    if (mainFile) {
+      document.getElementById('fileNameLabel').textContent = mainFile.original_filename || 'manuscript.docx';
+      document.getElementById('fileMetaLabel').textContent =
+        `${((mainFile.byte_size || 0) / 1048576).toFixed(2)} MB · Manuscript Document`;
+    } else {
+      document.getElementById('fileNameLabel').textContent = 'manuscript.pdf';
+      document.getElementById('fileMetaLabel').textContent = 'Full manuscript document';
     }
 
-    function formatPublishedDate(dateStr) {
-      if (!dateStr) return 'N/A';
-      try {
-        return new Date(dateStr).toLocaleDateString(undefined, {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-      } catch (e) {
-        return dateStr;
-      }
-    }
+    // Citation
+    const year = paper.published_at ? new Date(paper.published_at).getFullYear() : new Date().getFullYear();
+    const citation = `${authorName}. (${year}). ${paper.title || 'Untitled'}. Digital Evolution Journal, ${paper.volume || 1}(${paper.issue || 1})${paper.pages ? ', ' + paper.pages : ''}. https://dej.journal/paper/${paper.id}`;
+    document.getElementById('citationBox').textContent = citation;
 
-    async function loadPaperDetails() {
-      const paperId = getQueryParam('id');
-      if (!paperId) {
-        showError('Invalid paper reference. Please return to catalog.');
-        return;
-      }
-
+    // Download
+    document.getElementById('downloadBtn').addEventListener('click', async () => {
       try {
-        const response = await fetch(`/api/published/details?id=${paperId}`);
-        if (!response.ok) {
-          throw new Error('Paper details not found.');
+        const authRes = await fetch('/api/me');
+        const auth = await authRes.json();
+        if (!auth.isAuthenticated) {
+          showAuthModal();
+          return;
         }
-        
-        const data = await response.json();
-        if (data.success && data.paper) {
-          renderPaper(data.paper);
+        if (mainFile && mainFile.storage_key) {
+          window.open(mainFile.storage_key, '_blank', 'noopener,noreferrer');
         } else {
-          throw new Error(data.error || 'Invalid metadata format');
+          alert('Download link is currently unavailable. Please contact the editorial team.');
         }
-      } catch (err) {
-        showError(err.message || 'Error syncing paper details.');
+      } catch (e) {
+        alert('Failed to authorize download. Please try again.');
       }
-    }
+    });
+  }
 
-    function renderPaper(paper) {
-      // Set titles
-      document.title = `${paper.title} - Digital Evolution Journal`;
-      document.querySelector('h1.text-2xl').textContent = paper.title;
-      
-      // Set abstract
-      const absText = document.getElementById('abstractText');
-      absText.textContent = paper.abstract || 'No abstract provided.';
-      
-      // Select files
-      const mainFile = paper.submission_files && paper.submission_files[0];
-      if (mainFile) {
-        document.getElementById('fileNameLabel').textContent = mainFile.original_filename || 'manuscript.docx';
-        document.getElementById('fileMetaLabel').textContent = `${((mainFile.byte_size || 0) / 1048576).toFixed(2)} MB · Microsoft Word`;
-        
-        // Wire up download trigger
-        const downloadBtn = document.getElementById('downloadBtn');
-        downloadBtn.onclick = async () => {
-          try {
-            const authRes = await fetch('/api/me');
-            const auth = await authRes.json();
-            
-            if (!auth.isAuthenticated) {
-              // Trigger login modal
-              const modal = document.createElement('div');
-              modal.className = 'fixed inset-0 bg-navy-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4';
-              modal.innerHTML = `
-                <div class="bg-white border border-navy-100 rounded-xl p-6 max-w-md w-full shadow-lg text-center space-y-6">
-                  <div class="text-4xl">🔒</div>
-                  <div class="space-y-2">
-                    <h3 class="text-lg font-bold font-editorial text-navy-900">Authentication Required</h3>
-                    <p class="text-xs text-navy-500">Please sign in to access and download published manuscripts.</p>
-                  </div>
-                  <div class="flex gap-3 justify-center pt-2">
-                    <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 border border-navy-200 hover:bg-navy-50 rounded-lg text-xs font-semibold text-navy-700">Cancel</button>
-                    <a href="/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}" class="bg-navy-900 hover:bg-navy-800 text-white px-6 py-2 rounded-lg text-xs font-semibold">Sign In</a>
-                  </div>
-                </div>
-              `;
-              document.body.appendChild(modal);
-              return;
-            }
+  function showAuthModal() {
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-navy-950/70 backdrop-blur-sm flex items-center justify-center z-50 p-4';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'modal-title');
+    modal.innerHTML = `
+      <div class="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl text-center space-y-5">
+        <div class="w-14 h-14 mx-auto bg-navy-50 rounded-2xl flex items-center justify-center">
+          <svg class="w-7 h-7 text-navy-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+        </div>
+        <div>
+          <h3 id="modal-title" class="text-lg font-bold font-editorial text-navy-900 mb-1">Sign In Required</h3>
+          <p class="text-sm text-navy-500">Please sign in to access and download published manuscripts.</p>
+        </div>
+        <div class="flex gap-3">
+          <button onclick="this.closest('.fixed').remove()" class="flex-1 px-4 py-3 border border-navy-200 text-navy-700 rounded-xl text-sm font-medium hover:bg-navy-50 transition-colors cursor-pointer">Cancel</button>
+          <a href="/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}"
+            class="flex-1 px-4 py-3 bg-navy-900 hover:bg-navy-800 text-white rounded-xl text-sm font-semibold transition-colors inline-flex items-center justify-center">Sign In</a>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+  }
 
-            if (mainFile.storage_key) {
-              window.open(mainFile.storage_key, '_blank');
-            } else {
-              alert('Download link currently unavailable.');
-            }
-          } catch (e) {
-            alert('Failed to authorize download.');
-          }
-        };
-      }
+  function showError(msg) {
+    document.querySelector('.grid').innerHTML = `
+      <div class="col-span-2 text-center py-20 space-y-5">
+        <div class="w-16 h-16 mx-auto bg-red-50 rounded-2xl flex items-center justify-center">
+          <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="font-editorial font-bold text-navy-900 text-xl mb-1">Could Not Load Paper</h2>
+          <p class="text-navy-500 text-sm">${msg}</p>
+        </div>
+        <a href="/researches" class="inline-flex items-center gap-2 px-6 py-3 bg-navy-900 hover:bg-navy-800 text-white rounded-xl text-sm font-semibold transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
+          Return to Catalog
+        </a>
+      </div>`;
+  }
 
-      // Sidebar author details
-      const nameDiv = document.querySelector('.font-semibold.text-navy-900');
-      const affDiv = document.querySelector('.text-xs.text-navy-500');
-      
-      if (nameDiv) nameDiv.textContent = paper.author_name || 'Unknown Author';
-      if (affDiv) affDiv.textContent = paper.affiliation || 'No affiliation logged';
-      
-      document.getElementById('authorLocation').textContent = paper.author_location || paper.location || 'N/A';
-      document.getElementById('authorEmail').textContent = paper.author_email || 'N/A';
+  // ── Copy citation ──
+  document.getElementById('copyCitation').addEventListener('click', async () => {
+    const text = document.getElementById('citationBox').textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      const btn = document.getElementById('copyCitation');
+      btn.innerHTML = `<svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Copied!`;
+      btn.classList.add('text-green-600', 'border-green-300');
+      setTimeout(() => { btn.innerHTML = `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg> Copy`; btn.classList.remove('text-green-600', 'border-green-300'); }, 2000);
+    } catch (e) {}
+  });
 
-      // Sidebar publication details
-      document.getElementById('detailVolume').textContent = paper.volume || '1';
-      document.getElementById('detailIssue').textContent = paper.issue || '1';
-      document.getElementById('detailPages').textContent = paper.pages || '1-25';
-      document.getElementById('detailPublished').textContent = formatPublishedDate(paper.published_at);
-      
-      // Header details label
-      document.getElementById('publishedDateLabel').textContent = `Volume ${paper.volume || 1}, Issue ${paper.issue || 1} · ${formatPublishedDate(paper.published_at)}`;
-    }
+  // ── Mobile menu ──
+  document.getElementById('mobileMenuButton').addEventListener('click', () => {
+    document.getElementById('mobileMenu').classList.toggle('hidden');
+  });
 
-    function showError(msg) {
-      const container = document.querySelector('.grid');
-      if (container) {
-        container.innerHTML = `
-          <div class="col-span-4 bg-red-50 border border-red-200 rounded-xl p-8 text-center space-y-4">
-            <div class="text-4xl">⚠️</div>
-            <h2 class="text-lg font-bold text-red-800">Error Accessing Manuscript</h2>
-            <p class="text-xs text-red-600 max-w-md mx-auto leading-relaxed">${msg}</p>
-            <a href="/researches" class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-lg text-xs font-semibold transition-colors">
-              Return to Catalog
-            </a>
-          </div>
-        `;
-      }
-    }
+  // ── Dashboard dropdown ──
+  const dashBtn = document.getElementById('dashboardBtn');
+  const dashMenu = document.getElementById('dashboardMenu');
+  if (dashBtn) {
+    let open = false;
+    dashBtn.addEventListener('click', e => {
+      e.stopPropagation(); open = !open;
+      dashMenu.classList.toggle('hidden', !open);
+      dashBtn.setAttribute('aria-expanded', String(open));
+    });
+    document.addEventListener('click', () => { open = false; dashMenu.classList.add('hidden'); dashBtn.setAttribute('aria-expanded', 'false'); });
+  }
 
-    // Auth state navbar sync
-    (async () => {
-      try {
-        const res = await fetch('/api/me', { credentials: 'include' });
-        const data = await res.json();
+  // ── Auth state ──
+  (async () => {
+    try {
+      const res = await fetch('/api/me', { credentials: 'include' });
+      const data = await res.json();
+      if (data && data.isAuthenticated) {
+        const u = data.user || {};
+        const displayName = u.name || u.email || 'User';
         const el = document.getElementById('authLinks');
-        const mobileEl = document.getElementById('mobileAuthLinks');
-        const dashTab = document.getElementById('dashboardTab');
-        const mobileDashTab = document.getElementById('mobileDashboardTab');
-        
-        if (data && data.isAuthenticated) {
-          const u = data.user || {};
-          const displayName = u.name || u.email || 'User';
-          const authContent = `
-            <span class="text-sm text-navy-600">Hello, ${displayName}</span>
-            <a href="/logout" class="border border-navy-200 hover:border-navy-400 px-3 py-1.5 rounded text-navy-700 transition-colors bg-white">Logout</a>
-          `;
-          const mobileAuthContent = `
-            <div class="text-sm text-navy-600 mb-2 font-medium">Hello, ${displayName}</div>
-            <a href="/logout" class="block w-full text-center border border-navy-200 px-4 py-2.5 rounded hover:bg-navy-50 transition-colors">Logout</a>
-          `;
-          
-          if (el) el.innerHTML = authContent;
-          if (mobileEl) mobileEl.innerHTML = mobileAuthContent;
-          
-          if (dashTab) {
-            dashTab.classList.remove('hidden');
-            const btn = dashTab.querySelector('button');
-            const menu = document.getElementById('dashboardMenu');
-            let open = false;
-            const toggle = (e) => { e?.preventDefault?.(); open = !open; menu.classList.toggle('hidden', !open); };
-            btn.addEventListener('click', toggle);
-            document.addEventListener('click', (e) => { if (!dashTab.contains(e.target)) { open = false; menu.classList.add('hidden'); } });
-          }
-          if (mobileDashTab) mobileDashTab.classList.remove('hidden');
-        }
-      } catch (e) {}
-    })();
+        if (el) el.innerHTML = `<div class="flex items-center gap-2 pl-4 ml-2 border-l border-white/10"><span class="text-sm text-white/70 hidden lg:block">${displayName}</span><a href="/logout" class="px-3 py-1.5 border border-white/10 text-white/60 hover:text-white rounded-lg transition-colors text-xs min-h-[44px] inline-flex items-center">Logout</a></div>`;
+        const dash = document.getElementById('dashboardTab');
+        if (dash) dash.classList.remove('hidden');
+        const mobileDash = document.getElementById('mobileDashboardTab');
+        if (mobileDash) mobileDash.classList.remove('hidden');
+      }
+    } catch (e) {}
+  })();
 
-    // Mobile menu toggle
-    const mobileMenuButton = document.getElementById('mobileMenuButton');
-    const mobileMenu = document.getElementById('mobileMenu');
-    if (mobileMenuButton && mobileMenu) {
-      mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-    }
-
-    loadPaperDetails();
+  loadPaperDetails();
   </script>
-
 </body>
 </html>
