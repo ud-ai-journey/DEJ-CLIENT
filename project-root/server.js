@@ -123,13 +123,12 @@ const protectedPages = [
   'submit',
   'dashboard/author',
   'dashboard/reviewer'
-  
 ];
+
+const pageAuthMiddleware = hasAuthConfig ? requiresAuth() : (req, res, next) => next();
+
 protectedPages.forEach(page => {
-  // Always require Auth0 authentication for protected pages
-  const authMiddleware = requiresAuth();
-  
-  app.get(`/${page}`, authMiddleware, (req, res) => {
+  app.get(`/${page}`, pageAuthMiddleware, (req, res) => {
     const file = page.includes('dashboard') ? `${page.replace('/', '-')}.html` : `${page}.html`;
     res.sendFile(path.join(__dirname, 'src', 'views', file));
   });
@@ -137,12 +136,11 @@ protectedPages.forEach(page => {
 
 // --- Login and register routes now handled by Auth0 ---
 app.get('/login', (req, res) => {
-  const returnTo = req.query.next || '/dashboard/author';
-  
   if (!hasAuthConfig) {
-    return res.status(500).send('Auth0 is not configured. Please check your environment variables.');
+    return res.sendFile(path.join(__dirname, 'src', 'views', 'login.html'));
   }
   
+  const returnTo = req.query.next || '/dashboard/author';
   try {
     if (!res.oidc) {
       console.error('Login error: res.oidc is undefined');
@@ -156,12 +154,11 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-  const returnTo = '/dashboard/author';
-  
   if (!hasAuthConfig) {
-    return res.status(500).send('Auth0 is not configured. Please check your environment variables.');
+    return res.sendFile(path.join(__dirname, 'src', 'views', 'register.html'));
   }
-  
+
+  const returnTo = '/dashboard/author';
   try {
     if (!res.oidc) {
       console.error('Register error: res.oidc is undefined');
