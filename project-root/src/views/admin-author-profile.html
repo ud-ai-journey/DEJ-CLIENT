@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Author Profile - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .slide-up { animation: slideUp 0.6s ease-out; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <img src="/images/Logo.png" alt="DEJ Logo" class="h-8 w-auto mr-3">
+                    <nav class="flex items-center space-x-2 text-sm text-gray-500">
+                        <a href="/admin" class="hover:text-gray-700">Admin</a>
+                        <i class="fas fa-chevron-right text-xs"></i>
+                        <a href="/admin/authors" class="hover:text-gray-700">Authors</a>
+                        <i class="fas fa-chevron-right text-xs"></i>
+                        <span class="text-gray-900 font-medium" id="breadcrumb-name">Author Profile</span>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600" id="admin-name">Loading...</span>
+                    <button onclick="adminLogout()" class="text-red-600 hover:text-red-700 text-sm font-medium">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading State -->
+    <div id="loading-state" class="max-w-7xl mx-auto p-8">
+        <div class="text-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p class="text-gray-600">Loading author profile...</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="max-w-7xl mx-auto p-8 hidden">
+        <!-- Author Header -->
+        <div class="bg-white rounded-xl shadow-sm p-8 mb-8 fade-in">
+            <div class="flex items-start justify-between">
+                <div class="flex items-center space-x-6">
+                    <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-blue-600 text-3xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900" id="author-name">Loading...</h1>
+                        <p class="text-lg text-gray-600 mt-1" id="author-email">Loading...</p>
+                        <p class="text-gray-500 mt-1" id="author-affiliation">Loading...</p>
+                        <div class="flex items-center space-x-3 mt-3">
+                            <span class="px-3 py-1 text-sm font-medium rounded-full" id="author-status">Loading...</span>
+                            <span class="text-sm text-gray-500" id="author-joined">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex space-x-3">
+                    <button id="edit-author-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium">
+                        <i class="fas fa-edit mr-2"></i>
+                        Edit Profile
+                    </button>
+                    <button id="send-message-btn" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium">
+                        <i class="fas fa-envelope mr-2"></i>
+                        Send Message
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Author Details -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Contact Information -->
+                <div class="bg-white rounded-xl shadow-sm p-6 slide-up">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Contact Information</h2>
+                    <dl class="space-y-3">
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Email</dt>
+                            <dd class="text-sm text-gray-900" id="contact-email">Loading...</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Affiliation</dt>
+                            <dd class="text-sm text-gray-900" id="contact-affiliation">Loading...</dd>
+                        </div>
+                       
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Status</dt>
+                            <dd class="text-sm" id="contact-status">Loading...</dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <!-- Statistics -->
+                <div class="bg-white rounded-xl shadow-sm p-6 slide-up" style="animation-delay: 0.1s">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Statistics</h2>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Total Submissions</span>
+                            <span class="text-lg font-semibold text-blue-600" id="stat-submissions">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Published Papers</span>
+                            <span class="text-lg font-semibold text-green-600" id="stat-published">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Under Review</span>
+                            <span class="text-lg font-semibold text-yellow-600" id="stat-under-review">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Success Rate</span>
+                            <span class="text-lg font-semibold text-purple-600" id="stat-success-rate">0%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Collaborations</span>
+                            <span class="text-lg font-semibold text-indigo-600" id="stat-collaborations">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Avg Review Score</span>
+                            <span class="text-lg font-semibold text-pink-600" id="stat-avg-score">N/A</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-xl shadow-sm p-6 slide-up" style="animation-delay: 0.2s">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+                    <div class="space-y-3">
+                        <button id="view-submissions-btn" class="w-full flex items-center justify-center px-4 py-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors">
+                            <i class="fas fa-file-alt mr-2"></i>
+                            View All Submissions
+                        </button>
+                        <button id="create-submission-btn" class="w-full flex items-center justify-center px-4 py-3 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>
+                            Create New Submission
+                        </button>
+                        <button id="export-data-btn" class="w-full flex items-center justify-center px-4 py-3 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors">
+                            <i class="fas fa-download mr-2"></i>
+                            Export Author Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Submissions and Activity -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Submissions List -->
+                <div class="bg-white rounded-xl shadow-sm slide-up" style="animation-delay: 0.3s">
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-lg font-semibold text-gray-900">Submissions</h2>
+                            <div class="flex space-x-2">
+                                <select id="submission-filter" class="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                    <option value="">All Submissions</option>
+                                    <option value="draft">Draft</option>
+                                    <option value="submitted">Submitted</option>
+                                    <option value="under_review">Under Review</option>
+                                    <option value="revision_required">Revision Required</option>
+                                    <option value="accepted">Accepted</option>
+                                    <option value="published">Published</option>
+                                    <option value="rejected">Rejected</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="submissions-container" class="divide-y divide-gray-200">
+                        <!-- Loading state -->
+                        <div id="submissions-loading" class="p-6 text-center">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                            <p class="text-gray-600">Loading submissions...</p>
+                        </div>
+                        
+                        <!-- Empty state -->
+                        <div id="no-submissions" class="p-12 text-center hidden">
+                            <i class="fas fa-file-alt text-gray-300 text-4xl mb-4"></i>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">No submissions found</h3>
+                            <p class="text-gray-600">This author hasn't submitted any papers yet.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Timeline -->
+                <div class="bg-white rounded-xl shadow-sm slide-up" style="animation-delay: 0.4s">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-900">Recent Activity</h2>
+                    </div>
+                    
+                    <div id="activity-container" class="p-6">
+                        <!-- Loading state -->
+                        <div id="activity-loading" class="text-center">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                            <p class="text-gray-600">Loading activity...</p>
+                        </div>
+                        
+                        <!-- Empty state -->
+                        <div id="no-activity" class="text-center hidden">
+                            <i class="fas fa-clock text-gray-300 text-4xl mb-4"></i>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">No recent activity</h3>
+                            <p class="text-gray-600">No recent activity for this author.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Author Modal -->
+    <div id="edit-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-xl max-w-lg w-full">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-900">Edit Author Profile</h3>
+                        <button id="close-edit-modal" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <form id="edit-form" class="p-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                            <input type="text" id="edit-full-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" id="edit-email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" readonly>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Affiliation</label>
+                            <input type="text" id="edit-affiliation" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                            <select id="edit-status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" id="cancel-edit" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin Authentication Check
+        function checkAdminAuth() {
+            const adminAuth = localStorage.getItem('adminAuthenticated');
+            if (adminAuth !== 'true') {
+                window.location.href = '/admin-login';
+                return false;
+            }
+            return true;
+        }
+
+        // Logout function
+        function adminLogout() {
+            localStorage.removeItem('adminAuthenticated');
+            window.location.href = '/admin-login';
+        }
+
+        // Check authentication on page load
+        if (!checkAdminAuth()) {
+            // Will redirect to login page
+        }
+
+        let authorEmail = null;
+        let authorData = null;
+
+        // Admin token helpers
+        function generateAdminToken() {
+            return 'admin-session-loratech-' + new Date().toDateString();
+        }
+
+        function getAdminToken() {
+            let token = localStorage.getItem('adminToken');
+            if (!token) {
+                token = generateAdminToken();
+                localStorage.setItem('adminToken', token);
+            }
+            return token;
+        }
+
+        async function authenticatedFetch(url, options = {}) {
+            const token = getAdminToken();
+            const headers = {
+                'admin-token': token,
+                ...(options.headers || {})
+            };
+
+            const fetchOptions = {
+                ...options,
+                headers
+            };
+
+            return fetch(url, fetchOptions);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get author email from URL path
+            const pathParts = window.location.pathname.split('/');
+            authorEmail = decodeURIComponent(pathParts[pathParts.length - 1]);
+            
+            getAdminToken();
+            loadUserInfo();
+            loadAuthorProfile();
+            setupEventListeners();
+        });
+
+        // Load user information
+        async function loadUserInfo() {
+            try {
+                // For hardcoded admin auth, just set admin name
+                document.getElementById('admin-name').textContent = 'Admin User';
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                document.getElementById('admin-name').textContent = 'Admin';
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('edit-author-btn').addEventListener('click', openEditModal);
+            document.getElementById('send-message-btn').addEventListener('click', sendMessage);
+            document.getElementById('view-submissions-btn').addEventListener('click', viewAllSubmissions);
+            document.getElementById('create-submission-btn').addEventListener('click', createSubmission);
+            document.getElementById('export-data-btn').addEventListener('click', exportAuthorData);
+            
+            // Modal events
+            document.getElementById('close-edit-modal').addEventListener('click', closeEditModal);
+            document.getElementById('cancel-edit').addEventListener('click', closeEditModal);
+            document.getElementById('edit-form').addEventListener('submit', saveAuthorChanges);
+            
+            // Filter events
+            document.getElementById('submission-filter').addEventListener('change', filterSubmissions);
+        }
+
+        // Load author profile
+        async function loadAuthorProfile() {
+            try {
+                const response = await authenticatedFetch(`/api/admin/authors/${encodeURIComponent(authorEmail)}`);
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        showError('Author not found');
+                        return;
+                    }
+                    throw new Error('Failed to load author profile');
+                }
+                
+                authorData = await response.json();
+                displayAuthorProfile(authorData);
+                await loadSubmissions();
+                
+            } catch (error) {
+                console.error('Error loading author profile:', error);
+                showError('Failed to load author profile');
+            } finally {
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+            }
+        }
+
+        // Display author profile
+        function displayAuthorProfile(author) {
+            // Update breadcrumb
+            document.getElementById('breadcrumb-name').textContent = author.full_name;
+            
+            // Header information
+            document.getElementById('author-name').textContent = author.full_name;
+            document.getElementById('author-email').textContent = author.email;
+            document.getElementById('author-affiliation').textContent = author.affiliation || 'No affiliation provided';
+            
+            // Status badge
+            const statusElement = document.getElementById('author-status');
+            const statusColor = getStatusColor(author.status || 'active');
+            statusElement.className = `px-3 py-1 text-sm font-medium rounded-full ${statusColor.bg} ${statusColor.text}`;
+            statusElement.textContent = (author.status || 'active').charAt(0).toUpperCase() + (author.status || 'active').slice(1);
+            
+            // Join date
+            document.getElementById('author-joined').textContent = `Joined ${formatDate(author.created_at)}`;
+            
+            // Contact information
+            document.getElementById('contact-email').textContent = author.email;
+            document.getElementById('contact-affiliation').textContent = author.affiliation || 'Not provided';
+           
+            document.getElementById('contact-status').innerHTML = `<span class="px-2 py-1 text-xs font-medium rounded-full ${statusColor.bg} ${statusColor.text}">${author.status || 'Active'}</span>`;
+            
+            // Statistics
+            document.getElementById('stat-submissions').textContent = author.statistics?.total || 0;
+            document.getElementById('stat-published').textContent = author.statistics?.published_count || 0;
+            document.getElementById('stat-under-review').textContent = 
+                (author.statistics?.by_status?.under_review || 0) + (author.statistics?.by_status?.submitted || 0);
+            
+            // Calculate success rate
+            const total = author.statistics?.total || 0;
+            const published = author.statistics?.published_count || 0;
+            const successRate = total > 0 ? Math.round((published / total) * 100) : 0;
+            document.getElementById('stat-success-rate').textContent = `${successRate}%`;
+            
+            // Collaboration count
+            document.getElementById('stat-collaborations').textContent = author.statistics?.collaboration_count || 0;
+            
+            // Average review score
+            const avgScore = author.statistics?.average_review_score || 0;
+            document.getElementById('stat-avg-score').textContent = avgScore > 0 ? avgScore.toFixed(1) : 'N/A';
+        }
+
+        // Load author submissions
+        async function loadSubmissions() {
+            try {
+                const filter = document.getElementById('submission-filter').value;
+                const params = new URLSearchParams({ author_email: authorEmail });
+                if (filter) params.append('status', filter);
+                
+                const response = await authenticatedFetch(`/api/admin/submissions?${params}`);
+                if (!response.ok) {
+                    throw new Error('Failed to load submissions');
+                }
+                
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load submissions');
+                }
+
+                displaySubmissions(data.submissions || []);
+                
+            } catch (error) {
+                console.error('Error loading submissions:', error);
+                showError('Failed to load submissions');
+            }
+        }
+
+        // Display submissions
+        function displaySubmissions(submissions) {
+            const container = document.getElementById('submissions-container');
+            const loading = document.getElementById('submissions-loading');
+            const noSubmissions = document.getElementById('no-submissions');
+            
+            loading.classList.add('hidden');
+            
+            if (!submissions || submissions.length === 0) {
+                noSubmissions.classList.remove('hidden');
+                return;
+            }
+            
+            noSubmissions.classList.add('hidden');
+            
+            const submissionsHTML = submissions.map(submission => createSubmissionCard(submission)).join('');
+            container.innerHTML = submissionsHTML;
+        }
+
+        // Create submission card
+        function createSubmissionCard(submission) {
+            const statusColor = getSubmissionStatusColor(submission.status);
+            
+            return `
+                <div class="p-6 hover:bg-gray-50">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <h3 class="text-lg font-medium text-gray-900 truncate">
+                                    <a href="/admin/submissions/${submission.id}" class="hover:text-blue-600">${submission.title}</a>
+                                </h3>
+                                <span class="px-2 py-1 text-xs font-medium rounded-full ${statusColor.bg} ${statusColor.text}">
+                                    ${submission.status.replace('_', ' ').toUpperCase()}
+                                </span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3 line-clamp-2">${submission.abstract || 'No abstract provided'}</p>
+                            <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                <div class="flex items-center">
+                                    <i class="fas fa-calendar mr-1"></i>
+                                    Submitted ${formatDate(submission.created_at)}
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-file-alt mr-1"></i>
+                                    ${submission.paper_type || 'Research Paper'}
+                                </div>
+                                ${submission.reviewer_count ? `
+                                <div class="flex items-center">
+                                    <i class="fas fa-users mr-1"></i>
+                                    ${submission.reviewer_count} reviewer${submission.reviewer_count !== 1 ? 's' : ''}
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2 ml-4">
+                            <a href="/admin/submissions/${submission.id}" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Filter submissions
+        function filterSubmissions() {
+            document.getElementById('submissions-loading').classList.remove('hidden');
+            loadSubmissions();
+        }
+
+        // Open edit modal
+        function openEditModal() {
+            if (!authorData) return;
+            
+            document.getElementById('edit-full-name').value = authorData.full_name || '';
+            document.getElementById('edit-email').value = authorData.email || '';
+            document.getElementById('edit-affiliation').value = authorData.affiliation || '';
+            document.getElementById('edit-status').value = authorData.status || 'active';
+            
+            document.getElementById('edit-modal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        // Close edit modal
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // Save author changes
+        async function saveAuthorChanges(e) {
+            e.preventDefault();
+            
+            try {
+                const formData = {
+                    full_name: document.getElementById('edit-full-name').value.trim(),
+                    affiliation: document.getElementById('edit-affiliation').value.trim(),
+                    status: document.getElementById('edit-status').value
+                };
+                
+                const response = await authenticatedFetch(`/api/admin/authors/${encodeURIComponent(authorEmail)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to update author profile');
+                }
+                
+                const updatedAuthor = await response.json();
+                authorData = updatedAuthor;
+                displayAuthorProfile(updatedAuthor);
+                closeEditModal();
+                showSuccess('Author profile updated successfully!');
+                
+            } catch (error) {
+                console.error('Error saving author changes:', error);
+                showError('Failed to update author profile');
+            }
+        }
+
+        // Action functions
+        function sendMessage() {
+            alert(`Send message to ${authorData.full_name} - Feature coming soon!`);
+        }
+
+        function viewAllSubmissions() {
+            window.location.href = `/admin/submissions?author=${encodeURIComponent(authorEmail)}`;
+        }
+
+        function createSubmission() {
+            alert(`Create submission for ${authorData.full_name} - Feature coming soon!`);
+        }
+
+        async function exportAuthorData() {
+            try {
+                const response = await authenticatedFetch(`/api/admin/authors/${encodeURIComponent(authorEmail)}?export=true`);
+                if (!response.ok) {
+                    throw new Error('Failed to export author data');
+                }
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `author_${authorEmail.replace('@', '_')}_${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                
+                showSuccess('Author data exported successfully!');
+            } catch (error) {
+                console.error('Error exporting author data:', error);
+                showError('Failed to export author data');
+            }
+        }
+
+        // Utility functions
+        function getStatusColor(status) {
+            const colors = {
+                active: { bg: 'bg-green-100', text: 'text-green-800' },
+                verified: { bg: 'bg-blue-100', text: 'text-blue-800' },
+                pending: { bg: 'bg-yellow-100', text: 'text-yellow-800' },
+                inactive: { bg: 'bg-gray-100', text: 'text-gray-800' },
+                suspended: { bg: 'bg-red-100', text: 'text-red-800' }
+            };
+            return colors[status] || colors.active;
+        }
+
+        function getSubmissionStatusColor(status) {
+            const colors = {
+                draft: { bg: 'bg-gray-100', text: 'text-gray-800' },
+                submitted: { bg: 'bg-blue-100', text: 'text-blue-800' },
+                under_review: { bg: 'bg-yellow-100', text: 'text-yellow-800' },
+                revision_required: { bg: 'bg-orange-100', text: 'text-orange-800' },
+                accepted: { bg: 'bg-green-100', text: 'text-green-800' },
+                published: { bg: 'bg-indigo-100', text: 'text-indigo-800' },
+                rejected: { bg: 'bg-red-100', text: 'text-red-800' }
+            };
+            return colors[status] || colors.draft;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function showError(message) {
+            console.error(message);
+            alert(message); // Simple fallback
+        }
+
+        function showSuccess(message) {
+            console.log(message);
+            alert(message); // Simple fallback
+        }
+    </script>
+</body>
+</html>

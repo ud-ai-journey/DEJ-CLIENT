@@ -1,0 +1,6 @@
+# Deployment configuration for Edge Functions
+[functions.admin-user-management]
+  verify_jwt = true
+  
+[functions.admin-submissions]
+  verify_jwt = true

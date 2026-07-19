@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Published Researches - Digital Evolution Journal</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto', sans-serif; }
+    h1, h2, h3, h4 { font-family: 'Lato', sans-serif; }
+  </style>
+</head>
+<body class="text-[#1A1A2E] bg-white">
+
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-white shadow-sm">
+    <div class="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div class="text-xl font-bold font-lato">
+        <a href="/"><img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-12 sm:h-14 w-auto"></a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center space-x-6 text-sm">
+        <a href="/" class="hover:text-[#3F72AF]">Home</a>
+        <a href="/researches" class="text-[#3F72AF] font-semibold">Published Papers</a>
+        <a href="/submit" class="hover:text-[#3F72AF]">Submit Research</a>
+        <a href="/reviewer" class="hover:text-[#3F72AF]">Review Paper</a>
+        <a href="/about.html" class="hover:text-[#3F72AF]">About</a>
+        <input type="text" placeholder="Search" class="border p-1 px-2 rounded text-sm hidden lg:block" />
+        <span id="dashboardTab" class="relative hidden">
+          <button class="inline-flex items-center gap-1 px-3 py-1 rounded hover:bg-gray-100">Dashboards
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/></svg>
+          </button>
+          <div class="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg hidden" id="dashboardMenu">
+            <a href="/dashboard/author" class="block px-4 py-2 hover:bg-gray-100">Author</a>
+            <a href="/dashboard/reviewer" class="block px-4 py-2 hover:bg-gray-100">Reviewer</a>
+          </div>
+        </span>
+        <span id="authLinks" class="flex items-center gap-2">
+          <a href="/login" class="bg-[#F9A826] hover:bg-[#e28e0c] text-white px-4 lg:px-6 py-1 rounded text-sm">Login</a>
+          <a href="/register" class="bg-[#3F72AF] hover:bg-[#345b8f] text-white text-sm px-3 lg:px-4 py-1 rounded">Register</a>
+        </span>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobileMenuButton" class="md:hidden p-2 text-gray-600 focus:outline-none">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
+      <div class="px-4 py-2 space-y-1">
+        <a href="/" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Home</a>
+        <a href="/researches" class="block px-3 py-2 text-base bg-[#3F72AF] text-white rounded">Published Papers</a>
+        <a href="/submit" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Submit Research</a>
+        <a href="/reviewer" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Review Paper</a>
+        <a href="/about.html" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">About</a>
+        <div class="px-3 py-2">
+          <input type="text" placeholder="Search" class="w-full border p-2 rounded text-sm" />
+        </div>
+        <span id="mobileDashboardTab" class="hidden">
+          <div class="px-3 py-2">
+            <div class="font-medium text-gray-900 mb-2">Dashboards</div>
+            <a href="/dashboard/author" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Author</a>
+            <a href="/dashboard/reviewer" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Reviewer</a>
+          </div>
+        </span>
+        <div id="mobileAuthLinks" class="px-3 py-2 space-y-2">
+          <a href="/login" class="block w-full text-center bg-[#F9A826] hover:bg-[#e28e0c] text-white px-4 py-2 rounded">Login</a>
+          <a href="/register" class="block w-full text-center bg-[#3F72AF] hover:bg-[#345b8f] text-white px-4 py-2 rounded">Register</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative bg-gradient-to-br from-[#1A1A2E] via-[#16213E] to-[#0F3460] text-white py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+    <div class="relative max-w-4xl mx-auto text-center">
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold font-lato leading-tight mb-4">
+        Published <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F9A826] to-[#FFD23F]">Research Papers</span>
+      </h1>
+      <p class="text-gray-300 max-w-2xl mx-auto text-lg sm:text-xl leading-relaxed">
+        Discover cutting-edge research from leading institutions worldwide. Our peer-reviewed publications advance knowledge across diverse fields of study.
+      </p>
+      <div class="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+        <div class="flex items-center gap-2 text-sm text-gray-400">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+          </svg>
+          <span>Latest publications updated daily</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filters and Controls -->
+  <section class="bg-white border-b border-gray-100 px-4 sm:px-6 lg:px-8 py-12">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+
+        <!-- Filters -->
+        <div class="flex flex-wrap items-center gap-6">
+          <div class="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-5 py-3 shadow-sm hover:shadow-md transition-shadow duration-200">
+            <svg class="w-5 h-5 text-[#3F72AF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <label for="yearFilter" class="text-sm font-semibold text-gray-700">Year:</label>
+            <select id="yearFilter" class="bg-transparent border-none text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]/20 rounded-md px-2 py-1">
+              <option value="">All Years</option>
+              <option value="2025">2025</option>
+              <option value="2024">2024</option>
+              <option value="2023">2023</option>
+            </select>
+          </div>
+
+          <div class="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-5 py-3 shadow-sm hover:shadow-md transition-shadow duration-200">
+            <svg class="w-5 h-5 text-[#3F72AF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+            </svg>
+            <label for="sortBy" class="text-sm font-semibold text-gray-700">Sort by:</label>
+            <select id="sortBy" class="bg-transparent border-none text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]/20 rounded-md px-2 py-1">
+              <option value="date-desc">Newest First</option>
+              <option value="date-asc">Oldest First</option>
+              <option value="title-asc">Title A-Z</option>
+              <option value="title-desc">Title Z-A</option>
+              <option value="author-asc">Author A-Z</option>
+              <option value="author-desc">Author Z-A</option>
+            </select>
+          </div>
+
+          <div class="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-5 py-3 shadow-sm hover:shadow-md transition-shadow duration-200 min-w-[320px]">
+            <svg class="w-5 h-5 text-[#3F72AF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input type="text" id="searchInput" placeholder="Search papers, authors, institutions..." class="bg-transparent border-none text-sm placeholder-gray-500 focus:outline-none focus:ring-0 flex-1 font-medium">
+          </div>
+        </div>
+
+        <!-- View Toggle -->
+        <div class="flex items-center gap-4">
+          <span class="text-sm font-semibold text-gray-700">View:</span>
+          <div class="flex bg-white border border-gray-200 rounded-xl p-1 shadow-sm">
+            <button id="gridViewBtn" class="flex items-center gap-2 px-5 py-3 text-sm font-semibold rounded-lg bg-[#3F72AF] text-white shadow-sm hover:bg-[#345b8f] transition-all duration-200">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+              </svg>
+              Grid
+            </button>
+            <button id="listViewBtn" class="flex items-center gap-2 px-5 py-3 text-sm font-semibold rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+              </svg>
+              List
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Filters Display -->
+      <div id="activeFilters" class="mt-8 flex flex-wrap gap-3 hidden">
+        <!-- Active filter tags will be added here dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Research Papers Grid -->
+  <section class="px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <div class="max-w-6xl mx-auto">
+      <div id="papersContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Papers will be loaded dynamically -->
+        <div id="loadingSpinner" class="col-span-full flex justify-center items-center py-12">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3F72AF]"></div>
+          <span class="ml-3 text-gray-600">Loading published papers...</span>
+        </div>
+      </div>
+
+      <!-- Load More Button -->
+      <div id="loadMoreContainer" class="text-center mt-8 hidden">
+        <button id="loadMoreBtn" class="bg-[#3F72AF] hover:bg-[#345b8f] text-white px-6 py-3 rounded font-medium">
+          Load More Published Papers
+        </button>
+      </div>
+
+      <!-- No papers message -->
+      <div id="noPapersMessage" class="col-span-full text-center py-12 hidden">
+        <div class="text-gray-500 text-lg">No published papers found.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 text-sm text-[#1A1A2E] px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 max-w-6xl mx-auto">
+      <div class="sm:col-span-2 lg:col-span-1">
+        <h4 class="font-bold mb-2 font-lato">Digital Evolution Journal</h4>
+        <p class="text-gray-600 mb-2 text-sm">
+          Premier peer-reviewed publication platform advancing technical research excellence through rigorous review processes and global collaboration.
+        </p>
+      </div>
+      <div>
+        <h4 class="font-bold mb-2 font-lato">For Authors</h4>
+        <ul class="space-y-1 text-gray-600">
+          <li><a href="/submit" class="hover:text-[#3F72AF]">Submit Paper</a></li>
+          <li><a href="/author-guidelines.html" class="hover:text-[#3F72AF]">Author Guidelines</a></li>
+          <li><a href="/formatting-guide.html" class="hover:text-[#3F72AF]">Formatting Guide</a></li>
+          <li><a href="/publication-ethics.html" class="hover:text-[#3F72AF]">Publication Ethics</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold mb-2 font-lato">For Reviewers</h4>
+        <ul class="space-y-1 text-gray-600">
+          <li><a href="/reviewer" class="hover:text-[#3F72AF]">Become Reviewer</a></li>
+          <li><a href="/review-guidelines.html" class="hover:text-[#3F72AF]">Review Guidelines</a></li>
+          <li><a href="/reviewer-ethics.html" class="hover:text-[#3F72AF]">Reviewer Ethics</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center text-xs text-gray-500 mt-8 sm:mt-12">
+      <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
+        <a href="#" class="hover:text-[#3F72AF]">Privacy Policy</a>
+        <span>·</span>
+        <a href="#" class="hover:text-[#3F72AF]">Terms of Service</a>
+        <span>·</span>
+        <a href="#" class="hover:text-[#3F72AF]">Accessibility</a>
+        <span>·</span>
+        <a href="#" class="hover:text-[#3F72AF]">Contact</a>
+      </div>
+      <div class="mt-2">© 2025 Digital Evolution Journal. All rights reserved.</div>
+    </div>
+  </footer>
+
+<script>
+(async () => {
+  try {
+    const res = await fetch('/api/me', { credentials: 'include' });
+    const data = await res.json();
+    const el = document.getElementById('authLinks');
+    const mobileEl = document.getElementById('mobileAuthLinks');
+    const dashTab = document.getElementById('dashboardTab');
+    const mobileDashTab = document.getElementById('mobileDashboardTab');
+
+    if (data && data.isAuthenticated) {
+      const u = data.user || {};
+      const displayName = u.name || u.email || 'User';
+      const authContent = `
+        <span class="text-sm text-gray-700">Hello, ${displayName}</span>
+        <a href="/logout" class="border px-3 py-1 rounded hover:bg-gray-100">Logout</a>
+      `;
+      const mobileAuthContent = `
+        <div class="text-sm text-gray-700 mb-2">Hello, ${displayName}</div>
+        <a href="/logout" class="block w-full text-center border px-4 py-2 rounded hover:bg-gray-100">Logout</a>
+      `;
+
+      if (el) el.innerHTML = authContent;
+      if (mobileEl) mobileEl.innerHTML = mobileAuthContent;
+
+      if (dashTab) {
+        dashTab.classList.remove('hidden');
+        const btn = dashTab.querySelector('button');
+        const menu = document.getElementById('dashboardMenu');
+        let open = false;
+        const toggle = (e) => { e?.preventDefault?.(); open = !open; menu.classList.toggle('hidden', !open); };
+        btn.addEventListener('click', toggle);
+        document.addEventListener('click', (e) => { if (!dashTab.contains(e.target)) { open = false; menu.classList.add('hidden'); } });
+      }
+
+      if (mobileDashTab) {
+        mobileDashTab.classList.remove('hidden');
+      }
+    }
+  } catch (e) { /* noop */ }
+})();
+
+// Function to format date
+function formatPublishedDate(dateString) {
+  if (!dateString) return 'Date not available';
+  const date = new Date(dateString);
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return `Published ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+// Function to get gradient colors based on index
+function getGradientColors(index) {
+  const gradients = [
+    { bg: 'from-[#3F72AF] to-[#16213E]', text: 'text-white', buttonBg: 'from-[#3F72AF] to-[#16213E]', buttonText: 'text-white' },
+    { bg: 'from-[#F9A826] to-[#FFD23F]', text: 'text-gray-900', buttonBg: 'from-[#F9A826] to-[#FFD23F]', buttonText: 'text-gray-900' },
+    { bg: 'from-[#9C27B0] to-[#BA68C8]', text: 'text-white', buttonBg: 'from-[#9C27B0] to-[#BA68C8]', buttonText: 'text-white' },
+    { bg: 'from-[#4CAF50] to-[#81C784]', text: 'text-white', buttonBg: 'from-[#4CAF50] to-[#81C784]', buttonText: 'text-white' },
+    { bg: 'from-[#FF5722] to-[#FF8A65]', text: 'text-white', buttonBg: 'from-[#FF5722] to-[#FF8A65]', buttonText: 'text-white' },
+    { bg: 'from-[#2196F3] to-[#64B5F6]', text: 'text-white', buttonBg: 'from-[#2196F3] to-[#64B5F6]', buttonText: 'text-white' }
+  ];
+  return gradients[index % gradients.length];
+}
+
+// Function to render a paper card
+function renderPaperCard(paper, index) {
+  const colors = getGradientColors(index);
+  const publishedDate = formatPublishedDate(paper.published_at);
+  const authorName = paper.author_name || 'Unknown Author';
+  const affiliation = paper.affiliation || 'No affiliation';
+  const abstract = paper.abstract || 'No abstract available';
+
+  return `
+    <div class="paper-card group bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-xl hover:border-[#3F72AF]/20 transition-all duration-300 overflow-hidden"
+         data-year="${new Date(paper.published_at || paper.created_at).getFullYear()}"
+         data-month="${new Date(paper.published_at || paper.created_at).getMonth() + 1}"
+         data-title="${paper.title}"
+         data-author="${authorName}"
+         data-institution="${affiliation}"
+         data-abstract="${abstract}"
+         data-keywords="${(paper.keywords || []).join(', ')}"
+         data-status="${paper.status}"
+         data-published-at="${paper.published_at}"
+         data-doi="${paper.doi || ''}"
+         data-volume="${paper.volume || ''}"
+         data-issue="${paper.issue || ''}"
+         data-pages="${paper.pages || ''}"
+         data-paper-type="${paper.paper_type}"
+         data-author-id="${paper.author?.id || ''}"
+         data-author-email="${paper.author?.email || ''}"
+         data-author-affiliation="${paper.affiliation || ''}">
+      <div class="relative">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${colors.bg}"></div>
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <span class="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r ${colors.bg}/10 ${colors.bg.split(' ')[0].replace('from-', 'text-').replace('[', '').replace(']', '')}/5 text-xs font-medium rounded-full">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+              </svg>
+              ${publishedDate}
+            </span>
+            <span class="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-emerald-100 to-emerald-50 text-emerald-700 text-xs font-medium rounded-full">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+              </svg>
+              ${paper.paper_type ? paper.paper_type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Research Article'}
+            </span>
+          </div>
+          <h3 class="text-lg font-semibold font-lato mb-3 line-clamp-2 text-gray-900 group-hover:text-[#3F72AF] transition-colors duration-200">
+            ${paper.title}
+          </h3>
+          <p class="text-sm text-gray-600 mb-4 line-clamp-3 leading-relaxed">
+            ${abstract}
+          </p>
+          <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+            <div class="flex items-center gap-3">
+         
+               
+              </div>
+            
+            </div>
+            <a href="/paper-detail.html?id=${paper.id}" aria-label="Read full paper: ${paper.title}"
+               class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r ${colors.buttonBg} ${colors.buttonText} text-sm font-medium rounded-lg hover:scale-105 transition-all duration-200">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+              </svg>
+              Read Full Paper
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Data cache
+let PAPERS_CACHE = [];
+let PAGINATION_STATE = { page: 0, hasNext: true, loading: false };
+
+function applyClientFilters(raw) {
+  const yearFilter = document.getElementById('yearFilter');
+  const sortBy = document.getElementById('sortBy');
+  const searchInput = document.getElementById('searchInput');
+  const yearVal = yearFilter?.value || '';
+  const searchVal = (searchInput?.value || '').trim().toLowerCase();
+  let filtered = raw.slice();
+
+  // Year filter
+  if (yearVal) {
+    filtered = filtered.filter(p => {
+      const d = new Date(p.published_at || p.created_at);
+      return String(d.getFullYear()) === yearVal;
+    });
+  }
+
+  // Search (title, author, affiliation, abstract, keywords)
+  if (searchVal) {
+    filtered = filtered.filter(p => {
+      const authorName = (p.author_name || p.author?.name || p.author?.email || '').toLowerCase();
+      const affiliation = (p.affiliation || '').toLowerCase();
+      const abstract = (p.abstract || '').toLowerCase();
+      const keywords = (p.keywords || []).join(', ').toLowerCase();
+      return (
+        (p.title || '').toLowerCase().includes(searchVal) ||
+        authorName.includes(searchVal) ||
+        affiliation.includes(searchVal) ||
+        abstract.includes(searchVal) ||
+        keywords.includes(searchVal)
+      );
+    });
+  }
+
+  // Sorting
+  switch (sortBy?.value) {
+    case 'date-asc':
+      filtered.sort((a, b) => new Date(a.published_at || a.created_at) - new Date(b.published_at || b.created_at));
+      break;
+    case 'date-desc':
+      filtered.sort((a, b) => new Date(b.published_at || b.created_at) - new Date(a.published_at || a.created_at));
+      break;
+    case 'title-asc':
+      filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+      break;
+    case 'title-desc':
+      filtered.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
+      break;
+    case 'author-asc':
+      filtered.sort((a, b) => (a.author_name || '').localeCompare(b.author_name || ''));
+      break;
+    case 'author-desc':
+      filtered.sort((a, b) => (b.author_name || '').localeCompare(a.author_name || ''));
+      break;
+    default: // date-desc default already handled later if not matched
+      filtered.sort((a, b) => new Date(b.published_at || b.created_at) - new Date(a.published_at || a.created_at));
+  }
+
+  return filtered;
+}
+
+function renderFiltered() {
+  const papersContainer = document.getElementById('papersContainer');
+  const noPapersMessage = document.getElementById('noPapersMessage');
+  const loadMoreContainer = document.getElementById('loadMoreContainer');
+  if (!papersContainer) return;
+
+  const filtered = applyClientFilters(PAPERS_CACHE);
+  papersContainer.querySelectorAll('.paper-card').forEach(el => el.remove());
+
+  if (filtered.length === 0) {
+    noPapersMessage.classList.remove('hidden');
+  } else {
+    noPapersMessage.classList.add('hidden');
+    const html = filtered.map((p, i) => renderPaperCard(p, i)).join('');
+    papersContainer.insertAdjacentHTML('afterbegin', html);
+  }
+
+  // Load more visibility: show only if unfiltered cache still has next page
+  if (PAGINATION_STATE.hasNext) {
+    loadMoreContainer.classList.remove('hidden');
+  } else {
+    loadMoreContainer.classList.add('hidden');
+  }
+}
+
+async function fetchNextPage() {
+  if (PAGINATION_STATE.loading || !PAGINATION_STATE.hasNext) return;
+  PAGINATION_STATE.loading = true;
+  const loadingSpinner = document.getElementById('loadingSpinner');
+  const noPapersMessage = document.getElementById('noPapersMessage');
+  loadingSpinner.classList.remove('hidden');
+  noPapersMessage.classList.add('hidden');
+  try {
+    const nextPage = PAGINATION_STATE.page + 1;
+    const response = await fetch(`/api/published?page=${nextPage}&limit=20`);
+    const data = await response.json();
+    loadingSpinner.classList.add('hidden');
+    if (data.success && Array.isArray(data.submissions)) {
+      PAPERS_CACHE = PAPERS_CACHE.concat(data.submissions);
+      PAGINATION_STATE.page = nextPage;
+      PAGINATION_STATE.hasNext = !!(data.pagination && data.pagination.has_next);
+      renderFiltered();
+    } else {
+      PAGINATION_STATE.hasNext = false;
+      renderFiltered();
+    }
+  } catch (e) {
+    console.error('Failed to fetch published papers', e);
+    loadingSpinner.classList.add('hidden');
+    const noPapersMessage = document.getElementById('noPapersMessage');
+    noPapersMessage.classList.remove('hidden');
+    noPapersMessage.innerHTML = '<div class="text-gray-500 text-lg">Error loading papers. Please try again later.</div>';
+  } finally {
+    PAGINATION_STATE.loading = false;
+  }
+}
+
+function initLoadMore() {
+  const btn = document.getElementById('loadMoreBtn');
+  if (btn) {
+    btn.onclick = () => fetchNextPage();
+  }
+}
+
+// Mobile menu functionality
+document.addEventListener('DOMContentLoaded', () => {
+  const mobileMenuButton = document.getElementById('mobileMenuButton');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  if (mobileMenuButton && mobileMenu) {
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+        mobileMenu.classList.add('hidden');
+      }
+    });
+
+    // Close mobile menu when window is resized to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768) { // md breakpoint
+        mobileMenu.classList.add('hidden');
+      }
+    });
+  }
+
+  // Initial fetch
+  fetchNextPage();
+  initLoadMore();
+
+  // Research papers filtering and sorting functionality
+  const papersContainer = document.getElementById('papersContainer');
+  const yearFilter = document.getElementById('yearFilter');
+  const sortBy = document.getElementById('sortBy');
+  const searchInput = document.getElementById('searchInput');
+  const gridViewBtn = document.getElementById('gridViewBtn');
+  const listViewBtn = document.getElementById('listViewBtn');
+  const activeFilters = document.getElementById('activeFilters');
+
+  let currentView = 'grid';
+
+  // View toggle functionality
+  gridViewBtn.addEventListener('click', () => {
+    currentView = 'grid';
+    gridViewBtn.classList.add('bg-[#3F72AF]', 'text-white');
+    gridViewBtn.classList.remove('text-gray-600', 'hover:text-gray-900', 'hover:bg-gray-50');
+    listViewBtn.classList.remove('bg-[#3F72AF]', 'text-white');
+    listViewBtn.classList.add('text-gray-600', 'hover:text-gray-900', 'hover:bg-gray-50');
+    papersContainer.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+    updatePapersDisplay();
+  });
+
+  listViewBtn.addEventListener('click', () => {
+    currentView = 'list';
+    listViewBtn.classList.add('bg-[#3F72AF]', 'text-white');
+    listViewBtn.classList.remove('text-gray-600', 'hover:text-gray-900', 'hover:bg-gray-50');
+    gridViewBtn.classList.remove('bg-[#3F72AF]', 'text-white');
+    gridViewBtn.classList.add('text-gray-600', 'hover:text-gray-900', 'hover:bg-gray-50');
+    papersContainer.className = 'space-y-4';
+    updatePapersDisplay();
+  });
+
+  // Filter and sort functionality
+  function updatePapersDisplay() {
+    // Apply filters/sorting to cached data
+    renderFiltered();
+  }
+
+  // Event listeners
+  yearFilter.addEventListener('change', updatePapersDisplay);
+  sortBy.addEventListener('change', updatePapersDisplay);
+  searchInput.addEventListener('input', updatePapersDisplay);
+
+  // Initial display
+  // Rendering will happen post-fetch automatically
+});
+</script></body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Lora Magazine</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Roboto&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        color: #1a1a2e;
+      }
+      h1, h2, h3, h4 {
+        font-family: "Lato", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-[#F9FAFB]">
+
+    <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-white shadow-sm px-8 py-4 flex justify-between items-center">
+    <div class="text-xl font-bold font-lato"><a href="/"><img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-14 w-37"></a></div>
+    <nav class="space-x-6 text-sm flex items-center">
+      <a href="/" class="hover:text-[#3F72AF]">Home</a>
+      <a href="/researches" class="hover:text-[#3F72AF]">Published Papers</a>
+      <a href="/submit" class="hover:text-[#3F72AF]">Submit your Research</a>
+      <a href="/reviewer" class="hover:text-[#3F72AF]">Apply as Reviewer</a>
+      <a href="#" class="hover:text-[#3F72AF]">About</a>
+      <input type="text" placeholder="Search" class="border p-1 px-2 rounded text-sm" />
+      <span id="authLinks" class="flex items-center gap-2">
+        <a href="/login" class="bg-[#F9A826] hover:bg-[#e28e0c] text-white px-6 py-1 rounded">Login</a>
+        <a href="/register" class="bg-[#3F72AF] hover:bg-[#345b8f] text-white text-sm px-4 py-1 rounded">Register</a>
+      </span>
+    </nav>
+  </header>
+
+
+    <!-- Login Form -->
+    <section class="flex items-center justify-center min-h-screen py-10 px-4">
+      <div class="bg-white p-10 rounded-xl shadow-md w-full max-w-md border border-gray-200">
+        <h2 class="text-2xl font-bold mb-6 text-center text-[#1A1A2E]">Welcome Back 👋</h2>
+        <form id="loginForm" class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium mb-1">Email Address</label>
+            <input id="email" type="email" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]" placeholder="you@example.com" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Password</label>
+            <input id="password" type="password" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]" placeholder="••••••••" required />
+          </div>
+          <div class="flex justify-between items-center text-sm">
+            <label class="flex items-center gap-2">
+              <input type="checkbox" />
+              Remember me
+            </label>
+            <a href="/forgot-password" class="text-[#3F72AF] hover:underline">Forgot password?</a>
+          </div>
+          <div id="loginError" class="text-red-600 text-sm text-center"></div>
+          <button type="submit" class="w-full bg-[#3F72AF] hover:bg-[#345b8f] text-white py-2 rounded font-medium">
+            Login
+          </button>
+        </form>
+        <p class="mt-6 text-sm text-center text-gray-600">
+          Don’t have an account?
+          <a href="/register" class="text-[#3F72AF] hover:underline">Register here</a>
+        </p>
+      </div>
+    </section>
+
+ <!-- Footer -->
+  <footer class="bg-gray-100 text-sm text-[#1A1A2E] px-8 py-12">
+    <div class="grid grid-cols-3 gap-12 max-w-6xl mx-auto">
+      <div>
+        <h4 class="font-bold mb-2 font-lato">Digital Evolution Journal</h4>
+        <p class="text-gray-600 mb-2">
+          Premier peer-reviewed publication platform advancing technical research excellence through rigorous review processes and global collaboration.
+        </p>
+
+      </div>
+      <div>
+        <h4 class="font-bold mb-2 font-lato">For Authors</h4>
+        <ul class="space-y-1 text-gray-600">
+          <li><a href="#">Submit Paper</a></li>
+          <li><a href="#">Author Guidelines</a></li>
+          <li><a href="#">Formatting Guide</a></li>
+          <li><a href="#">Publication Ethics</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold mb-2 font-lato">For Reviewers</h4>
+        <ul class="space-y-1 text-gray-600">
+          <li><a href="#">Become Reviewer</a></li>
+          <li><a href="#">Review Guidelines</a></li>
+          <!-- <li><a href="#">Training Materials</a></li> -->
+          <li><a href="#">Reviewer Ethics</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center text-xs text-gray-500 mt-12">
+      <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a> · <a href="#">Accessibility</a> · <a href="#">Contact</a>
+      <div class="mt-2">© 2024 Digital Evolution Journal. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    // Check if already logged in
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/me');
+        const data = await res.json();
+        if (data.isAuthenticated) {
+          window.location.href = '/dashboard/author';
+        }
+      } catch (err) {
+        console.error('Auth check failed:', err);
+      }
+    }
+    
+    // Don't check on page load since server already handles this
+    // checkAuth();
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const errorDiv = document.getElementById('loginError');
+      errorDiv.textContent = '';
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (res.ok && data.status === 'ok') {
+          // Redirect to dashboard or next page
+          const params = new URLSearchParams(window.location.search);
+          const next = params.get('next') || '/dashboard/author';
+          window.location.href = next;
+        } else {
+          errorDiv.textContent = data.error || 'Login failed.';
+        }
+      } catch (err) {
+        errorDiv.textContent = 'Network error. Please try again.';
+      }
+    });
+  </script>
+
+  </body>
+</html>

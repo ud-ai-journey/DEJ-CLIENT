@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submissions Management - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .slide-up { animation: slideUp 0.6s ease-out; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .submission-card { transition: all 0.3s ease; }
+        .submission-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .status-indicator { width: 4px; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <img src="/images/Logo.png" alt="DEJ Logo" class="h-8 w-auto mr-3">
+                    <h1 class="text-xl font-bold text-gray-900">Submissions Management</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600" id="admin-name">Loading...</span>
+                    <button onclick="adminLogout()" class="text-red-600 hover:text-red-700 text-sm font-medium">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white shadow-lg min-h-screen">
+            <div class="p-4">
+                <nav class="space-y-2">
+                    <a href="/admin" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        Dashboard
+                    </a>
+                    <a href="/admin/submissions" class="flex items-center px-4 py-2 text-gray-900 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                        <i class="fas fa-file-alt mr-3 text-blue-500"></i>
+                        Submissions
+                    </a>
+                    <a href="/admin/authors" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-users mr-3"></i>
+                        Authors
+                    </a>
+                    <a href="/admin/reviewers" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-user-check mr-3"></i>
+                        Reviewers
+                    </a>
+                    <a href="/admin/published" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-book-open mr-3"></i>
+                        Published
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-8">
+            <!-- Header -->
+            <div class="mb-8 fade-in">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900">Submissions</h2>
+                        <p class="text-gray-600 mt-2">Manage editorial workflow and review process</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button id="bulk-actions-btn" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center" disabled>
+                            <i class="fas fa-tasks mr-2"></i>
+                            Bulk Actions (<span id="selected-count">0</span>)
+                        </button>
+                        <button id="export-btn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
+                            <i class="fas fa-download mr-2"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-yellow-100 rounded-lg">
+                            <i class="fas fa-clock text-yellow-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-600">Pending Review</p>
+                            <p class="text-2xl font-bold text-gray-900" id="pending-count">-</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-blue-100 rounded-lg">
+                            <i class="fas fa-eye text-blue-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-600">Under Review</p>
+                            <p class="text-2xl font-bold text-gray-900" id="under-review-count">-</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-green-100 rounded-lg">
+                            <i class="fas fa-check-circle text-green-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-600">Ready to Publish</p>
+                            <p class="text-2xl font-bold text-gray-900" id="ready-publish-count">-</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-red-100 rounded-lg">
+                            <i class="fas fa-exclamation-triangle text-red-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-600">Overdue</p>
+                            <p class="text-2xl font-bold text-gray-900" id="overdue-count">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                <div class="flex flex-wrap gap-4 items-end">
+                    <div class="flex-1 min-w-64">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Search Submissions</label>
+                        <div class="relative">
+                            <input type="text" id="search-input" placeholder="Search by title, author, or keywords..." 
+                                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                        <select id="status-filter" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="verified">Verified</option>
+                            <option value="under_review">Under Review</option>
+                            <option value="revision_required">Revision Required</option>
+                            <option value="ready_to_publish">Ready to Publish</option>
+                            <option value="published">Published</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Paper Type</label>
+                        <select id="type-filter" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">All Types</option>
+                            <option value="Research Paper">Research Paper</option>
+                            <option value="White Paper">White Paper</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
+                        <select id="date-filter" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="quarter">This Quarter</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                        <select id="sort-filter" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="created_at_desc">Newest First</option>
+                            <option value="created_at_asc">Oldest First</option>
+                            <option value="title_asc">Title A-Z</option>
+                            <option value="status_priority">Status Priority</option>
+                            <option value="due_date_asc">Due Date</option>
+                        </select>
+                    </div>
+                    
+                    <button id="apply-filters" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg">
+                        <i class="fas fa-filter mr-2"></i>
+                        Apply
+                    </button>
+                    
+                    <button id="clear-filters" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-times mr-2"></i>
+                        Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Submissions List -->
+            <div class="bg-white rounded-xl shadow-sm">
+                <!-- List Header -->
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="select-all" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-600">Select All</span>
+                            </label>
+                            <h3 class="text-lg font-semibold text-gray-900">Submissions List</h3>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-gray-600">
+                                Showing <span id="showing-count">0</span> of <span id="total-count">0</span> submissions
+                            </span>
+                            <div class="flex items-center space-x-2">
+                                <label class="text-sm text-gray-600">Per page:</label>
+                                <select id="per-page" class="px-2 py-1 border border-gray-300 rounded text-sm">
+                                    <option value="10">10</option>
+                                    <option value="25" selected>25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submissions List -->
+                <div id="submissions-container">
+                    <!-- Loading state -->
+                    <div id="loading-submissions" class="text-center py-12">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                        <p class="text-gray-600">Loading submissions...</p>
+                    </div>
+
+                    <!-- Empty state -->
+                    <div id="no-submissions" class="text-center py-12 hidden">
+                        <i class="fas fa-file-alt text-gray-300 text-6xl mb-4"></i>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">No submissions found</h3>
+                        <p class="text-gray-600">Try adjusting your search or filter criteria.</p>
+                    </div>
+
+                    <!-- Submissions list -->
+                    <div id="submissions-list" class="divide-y divide-gray-200 hidden">
+                        <!-- Submission items will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination" class="px-6 py-4 border-t border-gray-200 hidden">
+                    <div class="flex items-center justify-between">
+                        <button id="prev-page" class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="fas fa-chevron-left mr-1"></i>
+                            Previous
+                        </button>
+                        
+                        <div class="flex space-x-1" id="page-numbers">
+                            <!-- Page numbers will be populated here -->
+                        </div>
+                        
+                        <button id="next-page" class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                            Next
+                            <i class="fas fa-chevron-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Actions Modal -->
+    <div id="bulk-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-xl max-w-lg w-full">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-900">Bulk Actions</h3>
+                        <button id="close-bulk-modal" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <p class="text-sm text-gray-600 mb-4">
+                        Performing action on <span id="bulk-selected-count">0</span> selected submissions
+                    </p>
+                    
+                    <div class="space-y-3">
+                        <button id="bulk-assign-reviewer" class="w-full flex items-center justify-center px-4 py-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            Assign Reviewer to Selected
+                        </button>
+                        <button id="bulk-publish" class="w-full flex items-center justify-center px-4 py-3 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            Publish Selected Submissions
+                        </button>
+                        <button id="bulk-export" class="w-full flex items-center justify-center px-4 py-3 bg-green-50 text-green-700 rounded-lg hover:bg-green-100">
+                            <i class="fas fa-download mr-2"></i>
+                            Export Selected to CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        // Admin Authentication Check
+        function checkAdminAuth() {
+            const adminAuth = localStorage.getItem('adminAuthenticated');
+            if (adminAuth !== 'true') {
+                window.location.href = '/admin-login';
+                return false;
+            }
+            return true;
+        }
+
+        // Logout function
+        function adminLogout() {
+            localStorage.removeItem('adminAuthenticated');
+            window.location.href = '/admin-login';
+        }
+
+        // Check authentication on page load
+        if (!checkAdminAuth()) {
+            // Will redirect to login page
+        }
+
+        const ADMIN_LOGIN_URL = '/admin-login';
+        const ADMIN_TOKEN_KEY = 'adminToken';
+        const ADMIN_TOKEN_PREFIX = 'admin-session-loratech-';
+
+        function generateAdminToken(date = new Date()) {
+            return `${ADMIN_TOKEN_PREFIX}${date.toDateString()}`;
+        }
+
+        function getAdminToken() {
+            const expectedToken = generateAdminToken();
+            let token = localStorage.getItem(ADMIN_TOKEN_KEY);
+
+            if (token !== expectedToken) {
+                token = expectedToken;
+                localStorage.setItem(ADMIN_TOKEN_KEY, token);
+            }
+
+            return token;
+        }
+
+        function ensureAdminToken() {
+            return getAdminToken();
+        }
+
+        function handleUnauthorized() {
+            alert('Your admin session has expired. Please log in again.');
+            localStorage.removeItem('adminAuthenticated');
+            localStorage.removeItem(ADMIN_TOKEN_KEY);
+            window.location.href = ADMIN_LOGIN_URL;
+        }
+
+        async function authenticatedFetch(url, options = {}) {
+            const token = ensureAdminToken();
+            const headers = {
+                'admin-token': token,
+                ...(options.headers || {})
+            };
+
+            const response = await fetch(url, {
+                ...options,
+                headers
+            });
+
+            if (response.status === 401) {
+                handleUnauthorized();
+            }
+
+            return response;
+        }
+
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentFilters = {};
+        let selectedSubmissions = new Set();
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            ensureAdminToken();
+            loadUserInfo();
+            loadQuickStats();
+            loadSubmissions();
+            setupEventListeners();
+        });
+
+        // Load user information
+        async function loadUserInfo() {
+            try {
+                // For hardcoded admin auth, just set admin name
+                document.getElementById('admin-name').textContent = 'Admin User';
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                document.getElementById('admin-name').textContent = 'Admin';
+            }
+        }
+
+        // Load quick statistics
+        async function loadQuickStats() {
+            try {
+                const response = await authenticatedFetch('/api/admin/submissions/statistics');
+                if (!response.ok) {
+                    throw new Error('Failed to load submission statistics');
+                }
+
+                const payload = await response.json();
+                if (!payload.success) {
+                    throw new Error(payload.error || 'Failed to load submission statistics');
+                }
+
+                const stats = payload.data || {};
+                document.getElementById('pending-count').textContent = stats.pending_submissions || 0;
+                document.getElementById('under-review-count').textContent = stats.under_review_submissions || 0;
+                document.getElementById('ready-publish-count').textContent = stats.ready_to_publish || 0;
+                document.getElementById('overdue-count').textContent = stats.overdue_submissions || 0;
+            } catch (error) {
+                console.error('Error loading quick stats:', error);
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('apply-filters').addEventListener('click', applyFilters);
+            document.getElementById('clear-filters').addEventListener('click', clearFilters);
+            document.getElementById('search-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') applyFilters();
+            });
+            document.getElementById('per-page').addEventListener('change', function() {
+                currentPage = 1;
+                loadSubmissions();
+            });
+            
+            // Selection events
+            document.getElementById('select-all').addEventListener('change', toggleSelectAll);
+            document.getElementById('bulk-actions-btn').addEventListener('click', openBulkModal);
+            
+            // Modal events
+            document.getElementById('close-bulk-modal').addEventListener('click', closeBulkModal);
+            document.getElementById('bulk-modal').addEventListener('click', function(e) {
+                if (e.target === this) closeBulkModal();
+            });
+            
+            // Bulk action events
+            document.getElementById('bulk-assign-reviewer').addEventListener('click', () => performBulkAction('assign-reviewer'));
+            document.getElementById('bulk-publish').addEventListener('click', () => performBulkAction('publish'));
+            document.getElementById('bulk-export').addEventListener('click', () => performBulkAction('export'));
+            
+            // Export functionality
+            document.getElementById('export-btn').addEventListener('click', exportSubmissions);
+        }
+
+        // Load submissions with current filters and pagination
+        async function loadSubmissions() {
+            try {
+                showLoading(true);
+                
+                const params = new URLSearchParams({
+                    page: currentPage,
+                    limit: document.getElementById('per-page').value,
+                    ...currentFilters
+                });
+                
+                const response = await authenticatedFetch(`/api/admin/submissions?${params}`);
+                if (!response.ok) {
+                    throw new Error('Failed to load submissions');
+                }
+                
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load submissions');
+                }
+
+                displaySubmissions(data.submissions || []);
+                updatePagination(data.pagination);
+                updateCounts(data.pagination);
+                
+            } catch (error) {
+                console.error('Error loading submissions:', error);
+                showError('Failed to load submissions. Please try again.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Display submissions
+        function displaySubmissions(submissions) {
+            const container = document.getElementById('submissions-list');
+            const noSubmissionsDiv = document.getElementById('no-submissions');
+            
+            if (!submissions || submissions.length === 0) {
+                container.classList.add('hidden');
+                noSubmissionsDiv.classList.remove('hidden');
+                return;
+            }
+            
+            noSubmissionsDiv.classList.add('hidden');
+            container.classList.remove('hidden');
+            
+            container.innerHTML = submissions.map(submission => createSubmissionRow(submission)).join('');
+            
+            // Add event listeners to checkboxes and action buttons
+            container.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedSubmissions);
+            });
+        }
+
+        // Create submission row HTML
+        function createSubmissionRow(submission) {
+            const statusColor = getStatusColor(submission.status);
+            const statusIcon = getStatusIcon(submission.status);
+            const priorityIndicator = getPriorityIndicator(submission);
+            
+            return `
+                <div class="submission-card p-6 hover:bg-gray-50">
+                    <div class="flex items-start space-x-4">
+                        <!-- Checkbox -->
+                        <div class="flex items-center pt-1">
+                            <input type="checkbox" value="${submission.id}" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        </div>
+                        
+                        <!-- Status Indicator -->
+                        <div class="status-indicator ${statusColor.bg} rounded-full h-16 mt-1"></div>
+                        
+                        <!-- Content -->
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-3 mb-2">
+                                        <h3 class="text-lg font-medium text-gray-900 truncate">
+                                            <a href="/admin/submissions/${submission.id}" class="hover:text-blue-600">${submission.title}</a>
+                                        </h3>
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full ${statusColor.bg} ${statusColor.text} flex items-center">
+                                            <i class="fas fa-${statusIcon} mr-1"></i>
+                                            ${submission.status.replace('_', ' ').toUpperCase()}
+                                        </span>
+                                        ${priorityIndicator}
+                                    </div>
+                                    
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-user mr-1"></i>
+                                            ${submission.author?.full_name || 'Unknown Author'}
+                                        </div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-calendar mr-1"></i>
+                                            ${formatDate(submission.created_at)}
+                                        </div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-file-alt mr-1"></i>
+                                            ${submission.paper_type || 'Research Paper'}
+                                        </div>
+                                        ${submission.reviewer_count ? `
+                                        <div class="flex items-center">
+                                            <i class="fas fa-users mr-1"></i>
+                                            ${submission.reviewer_count} reviewer${submission.reviewer_count !== 1 ? 's' : ''}
+                                        </div>
+                                        ` : ''}
+                                    </div>
+                                    
+                                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">${submission.abstract || 'No abstract provided'}</p>
+                                </div>
+                                
+                                <!-- Actions -->
+                                <div class="flex items-center space-x-2 ml-4">
+                                    ${getActionButtons(submission)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Get action buttons based on submission status
+        function getActionButtons(submission) {
+            const buttons = [];
+            
+            // Only show assignment and publishing actions in the list view
+            switch (submission.status) {
+                case 'verified':
+                case 'under_review':
+                    buttons.push(`
+                        <button onclick="assignReviewer(${submission.id})" class="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200">
+                            <i class="fas fa-user-plus mr-1"></i>Assign Reviewer
+                        </button>
+                    `);
+                    break;
+                case 'ready_to_publish':
+                case 'accepted':
+                    buttons.push(`
+                        <button onclick="publishSubmission(${submission.id})" class="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200">
+                            <i class="fas fa-check-circle mr-1"></i>Publish
+                        </button>
+                    `);
+                    break;
+            }
+            
+            // Always show the view details button
+            buttons.push(`
+                <a href="/admin/submissions/${submission.id}" class="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700">
+                    <i class="fas fa-eye mr-1"></i>View Details
+                </a>
+            `);
+            
+            return buttons.join('');
+        }
+
+        // Apply current filters
+        function applyFilters() {
+            currentPage = 1;
+            currentFilters = {
+                search: document.getElementById('search-input').value.trim(),
+                status: document.getElementById('status-filter').value,
+                paper_type: document.getElementById('type-filter').value,
+                date_range: document.getElementById('date-filter').value,
+                sort_by: document.getElementById('sort-filter').value
+            };
+            
+            // Remove empty filters
+            Object.keys(currentFilters).forEach(key => {
+                if (currentFilters[key] === '') {
+                    delete currentFilters[key];
+                }
+            });
+            
+            loadSubmissions();
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('status-filter').value = '';
+            document.getElementById('type-filter').value = '';
+            document.getElementById('date-filter').value = '';
+            document.getElementById('sort-filter').value = 'created_at_desc';
+            currentFilters = {};
+            currentPage = 1;
+            loadSubmissions();
+        }
+
+        // Selection management
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('select-all');
+            const checkboxes = document.querySelectorAll('#submissions-list input[type="checkbox"]');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+            });
+            
+            updateSelectedSubmissions();
+        }
+
+        function updateSelectedSubmissions() {
+            selectedSubmissions.clear();
+            const checkboxes = document.querySelectorAll('#submissions-list input[type="checkbox"]:checked');
+            
+            checkboxes.forEach(checkbox => {
+                selectedSubmissions.add(parseInt(checkbox.value));
+            });
+            
+            const count = selectedSubmissions.size;
+            document.getElementById('selected-count').textContent = count;
+            document.getElementById('bulk-selected-count').textContent = count;
+            document.getElementById('bulk-actions-btn').disabled = count === 0;
+            
+            // Update select all checkbox
+            const allCheckboxes = document.querySelectorAll('#submissions-list input[type="checkbox"]');
+            const selectAllCheckbox = document.getElementById('select-all');
+            selectAllCheckbox.indeterminate = count > 0 && count < allCheckboxes.length;
+            selectAllCheckbox.checked = count === allCheckboxes.length && count > 0;
+        }
+
+        // Bulk actions
+        function openBulkModal() {
+            if (selectedSubmissions.size === 0) return;
+            document.getElementById('bulk-modal').classList.remove('hidden');
+        }
+
+        function closeBulkModal() {
+            document.getElementById('bulk-modal').classList.add('hidden');
+        }
+
+        async function performBulkAction(action) {
+            if (selectedSubmissions.size === 0) return;
+            
+            try {
+                const submissionIds = Array.from(selectedSubmissions);
+                
+                if (action === 'export') {
+                    // Handle bulk export locally
+                    await exportSelectedSubmissions(submissionIds);
+                    return;
+                }
+                
+                if (action === 'publish') {
+                    // Show confirmation for bulk publish
+                    if (!confirm(`Are you sure you want to publish ${submissionIds.length} selected submission(s)?`)) {
+                        return;
+                    }
+                }
+                
+                if (action === 'assign-reviewer') {
+                    // For now, show a message that individual assignment is required
+                    showInfo('Please assign reviewers individually from each submission detail page for better control.');
+                    return;
+                }
+                
+                const response = await authenticatedFetch(`/api/admin/submissions/bulk-${action}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ submission_ids: submissionIds })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to perform bulk ${action}`);
+                }
+
+                const payload = await response.json().catch(() => ({ success: response.ok }));
+                if (payload.success === false) {
+                    throw new Error(payload.error || `Failed to perform bulk ${action}`);
+                }
+                
+                showSuccess(`Bulk ${action} completed successfully!`);
+                closeBulkModal();
+                selectedSubmissions.clear();
+                loadSubmissions();
+                loadQuickStats();
+                
+            } catch (error) {
+                console.error(`Error performing bulk ${action}:`, error);
+                showError(`Failed to perform bulk ${action}`);
+            }
+        }
+
+        async function exportSelectedSubmissions(submissionIds) {
+            try {
+                showInfo('Preparing export for selected submissions...');
+                
+                // Get current submissions and filter by selected IDs
+                const params = new URLSearchParams(currentFilters);
+                const response = await authenticatedFetch(`/api/admin/submissions?${params}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch submissions for export');
+                }
+                
+                const data = await response.json();
+                const allSubmissions = data.submissions || [];
+                const selectedSubmissionsData = allSubmissions.filter(sub => submissionIds.includes(sub.id));
+                
+                if (selectedSubmissionsData.length === 0) {
+                    showInfo('No submissions to export');
+                    return;
+                }
+                
+                // Create CSV content
+                const headers = [
+                    'ID', 'Title', 'Author Name', 'Author Email', 'Status', 'Paper Type',
+                    'Created Date', 'Updated Date', 'Verified', 'Published Date'
+                ];
+                
+                const csvContent = [
+                    headers.join(','),
+                    ...selectedSubmissionsData.map(submission => [
+                        `"${submission.id || ''}"`,
+                        `"${(submission.title || '').replace(/"/g, '""')}"`,
+                        `"${(submission.author?.full_name || '').replace(/"/g, '""')}"`,
+                        `"${(submission.author?.email || '').replace(/"/g, '""')}"`,
+                        `"${(submission.status || '').replace(/"/g, '""')}"`,
+                        `"${(submission.paper_type || '').replace(/"/g, '""')}"`,
+                        `"${formatDate(submission.created_at)}"`,
+                        `"${formatDate(submission.updated_at)}"`,
+                        `"${submission.is_verified ? 'Yes' : 'No'}"`,
+                        `"${formatDate(submission.published_at)}"`
+                    ].join(','))
+                ].join('\\n');
+                
+                // Download the CSV
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `selected_submissions_export_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+                
+                showSuccess(`${selectedSubmissionsData.length} submissions exported successfully!`);
+                closeBulkModal();
+                selectedSubmissions.clear();
+                updateSelectedSubmissions();
+                
+            } catch (error) {
+                console.error('Error exporting selected submissions:', error);
+                showError('Failed to export selected submissions');
+            }
+        }
+
+        // Update pagination (similar to authors page)
+        function updatePagination(pagination) {
+            if (!pagination) return;
+            
+            totalPages = pagination.total_pages;
+            currentPage = pagination.current_page;
+            
+            const paginationDiv = document.getElementById('pagination');
+            
+            if (totalPages <= 1) {
+                paginationDiv.classList.add('hidden');
+                return;
+            }
+            
+            paginationDiv.classList.remove('hidden');
+            
+            const prevBtn = document.getElementById('prev-page');
+            const nextBtn = document.getElementById('next-page');
+            
+            prevBtn.disabled = currentPage <= 1;
+            nextBtn.disabled = currentPage >= totalPages;
+            
+            prevBtn.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadSubmissions();
+                }
+            };
+            
+            nextBtn.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadSubmissions();
+                }
+            };
+            
+            const pageNumbers = document.getElementById('page-numbers');
+            pageNumbers.innerHTML = generatePageNumbers(currentPage, totalPages);
+        }
+
+        function generatePageNumbers(current, total) {
+            let pages = [];
+            
+            if (total <= 7) {
+                for (let i = 1; i <= total; i++) {
+                    pages.push(i);
+                }
+            } else {
+                if (current <= 4) {
+                    pages = [1, 2, 3, 4, 5, '...', total];
+                } else if (current >= total - 3) {
+                    pages = [1, '...', total - 4, total - 3, total - 2, total - 1, total];
+                } else {
+                    pages = [1, '...', current - 1, current, current + 1, '...', total];
+                }
+            }
+            
+            return pages.map(page => {
+                if (page === '...') {
+                    return '<span class="px-3 py-2 text-gray-500">...</span>';
+                }
+                
+                const isActive = page === current;
+                const classes = isActive 
+                    ? 'px-3 py-2 bg-blue-600 text-white rounded-lg text-sm'
+                    : 'px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg text-sm cursor-pointer';
+                
+                return `<span class="${classes}" ${!isActive ? `onclick="goToPage(${page})"` : ''}>${page}</span>`;
+            }).join('');
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            loadSubmissions();
+        }
+
+        function updateCounts(pagination) {
+            if (!pagination) return;
+            
+            document.getElementById('total-count').textContent = pagination.total_items || 0;
+            document.getElementById('showing-count').textContent = 
+                Math.min((pagination.current_page - 1) * pagination.per_page + pagination.items_on_page, pagination.total_items) || 0;
+        }
+
+        function showLoading(show) {
+            const loading = document.getElementById('loading-submissions');
+            const list = document.getElementById('submissions-list');
+            const noSubmissions = document.getElementById('no-submissions');
+            
+            if (show) {
+                loading.classList.remove('hidden');
+                list.classList.add('hidden');
+                noSubmissions.classList.add('hidden');
+            } else {
+                loading.classList.add('hidden');
+            }
+        }
+
+        // Individual submission actions (verify/reject moved to detail page)
+
+        function assignReviewer(id) {
+            window.location.href = `/admin/submissions/${id}?action=assign-reviewer`;
+        }
+
+        function publishSubmission(id) {
+            window.location.href = `/admin/submissions/${id}?action=publish`;
+        }
+
+        // Export functionality
+        async function exportSubmissions() {
+            try {
+                showInfo('Preparing export...');
+                
+                const params = new URLSearchParams(currentFilters);
+                params.append('export', 'true');
+                
+                // Get all submissions with current filters
+                const response = await authenticatedFetch(`/api/admin/submissions?${params}`);
+                if (!response.ok) {
+                    throw new Error('Failed to export submissions');
+                }
+                
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to export submissions');
+                }
+                
+                // Convert submissions to CSV format
+                const submissions = data.submissions || [];
+                
+                if (submissions.length === 0) {
+                    showInfo('No submissions to export');
+                    return;
+                }
+                
+                // Create CSV headers
+                const headers = [
+                    'ID', 'Title', 'Author Name', 'Author Email', 'Status', 'Paper Type',
+                    'Created Date', 'Updated Date', 'Verified', 'Published Date'
+                ];
+                
+                // Create CSV content
+                const csvContent = [
+                    headers.join(','),
+                    ...submissions.map(submission => [
+                        `"${submission.id || ''}"`,
+                        `"${(submission.title || '').replace(/"/g, '""')}"`,
+                        `"${(submission.author?.full_name || '').replace(/"/g, '""')}"`,
+                        `"${(submission.author?.email || '').replace(/"/g, '""')}"`,
+                        `"${(submission.status || '').replace(/"/g, '""')}"`,
+                        `"${(submission.paper_type || '').replace(/"/g, '""')}"`,
+                        `"${formatDate(submission.created_at)}"`,
+                        `"${formatDate(submission.updated_at)}"`,
+                        `"${submission.is_verified ? 'Yes' : 'No'}"`,
+                        `"${formatDate(submission.published_at)}"`
+                    ].join(','))
+                ].join('\\n');
+                
+                // Create and download file
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `submissions_export_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+                
+                showSuccess('Submissions exported successfully!');
+            } catch (error) {
+                console.error('Error exporting submissions:', error);
+                showError('Failed to export submissions');
+            }
+        }
+
+        // Utility functions
+        function getStatusColor(status) {
+            const colors = {
+                pending: { bg: 'bg-yellow-400', text: 'text-yellow-800' },
+                verified: { bg: 'bg-blue-400', text: 'text-blue-800' },
+                under_review: { bg: 'bg-purple-400', text: 'text-purple-800' },
+                revision_required: { bg: 'bg-orange-400', text: 'text-orange-800' },
+                ready_to_publish: { bg: 'bg-green-400', text: 'text-green-800' },
+                published: { bg: 'bg-indigo-400', text: 'text-indigo-800' },
+                rejected: { bg: 'bg-red-400', text: 'text-red-800' }
+            };
+            return colors[status] || colors.pending;
+        }
+
+        function getStatusIcon(status) {
+            const icons = {
+                pending: 'clock',
+                verified: 'check',
+                under_review: 'eye',
+                revision_required: 'edit',
+                ready_to_publish: 'check-circle',
+                published: 'book-open',
+                rejected: 'times'
+            };
+            return icons[status] || 'file';
+        }
+
+        function getPriorityIndicator(submission) {
+            // Add priority indicators based on urgency
+            if (submission.is_overdue) {
+                return '<span class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full">Overdue</span>';
+            }
+            if (submission.due_soon) {
+                return '<span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full">Due Soon</span>';
+            }
+            if (submission.high_priority) {
+                return '<span class="px-2 py-1 text-xs bg-orange-100 text-orange-700 rounded-full">High Priority</span>';
+            }
+            return '';
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function showError(message) {
+            // Create and show a toast notification for errors
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md';
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-3 text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 5000);
+            
+            console.error(message);
+        }
+
+        function showSuccess(message) {
+            // Create and show a toast notification for success
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md';
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-3 text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 3000);
+            
+            console.log(message);
+        }
+
+        function showInfo(message) {
+            // Create and show a toast notification for info
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-4 right-4 bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md';
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-3 text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            
+            // Auto-remove after 4 seconds
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 4000);
+            
+            console.log(message);
+        }
+    </script>
+</body>
+</html>

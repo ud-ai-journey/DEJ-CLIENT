@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Digital Evolution Journal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .slide-up { animation: slideUp 0.6s ease-out; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .stat-card { transition: all 0.3s ease; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <img src="/images/Logo.png" alt="DEJ Logo" class="h-8 w-auto mr-3">
+                    <h1 class="text-xl font-bold text-gray-900">Admin Dashboard</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600" id="admin-name">Admin User</span>
+                    <button onclick="adminLogout()" class="text-red-600 hover:text-red-700 text-sm font-medium">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white shadow-lg min-h-screen">
+            <div class="p-4">
+                <nav class="space-y-2">
+                    <a href="/admin" class="flex items-center px-4 py-2 text-gray-900 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                        <i class="fas fa-tachometer-alt mr-3 text-blue-500"></i>
+                        Dashboard
+                    </a>
+                    <a href="/admin/submissions" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-file-alt mr-3"></i>
+                        Submissions
+                    </a>
+                    <a href="/admin/authors" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-users mr-3"></i>
+                        Authors
+                    </a>
+                    <a href="/admin/reviewers" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-user-check mr-3"></i>
+                        Reviewers
+                    </a>
+                    <a href="/admin/published" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-book-open mr-3"></i>
+                        Published
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-8">
+            <!-- Header -->
+            <div class="mb-8 fade-in">
+                <h2 class="text-3xl font-bold text-gray-900">Dashboard Overview</h2>
+                <p class="text-gray-600 mt-2">Monitor journal activity and manage editorial workflow</p>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Submissions Stats -->
+                <div class="stat-card bg-white rounded-xl shadow-sm p-6 slide-up">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Total Submissions</p>
+                            <p class="text-3xl font-bold text-gray-900" id="total-submissions">-</p>
+                        </div>
+                        <div class="p-3 bg-blue-100 rounded-full">
+                            <i class="fas fa-file-alt text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-green-600 font-medium" id="submissions-change">-</span>
+                        <span class="text-gray-500 ml-1">this month</span>
+                    </div>
+                </div>
+
+                <!-- Authors Stats -->
+                <div class="stat-card bg-white rounded-xl shadow-sm p-6 slide-up" style="animation-delay: 0.1s">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Total Authors</p>
+                            <p class="text-3xl font-bold text-gray-900" id="total-authors">-</p>
+                        </div>
+                        <div class="p-3 bg-green-100 rounded-full">
+                            <i class="fas fa-users text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-green-600 font-medium" id="authors-change">-</span>
+                        <span class="text-gray-500 ml-1">new authors</span>
+                    </div>
+                </div>
+
+                <!-- Reviewers Stats -->
+                <div class="stat-card bg-white rounded-xl shadow-sm p-6 slide-up" style="animation-delay: 0.2s">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Active Reviewers</p>
+                            <p class="text-3xl font-bold text-gray-900" id="active-reviewers">-</p>
+                        </div>
+                        <div class="p-3 bg-purple-100 rounded-full">
+                            <i class="fas fa-user-check text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-orange-600 font-medium" id="pending-reviewers">-</span>
+                        <span class="text-gray-500 ml-1">pending approval</span>
+                    </div>
+                </div>
+
+                <!-- Published Papers -->
+                <div class="stat-card bg-white rounded-xl shadow-sm p-6 slide-up" style="animation-delay: 0.3s">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Published Papers</p>
+                            <p class="text-3xl font-bold text-gray-900" id="published-papers">-</p>
+                        </div>
+                        <div class="p-3 bg-indigo-100 rounded-full">
+                            <i class="fas fa-book-open text-indigo-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-blue-600 font-medium" id="published-change">-</span>
+                        <span class="text-gray-500 ml-1">this quarter</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity and Quick Actions -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+                    <div class="space-y-4" id="recent-activity">
+                        <div class="animate-pulse">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
+                                <div class="flex-1">
+                                    <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                                    <div class="h-3 bg-gray-200 rounded w-1/2 mt-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <a href="/admin/submissions?status=pending" class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-clock text-yellow-600 mr-3"></i>
+                                <span class="font-medium text-gray-900">Review Pending Submissions</span>
+                            </div>
+                            <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium" id="pending-count">-</span>
+                        </a>
+                        
+                        <a href="/admin/reviewers?status=pending" class="flex items-center justify-between p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-user-plus text-blue-600 mr-3"></i>
+                                <span class="font-medium text-gray-900">Approve New Reviewers</span>
+                            </div>
+                            <span class="bg-blue-200 text-blue-800 px-2 py-1 rounded-full text-xs font-medium" id="reviewer-pending-count">-</span>
+                        </a>
+                        
+                        <a href="/admin/reviews/overdue" class="flex items-center justify-between p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-triangle text-red-600 mr-3"></i>
+                                <span class="font-medium text-gray-900">Handle Overdue Reviews</span>
+                            </div>
+                            <span class="bg-red-200 text-red-800 px-2 py-1 rounded-full text-xs font-medium" id="overdue-count">-</span>
+                        </a>
+                        
+                        <a href="/admin/submissions?status=ready_to_publish" class="flex items-center justify-between p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                                <span class="font-medium text-gray-900">Ready to Publish</span>
+                            </div>
+                            <span class="bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs font-medium" id="ready-publish-count">-</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 shadow-xl">
+            <div class="flex items-center">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-3"></div>
+                <span class="text-gray-700">Loading dashboard data...</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin Authentication Check
+        // Simple authentication check
+        function checkAdminAuth() {
+            const adminAuth = localStorage.getItem('adminAuthenticated');
+            if (adminAuth !== 'true') {
+                window.location.href = '/admin-login';
+                return false;
+            }
+            return true;
+        }
+
+        // Simple logout function
+        function adminLogout() {
+            localStorage.removeItem('adminAuthenticated');
+            localStorage.removeItem('adminToken');
+            window.location.href = '/admin-login';
+        }
+
+        // Check authentication immediately - if not authenticated, redirect
+        if (!checkAdminAuth()) {
+            // User will be redirected to login
+        }
+
+        // Simple dashboard initialization
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                showLoadingState();
+                
+                // Generate admin session token for API calls
+                const adminToken = generateAdminToken();
+                localStorage.setItem('adminToken', adminToken);
+                
+                await Promise.all([
+                    loadUserInfo(),
+                    loadDashboardStats(),
+                    loadRecentActivity()
+                ]);
+                
+                hideLoadingState();
+                
+            } catch (error) {
+                console.error('Dashboard initialization error:', error);
+                hideLoadingState();
+                showErrorState('Failed to load dashboard data. Please refresh the page or check your connection.');
+            }
+        });
+
+        // Generate admin session token for API authentication
+        function generateAdminToken() {
+            const token = 'admin-session-loratech-' + new Date().toDateString();
+            localStorage.setItem('adminToken', token);
+            return token;
+        }
+
+        // Get admin token for API calls
+        function getAdminToken() {
+            let token = localStorage.getItem('adminToken');
+            if (!token) {
+                token = generateAdminToken();
+            }
+            return token;
+        }
+
+        // Enhanced fetch with authentication and error handling
+        async function authenticatedFetch(url, options = {}) {
+            const token = getAdminToken();
+            
+            const defaultOptions = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'admin-token': token,
+                    ...options.headers
+                },
+                ...options
+            };
+            
+            const response = await fetch(url, defaultOptions);
+            
+            if (!response.ok) {
+                if (response.status === 401 || response.status === 403) {
+                    // Authentication failed, redirect to login
+                    // FIXME: Fix the unauthorized error
+                    // localStorage.removeItem('adminAuthenticated');
+                    // localStorage.removeItem('adminToken');
+                    // window.location.href = '/admin-login';
+                    throw new Error('Authentication failed');
+                }
+                
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+            }
+            
+            return response;
+        }
+
+        // Show loading state
+        function showLoadingState() {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+            }
+        }
+
+        // Hide loading state
+        function hideLoadingState() {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        }
+
+        // Show error state with user-friendly message
+        function showErrorState(message) {
+            hideLoadingState();
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'fixed top-4 right-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg shadow-lg z-50 max-w-md';
+            errorDiv.innerHTML = `
+                <div class="flex items-start">
+                    <i class="fas fa-exclamation-triangle mr-2 mt-1 flex-shrink-0"></i>
+                    <div class="flex-1">
+                        <p class="font-medium">Error</p>
+                        <p class="text-sm mt-1">${escapeHtml(message)}</p>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                class="text-red-600 hover:text-red-800 text-sm mt-2 underline">
+                            Dismiss
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(errorDiv);
+            
+            // Auto-remove after 10 seconds
+            setTimeout(() => {
+                if (errorDiv.parentNode) {
+                    errorDiv.remove();
+                }
+            }, 10000);
+        }
+
+        // XSS protection: Escape HTML content
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load user information
+        async function loadUserInfo() {
+            try {
+                // For hardcoded admin auth, just set admin name
+                document.getElementById('admin-name').textContent = 'Admin User';
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                document.getElementById('admin-name').textContent = 'Admin';
+            }
+        }
+
+        // Load dashboard statistics with robust error handling
+        async function loadDashboardStats() {
+            try {
+                // Load submission statistics
+                try {
+                    const submissionStats = await authenticatedFetch('/api/admin/submissions/statistics');
+                    const subData = await submissionStats.json();
+                    
+                    if (subData.success && subData.data) {
+                        document.getElementById('total-submissions').textContent = subData.data.total_submissions || 0;
+                        document.getElementById('submissions-change').textContent = `+${subData.data.new_this_month || 0}`;
+                        document.getElementById('pending-count').textContent = subData.data.pending_submissions || 0;
+                        document.getElementById('ready-publish-count').textContent = subData.data.ready_to_publish || 0;
+                    } else {
+                        throw new Error(subData.error || 'Invalid response format');
+                    }
+                } catch (error) {
+                    console.error('Error loading submission statistics:', error);
+                    setElementTextSafely('total-submissions', 'Error');
+                    setElementTextSafely('submissions-change', '-');
+                    setElementTextSafely('pending-count', 'Error');
+                    setElementTextSafely('ready-publish-count', 'Error');
+                }
+
+                // Load author statistics
+                try {
+                    const authorStats = await authenticatedFetch('/api/admin/authors/statistics');
+                    const authData = await authorStats.json();
+                    
+                    if (authData.success && authData.data) {
+                        document.getElementById('total-authors').textContent = authData.data.total_authors || 0;
+                        document.getElementById('authors-change').textContent = `+${authData.data.new_this_month || 0}`;
+                    } else {
+                        throw new Error(authData.error || 'Invalid response format');
+                    }
+                } catch (error) {
+                    console.error('Error loading author statistics:', error);
+                    setElementTextSafely('total-authors', 'Error');
+                    setElementTextSafely('authors-change', '-');
+                }
+
+                // Load reviewer statistics
+                try {
+                    const reviewerStats = await authenticatedFetch('/api/admin/reviewers/statistics');
+                    const revData = await reviewerStats.json();
+                    
+                    if (revData.success && revData.data) {
+                        document.getElementById('active-reviewers').textContent = revData.data.verified_reviewers || 0;
+                        document.getElementById('pending-reviewers').textContent = revData.data.pending_reviewers || 0;
+                        document.getElementById('reviewer-pending-count').textContent = revData.data.pending_reviewers || 0;
+                    } else {
+                        throw new Error(revData.error || 'Invalid response format');
+                    }
+                } catch (error) {
+                    console.error('Error loading reviewer statistics:', error);
+                    setElementTextSafely('active-reviewers', 'Error');
+                    setElementTextSafely('pending-reviewers', 'Error');
+                    setElementTextSafely('reviewer-pending-count', 'Error');
+                }
+
+                // Load review statistics for overdue count
+                try {
+                    const reviewStats = await authenticatedFetch('/api/admin/reviews/statistics');
+                    const reviewData = await reviewStats.json();
+                    
+                    if (reviewData.success && reviewData.data) {
+                        document.getElementById('overdue-count').textContent = reviewData.data.overdue_reviews || 0;
+                    } else {
+                        throw new Error(reviewData.error || 'Invalid response format');
+                    }
+                } catch (error) {
+                    console.error('Error loading review statistics:', error);
+                    setElementTextSafely('overdue-count', 'Error');
+                }
+
+                // Load published paper statistics
+                try {
+                    const publishedStats = await authenticatedFetch('/api/admin/submissions/statistics?status=published');
+                    const pubData = await publishedStats.json();
+                    
+                    if (pubData.success && pubData.data) {
+                        document.getElementById('published-papers').textContent = pubData.data.published_count || 0;
+                        document.getElementById('published-change').textContent = `+${pubData.data.published_this_quarter || 0}`;
+                    } else {
+                        // Fallback to placeholder values if endpoint doesn't exist yet
+                        document.getElementById('published-papers').textContent = '0';
+                        document.getElementById('published-change').textContent = '+0';
+                    }
+                } catch (error) {
+                    console.error('Error loading published statistics:', error);
+                    setElementTextSafely('published-papers', '0');
+                    setElementTextSafely('published-change', '+0');
+                }
+
+            } catch (error) {
+                console.error('Error loading dashboard statistics:', error);
+                showErrorState('Failed to load dashboard statistics. Some data may be unavailable.');
+            }
+        }
+
+        // Safely set element text content with null checks
+        function setElementTextSafely(elementId, text) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = text;
+            }
+        }
+
+        // Load recent activity with secure rendering
+        async function loadRecentActivity() {
+            try {
+                const response = await authenticatedFetch('/api/admin/audit/recent?limit=5');
+                const data = await response.json();
+                
+                const container = document.getElementById('recent-activity');
+                if (!container) {
+                    console.error('Recent activity container not found');
+                    return;
+                }
+                
+                if (data.success && data.data && data.data.length > 0) {
+                    // Securely render activities with XSS protection
+                    container.innerHTML = data.data.map(activity => {
+                        const safeActivity = {
+                            action: escapeHtml(activity.action || ''),
+                            description: escapeHtml(activity.description || ''),
+                            timestamp: escapeHtml(activity.timestamp || '')
+                        };
+                        
+                        return `
+                            <div class="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg">
+                                <div class="w-8 h-8 bg-${getActivityColor(safeActivity.action)}-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-${getActivityIcon(safeActivity.action)} text-${getActivityColor(safeActivity.action)}-600 text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-gray-900">${safeActivity.description}</p>
+                                    <p class="text-xs text-gray-500">${formatTimeAgo(safeActivity.timestamp)}</p>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else if (data.data && data.data.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500 text-center py-4">No recent activity</p>';
+                } else {
+                    throw new Error(data.error || 'Invalid response format');
+                }
+                
+            } catch (error) {
+                console.error('Error loading recent activity:', error);
+                const container = document.getElementById('recent-activity');
+                if (container) {
+                    container.innerHTML = '<p class="text-red-500 text-center py-4">Failed to load recent activity</p>';
+                }
+                
+                // Don't show error popup for non-critical feature
+                console.warn('Recent activity failed to load, but continuing...');
+            }
+        }
+
+        // Utility functions
+        function getActivityColor(action) {
+            const colorMap = {
+                'SUBMISSION_VERIFY': 'green',
+                'SUBMISSION_PUBLISH': 'indigo',
+                'SUBMISSION_REJECT': 'red',
+                'REVIEWER_VERIFY': 'blue',
+                'REVIEWER_REJECT': 'red',
+                'REVIEW_ASSIGN': 'yellow',
+                'REVIEW_COMPLETE': 'green',
+                'AUTHOR_UPDATE': 'purple'
+            };
+            return colorMap[action] || 'gray';
+        }
+
+        function getActivityIcon(action) {
+            const iconMap = {
+                'SUBMISSION_VERIFY': 'check',
+                'SUBMISSION_PUBLISH': 'book-open',
+                'SUBMISSION_REJECT': 'times',
+                'REVIEWER_VERIFY': 'user-check',
+                'REVIEWER_REJECT': 'user-times',
+                'REVIEW_ASSIGN': 'user-plus',
+                'REVIEW_COMPLETE': 'check-circle',
+                'AUTHOR_UPDATE': 'edit'
+            };
+            return iconMap[action] || 'info';
+        }
+
+        function getActivityDescription(activity) {
+            const actionMap = {
+                'SUBMISSION_VERIFY': 'Verified submission',
+                'SUBMISSION_PUBLISH': 'Published paper',
+                'SUBMISSION_REJECT': 'Rejected submission',
+                'REVIEWER_VERIFY': 'Approved reviewer',
+                'REVIEWER_REJECT': 'Rejected reviewer',
+                'REVIEW_ASSIGN': 'Assigned reviewer',
+                'REVIEW_COMPLETE': 'Completed review',
+                'AUTHOR_UPDATE': 'Updated author'
+            };
+            return actionMap[activity.action] || 'Admin action';
+        }
+
+        function formatTimeAgo(timestamp) {
+            const now = new Date();
+            const time = new Date(timestamp);
+            const diffInSeconds = Math.floor((now - time) / 1000);
+            
+            if (diffInSeconds < 60) return 'Just now';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+            return `${Math.floor(diffInSeconds / 86400)}d ago`;
+        }
+
+        function showError(message) {
+            // Simple error display - you might want to implement a more sophisticated notification system
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50';
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+            
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

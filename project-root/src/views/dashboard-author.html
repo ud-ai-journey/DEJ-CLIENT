@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Author Dashboard</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto', sans-serif; }
+    .font-lato { font-family: 'Lato', sans-serif; }
+  </style>
+  <script>
+    function fmtDate(ts){ try{ return new Date(ts).toLocaleString(); }catch(e){ return ts; } }
+  </script>
+</head>
+<body class="bg-[#F9FAFB] text-[#1A1A2E]">
+  <header class="sticky top-0 z-50 bg-white shadow-sm">
+    <div class="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div class="text-xl font-bold font-lato">
+        <a href="/"><img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-12 sm:h-14 w-auto"></a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center space-x-6 text-sm">
+        <a href="/" class="hover:text-[#3F72AF]">Home</a>
+        <a href="/researches" class="hover:text-[#3F72AF]">Published Papers</a>
+        <a href="/submit" class="hover:text-[#3F72AF]">Submit Research</a>
+        <a href="/reviewer" class="hover:text-[#3F72AF]">Review Paper</a>
+        <span id="dashboardTab" class="relative">
+          <button class="inline-flex items-center gap-1 px-3 py-1 rounded hover:bg-gray-100">Dashboards
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/></svg>
+          </button>
+          <div class="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg hidden" id="dashboardMenu">
+            <a href="/dashboard/author" class="block px-4 py-2 hover:bg-gray-100">Author</a>
+            <a href="/dashboard/reviewer" class="block px-4 py-2 hover:bg-gray-100">Reviewer</a>
+          </div>
+        </span>
+        <span id="authLinks" class="flex items-center gap-2"></span>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobileMenuButton" class="md:hidden p-2 text-gray-600 focus:outline-none">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
+      <div class="px-4 py-2 space-y-1">
+        <a href="/" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Home</a>
+        <a href="/researches" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Published Papers</a>
+        <a href="/submit" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Submit Research</a>
+        <a href="/reviewer" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Review Paper</a>
+        <span id="mobileDashboardTab">
+          <div class="px-3 py-2">
+            <div class="font-medium text-gray-900 mb-2">Dashboards</div>
+            <a href="/dashboard/author" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Author</a>
+            <a href="/dashboard/reviewer" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Reviewer</a>
+          </div>
+        </span>
+        <div id="mobileAuthLinks" class="px-3 py-2 space-y-2"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between mb-6">
+      <div>
+        <h1 class="text-xl sm:text-2xl font-bold font-lato">Author Dashboard</h1>
+        <p class="text-sm text-gray-600">Track your submissions, revisions, and decisions</p>
+      </div>
+      <a href="/submit" class="inline-flex items-center justify-center gap-2 bg-[#3F72AF] hover:bg-[#345b8f] text-white px-4 py-2 rounded text-sm">
+        <span>＋</span> New Submission
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <div class="bg-gradient-to-br from-blue-50 to-white border rounded-lg p-4 flex items-center gap-3">
+        <div class="text-blue-600">📚</div>
+        <div>
+          <div class="text-sm text-gray-500">Total Submissions</div>
+          <div class="text-2xl font-bold" id="statTotal">—</div>
+        </div>
+      </div>
+      <div class="bg-gradient-to-br from-amber-50 to-white border rounded-lg p-4 flex items-center gap-3">
+        <div class="text-amber-600">⏳</div>
+        <div>
+          <div class="text-sm text-gray-500">Under Review</div>
+          <div class="text-2xl font-bold" id="statUnder">—</div>
+        </div>
+      </div>
+      <div class="bg-gradient-to-br from-emerald-50 to-white border rounded-lg p-4 flex items-center gap-3">
+        <div class="text-emerald-600">✅</div>
+        <div>
+          <div class="text-sm text-gray-500">Accepted</div>
+          <div class="text-2xl font-bold" id="statAccepted">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <div class="flex items-start gap-3 bg-white border rounded-lg p-4">
+        <div class="text-[#3F72AF]">💡</div>
+        <div class="text-sm text-gray-700">
+          Tip: Higher average scores and lower variance among reviewer scores increase your chance of acceptance.
+          Ensure your abstract and keywords are clear to improve reviewer matching.
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white border rounded-xl mb-4 p-4">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div class="relative">
+            <input id="searchInput" type="text" placeholder="Search title..." class="pl-9 pr-3 py-2 border rounded w-full sm:w-64 text-sm">
+            <span class="absolute left-2 top-2.5 text-gray-400">🔎</span>
+          </div>
+          <select id="statusFilter" class="border rounded py-2 px-3 text-sm">
+            <option value="">All Statuses</option>
+            <option value="submitted">Submitted</option>
+            <option value="under_review">Under Review</option>
+            <option value="accepted">Accepted</option>
+            <option value="minor_rev">Minor Rev</option>
+            <option value="major_rev">Major Rev</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+        <div class="text-xs text-gray-500">Showing <span id="showingCount">0</span> items</div>
+      </div>
+    </div>
+
+    <section class="bg-white border rounded-xl overflow-hidden">
+      <div class="px-4 py-3 border-b font-medium">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <span>Your Submissions</span>
+          <div class="flex flex-wrap items-center gap-2 text-xs">
+            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100">Legend:</span>
+            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-50 text-amber-700">Under Review</span>
+            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-50 text-emerald-700">Accepted</span>
+            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-rose-50 text-rose-700">Rejected</span>
+          </div>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead class="bg-gray-50 sticky top-0 z-10">
+            <tr>
+              <th class="text-left px-3 sm:px-4 py-2 min-w-[200px]">Title</th>
+              <th class="text-left px-3 sm:px-4 py-2 min-w-[100px]">Status</th>
+              <th class="text-left px-3 sm:px-4 py-2 min-w-[80px]">Avg Score</th>
+              <th class="text-left px-3 sm:px-4 py-2 min-w-[120px]">Last Update</th>
+              <th class="text-left px-3 sm:px-4 py-2 min-w-[100px]">Progress</th>
+              <th class="text-left px-4 py-2">Details</th>
+            </tr>
+          </thead>
+          <tbody id="submissionRows"></tbody>
+        </table>
+        <div id="emptyState" class="hidden p-8 text-center text-gray-500">No submissions found.</div>
+        <div id="skeletonRows" class="divide-y">
+          <div class="animate-pulse p-4 grid grid-cols-5 gap-4">
+            <div class="h-4 bg-gray-100 rounded col-span-2"></div>
+            <div class="h-4 bg-gray-100 rounded"></div>
+            <div class="h-4 bg-gray-100 rounded"></div>
+            <div class="h-4 bg-gray-100 rounded"></div>
+          </div>
+          <div class="animate-pulse p-4 grid grid-cols-5 gap-4">
+            <div class="h-4 bg-gray-100 rounded col-span-2"></div>
+            <div class="h-4 bg-gray-100 rounded"></div>
+            <div class="h-4 bg-gray-100 rounded"></div>
+            <div class="h-4 bg-gray-100 rounded"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Function to handle payment processing
+    function processPayment(submissionId) {
+      // Show payment modal
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+      modal.innerHTML = `
+        <div class="bg-white rounded-lg p-6 max-w-md w-full">
+          <h3 class="text-lg font-bold mb-4">Process Payment</h3>
+          <p class="mb-4">Please complete the payment to proceed with publication of your accepted submission.</p>
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">Card Number</label>
+            <input type="text" class="w-full border rounded px-3 py-2" placeholder="1234 5678 9012 3456">
+          </div>
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">Expiry Date</label>
+              <input type="text" class="w-full border rounded px-3 py-2" placeholder="MM/YY">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">CVC</label>
+              <input type="text" class="w-full border rounded px-3 py-2" placeholder="123">
+            </div>
+          </div>
+          <div class="flex justify-end gap-2">
+            <button onclick="closePaymentModal()" class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
+            <button onclick="confirmPayment(${submissionId})" class="px-4 py-2 bg-[#3F72AF] hover:bg-[#345b8f] text-white rounded">Pay Now</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+    
+    // Function to close payment modal
+    function closePaymentModal() {
+      const modal = document.querySelector('.fixed.inset-0');
+      if (modal) {
+        document.body.removeChild(modal);
+      }
+    }
+    
+    // Function to confirm payment
+    function confirmPayment(submissionId) {
+      // Here you would typically make an API call to process the payment
+      // For now, we'll just show a success message and close the modal
+      alert('Payment processed successfully!');
+      closePaymentModal();
+      
+      // Refresh the page to update the submission status
+      window.location.reload();
+    }
+    
+    (async () => {
+      const dashTab = document.getElementById('dashboardTab');
+      const menu = document.getElementById('dashboardMenu');
+      const btn = dashTab.querySelector('button');
+      let open = false;
+      btn.addEventListener('click', (e) => { e.preventDefault(); open = !open; menu.classList.toggle('hidden', !open); });
+      document.addEventListener('click', (e) => { if (!dashTab.contains(e.target)) { open = false; menu.classList.add('hidden'); } });
+
+      // Auth UI with Auth0
+      const res = await fetch('/api/me', { credentials: 'include' });
+      const data = await res.json();
+      const el = document.getElementById('authLinks');
+      const mobileEl = document.getElementById('mobileAuthLinks');
+      
+      if (data && data.isAuthenticated) {
+        const u = data.user || {};
+        const displayName = u.name || u.email || 'User';
+        const authContent = `<span class="text-sm text-gray-700">Hello, ${displayName}</span>
+          <a href="/logout" class="border px-3 py-1 rounded hover:bg-gray-100">Logout</a>`;
+        const mobileAuthContent = `
+          <div class="text-sm text-gray-700 mb-2">Hello, ${displayName}</div>
+          <a href="/logout" class="block w-full text-center border px-4 py-2 rounded hover:bg-gray-100">Logout</a>
+        `;
+        
+        if (el) el.innerHTML = authContent;
+        if (mobileEl) mobileEl.innerHTML = mobileAuthContent;
+      } else {
+        window.location.href = '/api/auth/login?returnTo=/dashboard/author';
+        return;
+      }
+
+      // Mobile menu functionality
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      const mobileMenu = document.getElementById('mobileMenu');
+      
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', () => {
+          mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+            mobileMenu.classList.add('hidden');
+          }
+        });
+        
+        // Close mobile menu when window is resized to desktop
+        window.addEventListener('resize', () => {
+          if (window.innerWidth >= 768) { // md breakpoint
+            mobileMenu.classList.add('hidden');
+          }
+        });
+      }
+
+      // Fetch real submission data from API
+      const rows = document.getElementById('submissionRows');
+      const skeleton = document.getElementById('skeletonRows');
+      const empty = document.getElementById('emptyState');
+      const statusBadge = (s) => {
+        // Convert database status to display format
+        const status = s.toLowerCase();
+        const map = {
+          pending: 'bg-blue-50 text-blue-700',
+          under_review: 'bg-amber-50 text-amber-700',
+          accepted: 'bg-emerald-50 text-emerald-700',
+          minor_revision: 'bg-cyan-50 text-cyan-700',
+          major_revision: 'bg-orange-50 text-orange-700',
+          rejected: 'bg-rose-50 text-rose-700',
+        };
+        return `<span class="px-2 py-1 rounded-full text-xs ${map[status] || 'bg-gray-100 text-gray-700'}">${
+          status.replace('_',' ')}</span>`;
+      };
+      const progressOf = (s) => {
+        const status = s.toLowerCase();
+        switch (status) {
+          case 'pending': return 10;
+          case 'under_review': return 50;
+          case 'minor_revision': return 70;
+          case 'major_revision': return 60;
+          case 'accepted': return 100;
+          case 'rejected': return 100;
+          default: return 20;
+        }
+      };
+      
+      // Helper function to get comments based on submission status
+      const getCommentForStatus = (status) => {
+        const statusLower = status.toLowerCase();
+        switch (statusLower) {
+          case 'submitted':
+          case 'pending':
+            return 'Thanks for your submission. We will review it shortly.';
+          case 'under_review':
+            return 'Wait for the decision. Your submission is currently under review by our experts.';
+          case 'accepted':
+            return 'Congratulations! Your submission has been accepted. Next step is payment to proceed with publication.';
+          case 'rejected':
+            return 'We regret to inform you that your submission has been rejected. Please read the feedback, incorporate it and consider resubmitting.';
+          case 'minor_revision':
+            return 'Your submission requires minor revisions. Please address the reviewer comments and resubmit.';
+          case 'major_revision':
+            return 'Your submission requires major revisions. Please address the reviewer comments and resubmit.';
+          default:
+            return 'Status update: ' + status;
+        }
+      };
+      
+      // Helper function to safely escape text for insertion into HTML
+      const escapeHtml = (str) => {
+        if (str == null) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      };
+
+      // Render a modal with submission details and keep user on dashboard
+      window.viewSubmissionDetails = (submissionId) => {
+        const sub = submissions.find(s => String(s.id) === String(submissionId));
+        if (!sub) {
+          alert('Submission not found');
+          return;
+        }
+
+        // Remove any existing modal
+        const existing = document.getElementById('submissionDetailsModal');
+        if (existing) existing.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'submissionDetailsModal';
+        modal.className = 'fixed inset-0 z-50 flex items-start justify-center p-6';
+        modal.innerHTML = `
+          <div class="absolute inset-0 bg-black bg-opacity-40" onclick="document.getElementById('submissionDetailsModal')?.remove()"></div>
+          <div class="relative bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 z-10">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h2 class="text-lg font-bold">${escapeHtml(sub.title || 'Untitled')}</h2>
+                <div class="text-sm text-gray-500">Status: ${escapeHtml(sub.status)}</div>
+              </div>
+              <div>
+                <button onclick="document.getElementById('submissionDetailsModal')?.remove()" class="text-gray-500 hover:text-gray-800">Close ✕</button>
+              </div>
+            </div>
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <div class="text-xs text-gray-600">Abstract</div>
+                <div class="mt-2 text-sm text-gray-800 whitespace-pre-wrap">${escapeHtml(sub.abstract || 'No abstract provided.')}</div>
+              </div>
+              <div>
+                <div class="text-xs text-gray-600">Authors</div>
+                <div class="mt-2 text-sm text-gray-800">${escapeHtml((sub.authors || []).join(', ') || '—')}</div>
+                <div class="mt-3 text-xs text-gray-600">Average Score</div>
+                <div class="text-sm text-gray-800">${escapeHtml(sub.average_score ?? '—')}</div>
+                <div class="mt-3 text-xs text-gray-600">Last Updated</div>
+                <div class="text-sm text-gray-800">${escapeHtml(fmtDate(sub.updated_at))}</div>
+              </div>
+            </div>
+            <div class="mt-4 flex justify-end gap-2">
+              ${getActionButtonsForStatus(sub.status, sub.id)}
+            </div>
+          </div>
+        `;
+
+        document.body.appendChild(modal);
+      };
+
+      // Helper function to get action buttons based on submission status
+      const getActionButtonsForStatus = (status, submissionId, includeViewDetails = true) => {
+        const statusLower = (status || '').toLowerCase();
+        let buttons = '';
+
+        // For accepted status, only show payment button - no view details button
+        if (statusLower === 'accepted') {
+          buttons += `<button onclick="processPayment(${submissionId})" class="inline-block px-3 py-1 bg-[#3F72AF] hover:bg-[#345b8f] text-white rounded text-sm">Process Payment</button>`;
+          return buttons; // Return early to avoid adding view details button
+        }
+
+        // Common view button for statuses where viewing details is useful
+        // Only show view button for under_review, minor_revision, major_revision, and rejected
+        if (includeViewDetails && (statusLower === 'under_review' || statusLower === 'minor_revision' || statusLower === 'major_revision' || statusLower === 'rejected')) {
+          // Use a button that opens the modal instead of a navigation link
+          buttons += `<button onclick="window.viewSubmissionDetails(${submissionId})" class="inline-block px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm">View Details</button>`;
+        }
+
+        // Status-specific buttons
+        if (statusLower === 'rejected') {
+          buttons += `<a href="/submit?resubmit=${submissionId}" class="inline-block px-3 py-1 bg-[#F9A826] hover:bg-[#e28e0c] text-white rounded text-sm">Resubmit</a>`;
+        } else if (statusLower === 'minor_revision' || statusLower === 'major_revision') {
+          buttons += `<a href="/submit-revision/${submissionId}" class="inline-block px-3 py-1 bg-[#F9A826] hover:bg-[#e28e0c] text-white rounded text-sm">Upload Revision</a>`;
+        }
+
+        return buttons;
+      };
+      
+      // Fetch submissions from API
+      let submissions = [];
+      try {
+        const response = await fetch('/api/submissions', {
+          credentials: 'include'
+        });
+        if (response.ok) {
+          submissions = await response.json();
+        } else {
+          console.error('Failed to fetch submissions:', await response.text());
+        }
+      } catch (error) {
+        console.error('Error fetching submissions:', error);
+      }
+      
+      document.getElementById('statTotal').textContent = submissions.length;
+      document.getElementById('statUnder').textContent = submissions.filter(d => d.status.toLowerCase() === 'under_review').length;
+      document.getElementById('statAccepted').textContent = submissions.filter(d => d.status.toLowerCase() === 'accepted').length;
+
+      const applyFilters = () => {
+        const q = (document.getElementById('searchInput').value || '').toLowerCase();
+        const f = document.getElementById('statusFilter').value;
+        const filtered = submissions.filter(d => (!q || d.title.toLowerCase().includes(q)) && (!f || d.status.toLowerCase() === f.toLowerCase()));
+        document.getElementById('showingCount').textContent = filtered.length;
+        rows.innerHTML = filtered.map(d => `
+          <tr class="border-t hover:bg-gray-50">
+            <td class="px-4 py-2">${d.title}</td>
+            <td class="px-4 py-2">${statusBadge(d.status)}</td>
+            <td class="px-4 py-2">${d.average_score ?? '—'}</td>
+            <td class="px-4 py-2">${fmtDate(d.updated_at)}</td>
+            <td class="px-4 py-2">
+              <div class="w-28 bg-gray-100 rounded-full h-2 overflow-hidden">
+                <div class="h-2 bg-[#3F72AF]" style="width:${progressOf(d.status)}%"></div>
+              </div>
+            </td>
+            <td class="px-4 py-2 space-x-2">
+              ${getActionButtonsForStatus(d.status, d.id)}
+            </td>
+          </tr>
+          <tr class="border-t bg-gray-50">
+            <td colspan="6" class="px-4 py-3">
+              <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-start">
+                  <div class="font-medium text-sm">Comments:</div>
+                  <div class="text-xs text-gray-500">Last updated: ${fmtDate(d.updated_at)}</div>
+                </div>
+                <div class="bg-white p-3 rounded border text-sm">
+                   ${getCommentForStatus(d.status)}
+                 </div>
+              </div>
+            </td>
+          </tr>`).join('');
+        empty.classList.toggle('hidden', filtered.length !== 0);
+      };
+      skeleton.classList.add('hidden');
+      applyFilters();
+      document.getElementById('searchInput').addEventListener('input', applyFilters);
+      document.getElementById('statusFilter').addEventListener('change', applyFilters);
+    })();
+  </script>
+</body>
+</html>
+
+

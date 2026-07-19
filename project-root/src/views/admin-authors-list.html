@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authors Management - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .slide-up { animation: slideUp 0.6s ease-out; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .author-card { transition: all 0.3s ease; }
+        .author-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <img src="/images/Logo.png" alt="DEJ Logo" class="h-8 w-auto mr-3">
+                    <h1 class="text-xl font-bold text-gray-900">Authors Management</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600" id="admin-name">Loading...</span>
+                    <button onclick="adminLogout()" class="text-red-600 hover:text-red-700 text-sm font-medium">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white shadow-lg min-h-screen">
+            <div class="p-4">
+                <nav class="space-y-2">
+                    <a href="/admin" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        Dashboard
+                    </a>
+                    <a href="/admin/submissions" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-file-alt mr-3"></i>
+                        Submissions
+                    </a>
+                    <a href="/admin/authors" class="flex items-center px-4 py-2 text-gray-900 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                        <i class="fas fa-users mr-3 text-blue-500"></i>
+                        Authors
+                    </a>
+                    <a href="/admin/reviewers" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-user-check mr-3"></i>
+                        Reviewers
+                    </a>
+                    <a href="/admin/published" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-book-open mr-3"></i>
+                        Published
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-8">
+            <!-- Header -->
+            <div class="mb-8 fade-in">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900">Authors</h2>
+                        <p class="text-gray-600 mt-2">Manage author profiles and submissions</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button id="sync-counts-btn" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center">
+                            <i class="fas fa-sync-alt mr-2"></i>
+                            Sync Counts
+                        </button>
+                        <button id="export-btn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
+                            <i class="fas fa-download mr-2"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                <div class="flex flex-wrap gap-4 items-end">
+                    <div class="flex-1 min-w-64">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Search Authors</label>
+                        <div class="relative">
+                            <input type="text" id="search-input" placeholder="Search by name, email, or affiliation..." 
+                                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                        <select id="status-filter" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="verified">Verified</option>
+                            <option value="pending">Pending</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Has Submissions</label>
+                        <select id="submissions-filter" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">All</option>
+                            <option value="true">Has Submissions</option>
+                            <option value="false">No Submissions</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                        <select id="sort-filter" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="created_at_desc">Newest First</option>
+                            <option value="created_at_asc">Oldest First</option>
+                            <option value="name_asc">Name A-Z</option>
+                            <option value="name_desc">Name Z-A</option>
+                            <option value="submissions_desc">Most Submissions</option>
+                        </select>
+                    </div>
+                    
+                    <button id="apply-filters" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg">
+                        <i class="fas fa-filter mr-2"></i>
+                        Apply
+                    </button>
+                    
+                    <button id="clear-filters" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-times mr-2"></i>
+                        Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Authors List -->
+            <div class="bg-white rounded-xl shadow-sm">
+                <!-- List Header -->
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-900">Authors List</h3>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-gray-600">
+                                Showing <span id="showing-count">0</span> of <span id="total-count">0</span> authors
+                            </span>
+                            <div class="flex items-center space-x-2">
+                                <label class="text-sm text-gray-600">Per page:</label>
+                                <select id="per-page" class="px-2 py-1 border border-gray-300 rounded text-sm">
+                                    <option value="10">10</option>
+                                    <option value="25" selected>25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Authors Grid -->
+                <div id="authors-container" class="p-6">
+                    <!-- Loading state -->
+                    <div id="loading-authors" class="text-center py-12">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                        <p class="text-gray-600">Loading authors...</p>
+                    </div>
+
+                    <!-- Empty state -->
+                    <div id="no-authors" class="text-center py-12 hidden">
+                        <i class="fas fa-users text-gray-300 text-6xl mb-4"></i>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">No authors found</h3>
+                        <p class="text-gray-600">Try adjusting your search or filter criteria.</p>
+                    </div>
+
+                    <!-- Authors grid -->
+                    <div id="authors-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+                        <!-- Author cards will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination" class="px-6 py-4 border-t border-gray-200 hidden">
+                    <div class="flex items-center justify-between">
+                        <button id="prev-page" class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="fas fa-chevron-left mr-1"></i>
+                            Previous
+                        </button>
+                        
+                        <div class="flex space-x-1" id="page-numbers">
+                            <!-- Page numbers will be populated here -->
+                        </div>
+                        
+                        <button id="next-page" class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                            Next
+                            <i class="fas fa-chevron-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Author Modal -->
+    <div id="author-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-900">Author Details</h3>
+                        <button id="close-modal" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="author-modal-content" class="p-6">
+                    <!-- Author details will be loaded here -->
+                    <div class="animate-pulse">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="w-16 h-16 bg-gray-200 rounded-full"></div>
+                            <div class="flex-1">
+                                <div class="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+                                <div class="h-3 bg-gray-200 rounded w-2/3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        // Admin Authentication Check
+        function checkAdminAuth() {
+            const adminAuth = localStorage.getItem('adminAuthenticated');
+            if (adminAuth !== 'true') {
+                window.location.href = '/admin-login';
+                return false;
+            }
+            return true;
+        }
+
+        // Logout function
+        function adminLogout() {
+            localStorage.removeItem('adminAuthenticated');
+            window.location.href = '/admin-login';
+        }
+
+        // Check authentication on page load
+        if (!checkAdminAuth()) {
+            // Will redirect to login page
+        }
+
+        // Admin token helpers
+        function generateAdminToken() {
+            return 'admin-session-loratech-' + new Date().toDateString();
+        }
+
+        function getAdminToken() {
+            let token = localStorage.getItem('adminToken');
+            if (!token) {
+                token = generateAdminToken();
+                localStorage.setItem('adminToken', token);
+            }
+            return token;
+        }
+
+        async function authenticatedFetch(url, options = {}) {
+            const token = getAdminToken();
+            const headers = {
+                'admin-token': token,
+                ...(options.headers || {})
+            };
+
+            const fetchOptions = {
+                ...options,
+                headers
+            };
+
+            return fetch(url, fetchOptions);
+        }
+
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentFilters = {};
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            getAdminToken();
+            loadUserInfo();
+            loadAuthors();
+            setupEventListeners();
+        });
+
+        // Load user information
+        async function loadUserInfo() {
+            try {
+                // For hardcoded admin auth, just set admin name
+                document.getElementById('admin-name').textContent = 'Admin User';
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                document.getElementById('admin-name').textContent = 'Admin';
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('apply-filters').addEventListener('click', applyFilters);
+            document.getElementById('clear-filters').addEventListener('click', clearFilters);
+            document.getElementById('search-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') applyFilters();
+            });
+            document.getElementById('per-page').addEventListener('change', function() {
+                currentPage = 1;
+                loadAuthors();
+            });
+            
+            // Modal events
+            document.getElementById('close-modal').addEventListener('click', closeModal);
+            document.getElementById('author-modal').addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+            
+            // Export functionality
+            document.getElementById('export-btn').addEventListener('click', exportAuthors);
+            
+            // Sync counts functionality
+            document.getElementById('sync-counts-btn').addEventListener('click', syncSubmissionCounts);
+        }
+
+        // Load authors with current filters and pagination
+        async function loadAuthors() {
+            try {
+                showLoading(true);
+                
+                const params = new URLSearchParams({
+                    page: currentPage,
+                    limit: document.getElementById('per-page').value,
+                    ...currentFilters
+                });
+                
+                const response = await authenticatedFetch(`/api/admin/authors?${params}`);
+                if (!response.ok) {
+                    throw new Error('Failed to load authors');
+                }
+                
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load authors');
+                }
+
+                displayAuthors(data.authors || []);
+                updatePagination(data.pagination);
+                updateCounts(data.pagination);
+                
+            } catch (error) {
+                console.error('Error loading authors:', error);
+                showError('Failed to load authors. Please try again.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Display authors in grid
+        function displayAuthors(authors) {
+            const container = document.getElementById('authors-grid');
+            const noAuthorsDiv = document.getElementById('no-authors');
+            
+            if (!authors || authors.length === 0) {
+                container.classList.add('hidden');
+                noAuthorsDiv.classList.remove('hidden');
+                return;
+            }
+            
+            noAuthorsDiv.classList.add('hidden');
+            container.classList.remove('hidden');
+            
+            container.innerHTML = authors.map(author => createAuthorCard(author)).join('');
+            
+            // Add click event listeners to author cards
+            container.querySelectorAll('.author-card').forEach((card, index) => {
+                card.addEventListener('click', () => showAuthorDetails(authors[index]));
+            });
+        }
+
+        // Create author card HTML
+        function createAuthorCard(author) {
+            const statusColor = getStatusColor(author.status || 'active');
+            const submissionCount = author.submission_count || 0;
+            const publishedCount = author.published_count || 0;
+            const underReviewCount = author.under_review_count || 0;
+            
+            return `
+                <div class="author-card bg-white border border-gray-200 rounded-lg p-6 cursor-pointer hover:shadow-md transition-all">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-user text-blue-600 text-lg"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900 truncate">${author.full_name}</h3>
+                                <span class="px-2 py-1 text-xs font-medium rounded-full ${statusColor.bg} ${statusColor.text}">
+                                    ${(author.status || 'active').charAt(0).toUpperCase() + (author.status || 'active').slice(1)}
+                                </span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2 truncate">${author.email}</p>
+                            <p class="text-sm text-gray-500 mb-3 truncate">${author.affiliation || 'No affiliation'}</p>
+                            
+                            <div class="grid grid-cols-3 gap-2 text-xs mb-3">
+                                <div class="text-center p-2 bg-blue-50 rounded">
+                                    <div class="font-semibold text-blue-600">${submissionCount}</div>
+                                    <div class="text-gray-600">Total</div>
+                                </div>
+                                <div class="text-center p-2 bg-green-50 rounded">
+                                    <div class="font-semibold text-green-600">${publishedCount}</div>
+                                    <div class="text-gray-600">Published</div>
+                                </div>
+                                <div class="text-center p-2 bg-yellow-50 rounded">
+                                    <div class="font-semibold text-yellow-600">${underReviewCount}</div>
+                                    <div class="text-gray-600">In Review</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between text-sm">
+                                <div class="text-xs text-gray-400">
+                                    Joined ${formatDate(author.created_at)}
+                                </div>
+                                ${author.latest_submission ? `
+                                <div class="text-xs text-gray-500">
+                                    Last: ${formatDate(author.latest_submission.created_at)}
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Show author details in modal
+        async function showAuthorDetails(author) {
+            try {
+                document.getElementById('author-modal').classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+                
+                // Load detailed author info
+                const response = await authenticatedFetch(`/api/admin/authors/${encodeURIComponent(author.email)}`);
+                if (!response.ok) {
+                    throw new Error('Failed to load author details');
+                }
+                
+                const detailedAuthor = await response.json();
+                console.log('Detailed author data:', detailedAuthor); // Debug log
+                displayAuthorDetails(detailedAuthor);
+                
+            } catch (error) {
+                console.error('Error loading author details:', error);
+                // Show basic author info if detailed fetch fails
+                displayAuthorDetails(author);
+                showError('Failed to load detailed author information, showing basic data');
+            }
+        }
+
+        // Display author details in modal
+        function displayAuthorDetails(author) {
+            const content = document.getElementById('author-modal-content');
+            const statusColor = getStatusColor(author.status || 'active');
+            
+            content.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Author Header -->
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-blue-600 text-2xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <h2 class="text-xl font-bold text-gray-900">${author.full_name}</h2>
+                                <span class="px-3 py-1 text-sm font-medium rounded-full ${statusColor.bg} ${statusColor.text}">
+                                    ${(author.status || 'active').charAt(0).toUpperCase() + (author.status || 'active').slice(1)}
+                                </span>
+                            </div>
+                            <p class="text-gray-600">${author.email}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Author Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-900 mb-3">Contact Information</h3>
+                            <dl class="space-y-2">
+                                <div>
+                                    <dt class="text-sm text-gray-500">Email</dt>
+                                    <dd class="text-sm text-gray-900">${author.email}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm text-gray-500">Affiliation</dt>
+                                    <dd class="text-sm text-gray-900">${author.affiliation || 'Not specified'}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm text-gray-500">Status</dt>
+                                    <dd class="text-sm text-gray-900">${author.status || 'Active'}</dd>
+                                </div>
+                            </dl>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-900 mb-3">Account Statistics</h3>
+                            <dl class="space-y-2">
+                                <div>
+                                    <dt class="text-sm text-gray-500">Total Submissions</dt>
+                                    <dd class="text-sm text-gray-900">${author.statistics?.total || author.submission_count || 0}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm text-gray-500">Published Papers</dt>
+                                    <dd class="text-sm text-gray-900">${author.statistics?.published_count || author.published_count || 0}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm text-gray-500">Under Review</dt>
+                                    <dd class="text-sm text-gray-900">${(author.statistics?.by_status?.under_review || 0) + (author.statistics?.by_status?.submitted || 0) || author.under_review_count || 0}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm text-gray-500">Success Rate</dt>
+                                    <dd class="text-sm text-gray-900">${(() => {
+                                        const total = author.statistics?.total || author.submission_count || 0;
+                                        const published = author.statistics?.published_count || author.published_count || 0;
+                                        return total > 0 ? Math.round((published / total) * 100) : 0;
+                                    })()}%</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm text-gray-500">Member Since</dt>
+                                    <dd class="text-sm text-gray-900">${formatDate(author.created_at)}</dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Submissions -->
+                    ${(author.recent_submissions || author.submissions || []).length > 0 ? `
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-900 mb-3">Recent Submissions</h3>
+                        <div class="space-y-3">
+                            ${(author.recent_submissions || author.submissions || []).slice(0, 5).map(submission => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium text-gray-900">${submission.title}</p>
+                                        <p class="text-xs text-gray-500">${formatDate(submission.created_at)}</p>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full ${getSubmissionStatusColor(submission.status).bg} ${getSubmissionStatusColor(submission.status).text}">
+                                            ${submission.status}
+                                        </span>
+                                        <a href="/admin/submissions/${submission.id}" class="px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded border border-blue-300 hover:border-blue-400 transition-colors">
+                                            View
+                                        </a>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Actions -->
+                    <div class="flex space-x-3 pt-4 border-t border-gray-200">
+                        <button onclick="editAuthor('${author.email}')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
+                            <i class="fas fa-edit mr-2"></i>
+                            Edit Profile
+                        </button>
+                        <button onclick="viewAuthorSubmissions('${author.email}')" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm">
+                            <i class="fas fa-file-alt mr-2"></i>
+                            View Submissions
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Apply current filters
+        function applyFilters() {
+            currentPage = 1;
+            currentFilters = {
+                search: document.getElementById('search-input').value.trim(),
+                status: document.getElementById('status-filter').value,
+                has_submissions: document.getElementById('submissions-filter').value,
+                sort_by: document.getElementById('sort-filter').value
+            };
+            
+            // Remove empty filters
+            Object.keys(currentFilters).forEach(key => {
+                if (currentFilters[key] === '') {
+                    delete currentFilters[key];
+                }
+            });
+            
+            loadAuthors();
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('status-filter').value = '';
+            document.getElementById('submissions-filter').value = '';
+            document.getElementById('sort-filter').value = 'created_at_desc';
+            currentFilters = {};
+            currentPage = 1;
+            loadAuthors();
+        }
+
+        // Update pagination
+        function updatePagination(pagination) {
+            if (!pagination) return;
+            
+            totalPages = pagination.total_pages;
+            currentPage = pagination.current_page;
+            
+            const paginationDiv = document.getElementById('pagination');
+            
+            if (totalPages <= 1) {
+                paginationDiv.classList.add('hidden');
+                return;
+            }
+            
+            paginationDiv.classList.remove('hidden');
+            
+            // Update previous/next buttons
+            const prevBtn = document.getElementById('prev-page');
+            const nextBtn = document.getElementById('next-page');
+            
+            prevBtn.disabled = currentPage <= 1;
+            nextBtn.disabled = currentPage >= totalPages;
+            
+            prevBtn.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadAuthors();
+                }
+            };
+            
+            nextBtn.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadAuthors();
+                }
+            };
+            
+            // Update page numbers
+            const pageNumbers = document.getElementById('page-numbers');
+            pageNumbers.innerHTML = generatePageNumbers(currentPage, totalPages);
+        }
+
+        // Generate page numbers HTML
+        function generatePageNumbers(current, total) {
+            let pages = [];
+            
+            if (total <= 7) {
+                for (let i = 1; i <= total; i++) {
+                    pages.push(i);
+                }
+            } else {
+                if (current <= 4) {
+                    pages = [1, 2, 3, 4, 5, '...', total];
+                } else if (current >= total - 3) {
+                    pages = [1, '...', total - 4, total - 3, total - 2, total - 1, total];
+                } else {
+                    pages = [1, '...', current - 1, current, current + 1, '...', total];
+                }
+            }
+            
+            return pages.map(page => {
+                if (page === '...') {
+                    return '<span class="px-3 py-2 text-gray-500">...</span>';
+                }
+                
+                const isActive = page === current;
+                const classes = isActive 
+                    ? 'px-3 py-2 bg-blue-600 text-white rounded-lg text-sm'
+                    : 'px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg text-sm cursor-pointer';
+                
+                return `<span class="${classes}" ${!isActive ? `onclick="goToPage(${page})"` : ''}>${page}</span>`;
+            }).join('');
+        }
+
+        // Go to specific page
+        function goToPage(page) {
+            currentPage = page;
+            loadAuthors();
+        }
+
+        // Update counts display
+        function updateCounts(pagination) {
+            if (!pagination) return;
+            
+            document.getElementById('total-count').textContent = pagination.total_items || 0;
+            document.getElementById('showing-count').textContent = 
+                Math.min((pagination.current_page - 1) * pagination.per_page + pagination.items_on_page, pagination.total_items) || 0;
+        }
+
+        // Export authors
+        async function exportAuthors() {
+            try {
+                const params = new URLSearchParams(currentFilters);
+                params.append('export', 'true');
+                
+                const response = await authenticatedFetch(`/api/admin/authors?${params}`);
+                if (!response.ok) {
+                    throw new Error('Failed to export authors');
+                }
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `authors_export_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                
+                showSuccess('Authors exported successfully!');
+            } catch (error) {
+                console.error('Error exporting authors:', error);
+                showError('Failed to export authors');
+            }
+        }
+
+        // Sync submission counts
+        async function syncSubmissionCounts() {
+            try {
+                const syncBtn = document.getElementById('sync-counts-btn');
+                const originalText = syncBtn.innerHTML;
+                
+                // Show loading state
+                syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Syncing...';
+                syncBtn.disabled = true;
+                
+                const response = await authenticatedFetch('/api/admin/authors/sync-counts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to sync submission counts');
+                }
+                
+                const result = await response.json();
+                if (!result.success) {
+                    throw new Error(result.error || 'Sync failed');
+                }
+                
+                showSuccess(`Submission counts synced successfully! Updated ${result.data.updated} authors.`);
+                
+                // Reload the authors list to show updated counts
+                await loadAuthors();
+                
+            } catch (error) {
+                console.error('Error syncing submission counts:', error);
+                showError('Failed to sync submission counts: ' + error.message);
+            } finally {
+                // Reset button state
+                const syncBtn = document.getElementById('sync-counts-btn');
+                syncBtn.innerHTML = '<i class="fas fa-sync-alt mr-2"></i>Sync Counts';
+                syncBtn.disabled = false;
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('author-modal').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // Show loading state
+        function showLoading(show) {
+            const loading = document.getElementById('loading-authors');
+            const grid = document.getElementById('authors-grid');
+            const noAuthors = document.getElementById('no-authors');
+            
+            if (show) {
+                loading.classList.remove('hidden');
+                grid.classList.add('hidden');
+                noAuthors.classList.add('hidden');
+            } else {
+                loading.classList.add('hidden');
+            }
+        }
+
+        // Utility functions
+        function getStatusColor(status) {
+            const colors = {
+                active: { bg: 'bg-green-100', text: 'text-green-800' },
+                verified: { bg: 'bg-blue-100', text: 'text-blue-800' },
+                pending: { bg: 'bg-yellow-100', text: 'text-yellow-800' },
+                inactive: { bg: 'bg-gray-100', text: 'text-gray-800' }
+            };
+            return colors[status] || colors.active;
+        }
+
+        function getSubmissionStatusColor(status) {
+            const colors = {
+                draft: { bg: 'bg-gray-100', text: 'text-gray-800' },
+                submitted: { bg: 'bg-blue-100', text: 'text-blue-800' },
+                under_review: { bg: 'bg-yellow-100', text: 'text-yellow-800' },
+                revision_required: { bg: 'bg-orange-100', text: 'text-orange-800' },
+                accepted: { bg: 'bg-green-100', text: 'text-green-800' },
+                rejected: { bg: 'bg-red-100', text: 'text-red-800' }
+            };
+            return colors[status] || colors.draft;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function showError(message) {
+            // Implement your error notification system
+            console.error(message);
+            alert(message); // Simple fallback
+        }
+
+        function showSuccess(message) {
+            // Implement your success notification system
+            console.log(message);
+            alert(message); // Simple fallback
+        }
+
+        // Placeholder functions for actions
+        function editAuthor(email) {
+            alert(`Edit author: ${email} - Feature coming soon!`);
+        }
+
+        function viewAuthorSubmissions(email) {
+            window.location.href = `/admin/submissions?author=${encodeURIComponent(email)}`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login - Digital Evolution Journal</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Roboto&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        color: #1a1a2e;
+      }
+      h1, h2, h3, h4 {
+        font-family: "Lato", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-[#F9FAFB]">
+
+    <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-white shadow-sm px-8 py-4 flex justify-between items-center">
+    <div class="text-xl font-bold font-lato"><a href="/"><img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-14 w-37"></a></div>
+    <nav class="space-x-6 text-sm flex items-center">
+      <a href="/" class="hover:text-[#3F72AF]">Home</a>
+    </nav>
+  </header>
+
+
+    <!-- Login Form -->
+    <section class="flex items-center justify-center min-h-screen py-10 px-4">
+      <div class="bg-white p-10 rounded-xl shadow-md w-full max-w-md border border-gray-200">
+        <h2 class="text-2xl font-bold mb-6 text-center text-[#1A1A2E]">Admin Login</h2>
+        <form id="loginForm" class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium mb-1">Username</label>
+            <input id="username" type="text" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]" placeholder="admin" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Password</label>
+            <input id="password" type="password" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]" placeholder="••••••••" required />
+          </div>
+          <div id="loginError" class="text-red-600 text-sm text-center"></div>
+          <button type="submit" class="w-full bg-[#3F72AF] hover:bg-[#345b8f] text-white py-2 rounded font-medium">
+            Login
+          </button>
+        </form>
+      </div>
+    </section>
+
+  <script>
+    // Simple check if already logged in
+    function checkAdminAuth() {
+      const adminAuth = localStorage.getItem('adminAuthenticated');
+      if (adminAuth === 'true') {
+        window.location.href = '/admin';
+      }
+    }
+    
+    // Check on page load
+    checkAdminAuth();
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorDiv = document.getElementById('loginError');
+      errorDiv.textContent = '';
+      
+      // Simple credential check
+      if (username === 'loratech' && password === 'raghu123') {
+        // Set persistent session
+        localStorage.setItem('adminAuthenticated', 'true');
+        localStorage.setItem('adminToken', 'admin-session-' + new Date().getTime());
+        
+        // Redirect to dashboard
+        window.location.href = '/admin';
+      } else {
+        errorDiv.textContent = 'Invalid username or password.';
+      }
+    });
+  </script>
+
+  </body>
+</html>

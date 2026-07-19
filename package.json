@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "npm --prefix project-root run start",
+    "dev": "npm --prefix project-root run dev",
+    "install:project": "npm --prefix project-root install"
+  }
+}

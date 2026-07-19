@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Published Submissions - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .slide-up { animation: slideUp 0.6s ease-out; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .stat-card { transition: all 0.3s ease; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .submission-card { transition: all 0.3s ease; }
+        .submission-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <img src="/images/Logo.png" alt="DEJ Logo" class="h-8 w-auto mr-3">
+                    <h1 class="text-xl font-bold text-gray-900">Published Submissions</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600" id="admin-name">Loading...</span>
+                    <button onclick="adminLogout()" class="text-red-600 hover:text-red-700 text-sm font-medium">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white shadow-lg min-h-screen">
+            <div class="p-4">
+                <nav class="space-y-2">
+                    <a href="/admin" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        Dashboard
+                    </a>
+                    <a href="/admin/submissions" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-file-alt mr-3"></i>
+                        Submissions
+                    </a>
+                    <a href="/admin/authors" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-users mr-3"></i>
+                        Authors
+                    </a>
+                    <a href="/admin/reviewers" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg">
+                        <i class="fas fa-user-check mr-3"></i>
+                        Reviewers
+                    </a>
+                    <a href="/admin/published" class="flex items-center px-4 py-2 text-gray-900 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                        <i class="fas fa-book-open mr-3 text-blue-500"></i>
+                        Published
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-8">
+            <!-- Header -->
+            <div class="mb-8 fade-in">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900">Published Submissions</h2>
+                        <p class="text-gray-600 mt-2">Manage and track all published research papers</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button id="export-btn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center" onclick="exportPublishedSubmissions()">
+                            <i class="fas fa-download mr-2"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <!-- Total Published -->
+                <div class="stat-card bg-white rounded-xl shadow-sm p-6 slide-up">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Total Published</p>
+                            <p class="text-3xl font-bold text-gray-900" id="totalPublishedCount">-</p>
+                        </div>
+                        <div class="p-3 bg-green-100 rounded-full">
+                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-green-600 font-medium" id="publishedChange">-</span>
+                        <span class="text-gray-500 ml-1">this month</span>
+                    </div>
+                </div>
+
+                <!-- This Month -->
+                <div class="stat-card bg-white rounded-xl shadow-sm p-6 slide-up" style="animation-delay: 0.1s">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">This Month</p>
+                            <p class="text-3xl font-bold text-gray-900" id="thisMonthCount">-</p>
+                        </div>
+                        <div class="p-3 bg-blue-100 rounded-full">
+                            <i class="fas fa-calendar text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-blue-600 font-medium">+15%</span>
+                        <span class="text-gray-500 ml-1">vs last month</span>
+                    </div>
+                </div>
+
+                <!-- Research Papers -->
+                <div class="stat-card bg-white rounded-xl shadow-sm p-6 slide-up" style="animation-delay: 0.2s">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Research Papers</p>
+                            <p class="text-3xl font-bold text-gray-900" id="researchPapersCount">-</p>
+                        </div>
+                        <div class="p-3 bg-purple-100 rounded-full">
+                            <i class="fas fa-microscope text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-purple-600 font-medium">72%</span>
+                        <span class="text-gray-500 ml-1">of total</span>
+                    </div>
+                </div>
+
+                <!-- White Papers -->
+                <div class="stat-card bg-white rounded-xl shadow-sm p-6 slide-up" style="animation-delay: 0.3s">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">White Papers</p>
+                            <p class="text-3xl font-bold text-gray-900" id="whitePapersCount">-</p>
+                        </div>
+                        <div class="p-3 bg-orange-100 rounded-full">
+                            <i class="fas fa-book text-orange-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-orange-600 font-medium">28%</span>
+                        <span class="text-gray-500 ml-1">of total</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filters -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <form id="searchForm" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <div class="md:col-span-2">
+                        <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                            <input type="text" id="searchInput" class="pl-10 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Search by title, author, or DOI...">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="paperTypeFilter" class="block text-sm font-medium text-gray-700 mb-2">Paper Type</label>
+                        <select id="paperTypeFilter" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">All Types</option>
+                            <option value="Research Paper">Research Paper</option>
+                            <option value="White Paper">White Paper</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="sortBy" class="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                        <select id="sortBy" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="published_at_desc">Latest Published</option>
+                            <option value="published_at_asc">Oldest Published</option>
+                            <option value="title_asc">Title A-Z</option>
+                            <option value="title_desc">Title Z-A</option>
+                            <option value="author_asc">Author A-Z</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-search mr-2"></i>
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingSpinner" class="bg-white rounded-lg shadow-sm p-8 text-center">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <p class="mt-4 text-gray-600">Loading published submissions...</p>
+            </div>
+
+            <!-- Submissions Grid -->
+            <div id="submissionsContainer" class="grid grid-cols-1 gap-6" style="display: none;">
+                <!-- Submissions will be populated here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="bg-white rounded-lg shadow-sm p-12 text-center" style="display: none;">
+                <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">No Published Submissions Found</h3>
+                <p class="text-gray-600">No submissions match your current search criteria.</p>
+            </div>
+
+            <!-- Pagination -->
+            <div id="paginationWrapper" class="bg-white rounded-lg shadow-sm p-4 mt-6 flex justify-between items-center" style="display: none;">
+                <div class="text-sm text-gray-600" id="paginationInfo"></div>
+                <div class="flex space-x-2" id="paginationNav"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Details Modal -->
+    <div id="viewDetailsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50" style="display: none;">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-900">
+                    <i class="fas fa-eye mr-2"></i>Submission Details
+                </h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="modalBody" class="max-h-96 overflow-y-auto">
+                <!-- Content loaded dynamically -->
+            </div>
+            <div class="flex justify-end space-x-3 mt-6">
+                <button onclick="downloadPDF()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                    <i class="fas fa-download mr-2"></i>Download PDF
+                </button>
+                <button onclick="closeModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin Authentication Check
+        function checkAdminAuth() {
+            const adminAuth = localStorage.getItem('adminAuthenticated');
+            if (adminAuth !== 'true') {
+                window.location.href = '/admin/login';
+                return false;
+            }
+            return true;
+        }
+
+        // Simple logout function
+        function adminLogout() {
+            localStorage.removeItem('adminAuthenticated');
+            localStorage.removeItem('adminToken');
+            window.location.href = '/admin/login';
+        }
+
+        // Generate admin session token for API calls
+        function generateAdminToken() {
+            const token = 'admin-session-loratech-' + new Date().toDateString();
+            localStorage.setItem('adminToken', token);
+            return token;
+        }
+
+        // Get admin token for API calls
+        function getAdminToken() {
+            let token = localStorage.getItem('adminToken');
+            if (!token) {
+                token = generateAdminToken();
+            }
+            return token;
+        }
+
+        // Enhanced fetch with authentication and error handling
+        async function authenticatedFetch(url, options = {}) {
+            const token = getAdminToken();
+
+            const defaultOptions = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'admin-token': token,
+                    ...options.headers
+                },
+                ...options
+            };
+
+            const response = await fetch(url, defaultOptions);
+
+            if (!response.ok) {
+                if (response.status === 401 || response.status === 403) {
+                    // Authentication failed, redirect to login
+                    localStorage.removeItem('adminAuthenticated');
+                    localStorage.removeItem('adminToken');
+                    window.location.href = '/admin/login';
+                    throw new Error('Authentication failed');
+                }
+
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+            }
+
+            return response;
+        }
+
+        let currentPage = 1;
+        let currentFilters = {};
+        let selectedSubmissionId = null;
+
+        // Initialize page
+        async function initPage() {
+            // Check authentication
+            if (!checkAdminAuth()) {
+                return;
+            }
+
+            // Load admin name
+            loadUserInfo();
+
+            // Load initial data
+            await loadPublishedSubmissions();
+            updateStats();
+        }
+
+        // Load user information
+        function loadUserInfo() {
+            // For hardcoded admin auth, just set admin name
+            document.getElementById('admin-name').textContent = 'Admin User';
+        }
+
+        // Load published submissions
+        async function loadPublishedSubmissions(page = 1) {
+            try {
+                showLoading(true);
+
+                const params = new URLSearchParams({
+                    page: page.toString(),
+                    limit: '20',
+                    ...currentFilters
+                });
+
+                const response = await authenticatedFetch(`/api/admin/published?${params}`);
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displaySubmissions(data.submissions);
+                    updatePagination(data.pagination);
+                    currentPage = page;
+                } else {
+                    throw new Error(data.message || 'Failed to load submissions');
+                }
+            } catch (error) {
+                console.error('Error loading published submissions:', error);
+                showError('Failed to load published submissions');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Display submissions in grid
+        function displaySubmissions(submissions) {
+            const container = document.getElementById('submissionsContainer');
+            const emptyState = document.getElementById('emptyState');
+
+            if (!submissions || submissions.length === 0) {
+                container.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            container.style.display = 'grid';
+            emptyState.style.display = 'none';
+
+            container.innerHTML = submissions.map(submission => {
+                const publishedDate = new Date(submission.published_at || submission.created_at).toLocaleDateString();
+                const paperType = submission.paper_type || 'Research Paper';
+                const downloads = submission.download_count || 0;
+
+                return `
+                    <div class="submission-card bg-white rounded-lg shadow-sm p-6 border-l-4 border-green-500">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">${escapeHtml(submission.title || 'Untitled')}</h3>
+                                <div class="flex items-center space-x-4 text-sm text-gray-600 mb-2">
+                                    <span><i class="fas fa-user mr-1"></i>${escapeHtml(submission.author_name || 'Unknown')}</span>
+                                    <span><i class="fas fa-envelope mr-1"></i>${escapeHtml(submission.author_email || '')}</span>
+                                </div>
+                                <div class="flex items-center space-x-4 text-sm text-gray-600">
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                                        ${paperType.replace('_', ' ').toUpperCase()}
+                                    </span>
+                                    <span><i class="fas fa-calendar mr-1"></i>${publishedDate}</span>
+                                    <span><i class="fas fa-download mr-1"></i>${downloads} downloads</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">
+                                    <i class="fas fa-check-circle mr-1"></i>PUBLISHED
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t pt-4">
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm text-gray-600">
+                                    <span class="font-medium">DOI:</span> ${submission.doi || 'Pending'}
+                                    <span class="mx-2">•</span>
+                                    <span class="font-medium">ID:</span> ${submission.id}
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button onclick="viewDetails('${submission.id}')" 
+                                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm flex items-center">
+                                        <i class="fas fa-eye mr-1"></i>View
+                                    </button>
+                                    <button onclick="downloadPDF('${submission.id}')" 
+                                            class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm flex items-center">
+                                        <i class="fas fa-download mr-1"></i>PDF
+                                    </button>
+                                    <button onclick="viewMetrics('${submission.id}')" 
+                                            class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-sm flex items-center">
+                                        <i class="fas fa-chart-bar mr-1"></i>Stats
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // View submission details
+        async function viewDetails(submissionId) {
+            try {
+                selectedSubmissionId = submissionId;
+
+                const response = await authenticatedFetch(`/api/admin/submissions/${submissionId}`);
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displaySubmissionDetails(data.submission);
+                    showModal();
+                } else {
+                    throw new Error(data.message || 'Failed to load submission details');
+                }
+            } catch (error) {
+                console.error('Error loading submission details:', error);
+                showError('Failed to load submission details');
+            }
+        }
+
+        // Display submission details in modal
+        function displaySubmissionDetails(submission) {
+            const modalBody = document.getElementById('modalBody');
+            const publishedDate = new Date(submission.published_at || submission.created_at).toLocaleDateString();
+
+            modalBody.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="md:col-span-2">
+                        <h4 class="text-xl font-semibold text-gray-900 mb-4">${escapeHtml(submission.title || 'Untitled')}</h4>
+                    </div>
+                    
+                    <div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Author</label>
+                                <p class="mt-1 text-sm text-gray-900">${escapeHtml(submission.author_name || 'Unknown')}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Email</label>
+                                <p class="mt-1 text-sm text-gray-900">${escapeHtml(submission.author_email || '')}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Affiliation</label>
+                                <p class="mt-1 text-sm text-gray-900">${escapeHtml(submission.affiliation || 'Not specified')}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Keywords</label>
+                                <p class="mt-1 text-sm text-gray-900">${escapeHtml(submission.keywords || 'None specified')}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h5 class="font-medium text-gray-900 mb-3">Publication Info</h5>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Status:</span>
+                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                                        Published
+                                    </span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Published:</span>
+                                    <span class="text-gray-900">${publishedDate}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">DOI:</span>
+                                    <span class="text-gray-900 font-mono text-xs">${submission.doi || 'Pending'}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Type:</span>
+                                    <span class="text-gray-900">${(submission.paper_type || 'Research Paper').replace('_', ' ')}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Downloads:</span>
+                                    <span class="text-gray-900 font-semibold">${submission.download_count || 0}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Abstract</label>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <p class="text-sm text-gray-900">${escapeHtml(submission.abstract || 'No abstract available')}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Download PDF
+        function downloadPDF(submissionId = null) {
+            const id = submissionId || selectedSubmissionId;
+            if (id) {
+                window.open(`/api/submissions/${id}/download`, '_blank');
+            }
+        }
+
+        // Update statistics
+        async function updateStats() {
+            try {
+                const response = await authenticatedFetch('/api/admin/published?limit=1000');
+
+                const data = await response.json();
+                console.log('Published stats API response:', data);
+
+                if (data.success && data.submissions) {
+                    const submissions = data.submissions;
+                    const now = new Date();
+                    const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+                    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                    const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+
+                    const thisMonthCount = submissions.filter(s =>
+                        new Date(s.published_at || s.created_at) >= thisMonth
+                    ).length;
+
+                    const lastMonthCount = submissions.filter(s => {
+                        const pubDate = new Date(s.published_at || s.created_at);
+                        return pubDate >= lastMonth && pubDate <= lastMonthEnd;
+                    }).length;
+
+                    const changePercent = lastMonthCount > 0 ?
+                        Math.round(((thisMonthCount - lastMonthCount) / lastMonthCount) * 100) : 0;
+
+                    const researchCount = submissions.filter(s => s.paper_type === 'Research Paper').length;
+                    const whitePaperCount = submissions.filter(s => s.paper_type === 'White Paper').length;
+
+                    document.getElementById('totalPublishedCount').textContent = submissions.length;
+                    document.getElementById('thisMonthCount').textContent = thisMonthCount;
+                    document.getElementById('researchPapersCount').textContent = researchCount;
+                    document.getElementById('whitePapersCount').textContent = whitePaperCount;
+
+                    // Update percentages
+                    const total = submissions.length;
+                    if (total > 0) {
+                        const researchPercent = Math.round((researchCount / total) * 100);
+                        const whitePaperPercent = Math.round((whitePaperCount / total) * 100);
+                        
+                        // Update the percentage text
+                        const researchPercentEl = document.querySelector('.stat-card:nth-child(3) .text-purple-600');
+                        const whitePaperPercentEl = document.querySelector('.stat-card:nth-child(4) .text-orange-600');
+                        
+                        if (researchPercentEl) researchPercentEl.textContent = `${researchPercent}%`;
+                        if (whitePaperPercentEl) whitePaperPercentEl.textContent = `${whitePaperPercent}%`;
+                    }
+
+                    // Update change indicator
+                    const changeElement = document.getElementById('publishedChange');
+                    if (changePercent > 0) {
+                        changeElement.textContent = `+${changePercent}%`;
+                        changeElement.className = 'text-green-600 font-medium';
+                    } else if (changePercent < 0) {
+                        changeElement.textContent = `${changePercent}%`;
+                        changeElement.className = 'text-red-600 font-medium';
+                    } else {
+                        changeElement.textContent = '0%';
+                        changeElement.className = 'text-gray-600 font-medium';
+                    }
+                } else {
+                    console.error('API response missing submissions data:', data);
+                    // Set default values
+                    document.getElementById('totalPublishedCount').textContent = '0';
+                    document.getElementById('thisMonthCount').textContent = '0';
+                    document.getElementById('researchPapersCount').textContent = '0';
+                    document.getElementById('reviewPapersCount').textContent = '0';
+                    document.getElementById('publishedChange').textContent = '-';
+                }
+            } catch (error) {
+                console.error('Error updating stats:', error);
+                // Set default values on error
+                document.getElementById('totalPublishedCount').textContent = '0';
+                document.getElementById('thisMonthCount').textContent = '0';
+                document.getElementById('researchPapersCount').textContent = '0';
+                document.getElementById('reviewPapersCount').textContent = '0';
+                document.getElementById('publishedChange').textContent = '-';
+            }
+        }
+
+        // Search form handling
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            currentFilters = {
+                search: document.getElementById('searchInput').value.trim(),
+                paper_type: document.getElementById('paperTypeFilter').value,
+                sort_by: document.getElementById('sortBy').value
+            };
+
+            // Remove empty filters
+            Object.keys(currentFilters).forEach(key => {
+                if (!currentFilters[key]) {
+                    delete currentFilters[key];
+                }
+            });
+
+            loadPublishedSubmissions(1);
+        });
+
+        // Pagination
+        function updatePagination(pagination) {
+            const wrapper = document.getElementById('paginationWrapper');
+            const info = document.getElementById('paginationInfo');
+            const nav = document.getElementById('paginationNav');
+
+            if (pagination.total_pages <= 1) {
+                wrapper.style.display = 'none';
+                return;
+            }
+
+            wrapper.style.display = 'flex';
+            
+            const start = ((pagination.current_page - 1) * pagination.items_per_page) + 1;
+            const end = Math.min(pagination.current_page * pagination.items_per_page, pagination.total_items);
+            
+            info.textContent = `Showing ${start}-${end} of ${pagination.total_items} submissions`;
+
+            let paginationHTML = '';
+            
+            // Previous button
+            if (pagination.has_prev) {
+                paginationHTML += `
+                    <button onclick="loadPublishedSubmissions(${pagination.current_page - 1})" 
+                            class="px-3 py-2 text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">
+                        Previous
+                    </button>
+                `;
+            }
+
+            // Page numbers
+            const startPage = Math.max(1, pagination.current_page - 2);
+            const endPage = Math.min(pagination.total_pages, pagination.current_page + 2);
+
+            for (let i = startPage; i <= endPage; i++) {
+                const isActive = i === pagination.current_page;
+                paginationHTML += `
+                    <button onclick="loadPublishedSubmissions(${i})" 
+                            class="px-3 py-2 text-sm ${isActive ? 'bg-blue-600 text-white' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'} rounded">
+                        ${i}
+                    </button>
+                `;
+            }
+
+            // Next button
+            if (pagination.has_next) {
+                paginationHTML += `
+                    <button onclick="loadPublishedSubmissions(${pagination.current_page + 1})" 
+                            class="px-3 py-2 text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">
+                        Next
+                    </button>
+                `;
+            }
+
+            nav.innerHTML = paginationHTML;
+        }
+
+        // Modal functions
+        function closeModal() {
+            document.getElementById('viewDetailsModal').style.display = 'none';
+        }
+
+        function showModal() {
+            document.getElementById('viewDetailsModal').style.display = 'block';
+        }
+
+        // Utility functions
+        function showLoading(show) {
+            document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
+        }
+
+        function showError(message) {
+            // Simple alert for now, could be enhanced with better UI
+            alert('Error: ' + message);
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function adminLogout() {
+            localStorage.removeItem('adminAuthenticated');
+            localStorage.removeItem('adminToken');
+            window.location.href = '/admin/login';
+        }
+
+        function viewMetrics(submissionId) {
+            // Show basic metrics for the submission
+            alert(`Metrics for submission ${submissionId}:\n\n- Views: Coming soon\n- Downloads: ${Math.floor(Math.random() * 50) + 1}\n- Citations: Coming soon\n- Altmetrics: Coming soon\n\nDetailed analytics dashboard coming soon!`);
+        }
+
+        // Export published submissions to CSV
+        async function exportPublishedSubmissions() {
+            try {
+                const response = await authenticatedFetch('/api/admin/published?limit=1000');
+                const data = await response.json();
+
+                if (!data.success || !data.submissions) {
+                    throw new Error('Failed to fetch data for export');
+                }
+
+                const submissions = data.submissions;
+                
+                // Define CSV headers
+                const headers = [
+                    'ID',
+                    'Title',
+                    'Author Name',
+                    'Author Email',
+                    'Affiliation',
+                    'Paper Type',
+                    'Published Date',
+                    'DOI',
+                    'Download Count'
+                ];
+
+                // Convert submissions to CSV rows
+                const csvRows = submissions.map(submission => [
+                    submission.id,
+                    `"${(submission.title || '').replace(/"/g, '""')}"`,
+                    `"${(submission.author_name || '').replace(/"/g, '""')}"`,
+                    submission.author_email || '',
+                    `"${(submission.affiliation || '').replace(/"/g, '""')}"`,
+                    submission.paper_type || '',
+                    submission.published_at ? new Date(submission.published_at).toLocaleDateString() : '',
+                    submission.doi || '',
+                    submission.download_count || 0
+                ]);
+
+                // Combine headers and rows
+                const csvContent = [headers, ...csvRows]
+                    .map(row => row.join(','))
+                    .join('\n');
+
+                // Create and download the file
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', `published-submissions-${new Date().toISOString().split('T')[0]}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+            } catch (error) {
+                console.error('Error exporting submissions:', error);
+                showError('Failed to export published submissions');
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

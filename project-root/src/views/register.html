@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Lora Magazine</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Roboto&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        color: #1a1a2e;
+      }
+      h1, h2, h3, h4 {
+        font-family: "Lato", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-[#F9FAFB]">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white shadow-sm px-8 py-4 flex justify-between items-center">
+    <div class="text-xl font-bold font-lato"><a href="/"><img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-14 w-37"></a></div>
+    <nav class="space-x-6 text-sm flex items-center">
+      <a href="/" class="hover:text-[#3F72AF]">Home</a>
+      <a href="/researches" class="hover:text-[#3F72AF]">Published Papers</a>
+      <a href="/submit" class="hover:text-[#3F72AF]">Submit your Research</a>
+      <a href="/reviewer" class="hover:text-[#3F72AF]">Apply as Reviewer</a>
+      <a href="#" class="hover:text-[#3F72AF]">About</a>
+      <input type="text" placeholder="Search" class="border p-1 px-2 rounded text-sm" />
+      <span id="authLinks" class="flex items-center gap-2">
+        <a href="/login" class="bg-[#F9A826] hover:bg-[#e28e0c] text-white px-6 py-1 rounded">Login</a>
+        <a href="/register" class="bg-[#3F72AF] hover:bg-[#345b8f] text-white text-sm px-4 py-1 rounded">Register</a>
+      </span>
+    </nav>
+  </header>
+
+
+    <!-- Register Form -->
+    <section class="flex items-center justify-center min-h-screen py-10 px-4">
+      <div class="bg-white p-10 rounded-xl shadow-md w-full max-w-md border border-gray-200">
+        <h2 class="text-2xl font-bold mb-6 text-center text-[#1A1A2E]">Create Your Account 📝</h2>
+        <form id="registerForm" class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium mb-1">Full Name</label>
+            <input id="name" type="text" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]" placeholder="John Doe" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Email Address</label>
+            <input id="email" type="email" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]" placeholder="you@example.com" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Password</label>
+            <input id="password" type="password" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]" placeholder="••••••••" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Confirm Password</label>
+            <input id="confirmPassword" type="password" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]" placeholder="••••••••" required />
+          </div>
+          <div id="registerError" class="text-red-600 text-sm text-center"></div>
+          <button type="submit" class="w-full bg-[#3F72AF] hover:bg-[#345b8f] text-white py-2 rounded font-medium">
+            Register
+          </button>
+        </form>
+        <p class="mt-6 text-sm text-center text-gray-600">
+          Already have an account?
+          <a href="/login" class="text-[#3F72AF] hover:underline">Login here</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 text-sm text-[#1A1A2E] px-8 py-12 mt-14">
+      <div class="grid grid-cols-3 gap-12 max-w-6xl mx-auto">
+        <div>
+          <h4 class="font-bold mb-2">Lora Magazine</h4>
+          <p class="text-gray-600 mb-2">
+            A forward-thinking academic magazine publishing technical excellence across the globe through collaboration and insight.
+          </p>
+
+        </div>
+        <div>
+          <h4 class="font-bold mb-2">For Authors</h4>
+          <ul class="space-y-1 text-gray-600">
+            <li><a href="#">Submit Paper</a></li>
+            <li><a href="#">Author Guidelines</a></li>
+            <li><a href="#">Formatting Guide</a></li>
+            <li><a href="#">Publication Ethics</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold mb-2">For Reviewers</h4>
+          <ul class="space-y-1 text-gray-600">
+            <li><a href="#">Become Reviewer</a></li>
+            <li><a href="#">Review Guidelines</a></li>
+            <!-- <li><a href="#">Training Materials</a></li> -->
+            <li><a href="#">Reviewer Ethics</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="text-center text-xs text-gray-500 mt-12">
+        <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a> · <a href="#">Accessibility</a> · <a href="#">Contact</a>
+        <div class="mt-2">© 2025 Lora Magazine. All rights reserved.</div>
+      </div>
+    </footer>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const errorDiv = document.getElementById('registerError');
+      errorDiv.textContent = '';
+      if (password !== confirmPassword) {
+        errorDiv.textContent = 'Passwords do not match.';
+        return;
+      }
+      try {
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+        const data = await res.json();
+        if (res.ok && data.status === 'ok') {
+          // Redirect to dashboard or next page
+          window.location.href = '/dashboard/author';
+        } else {
+          errorDiv.textContent = data.error || 'Registration failed.';
+        }
+      } catch (err) {
+        errorDiv.textContent = 'Network error. Please try again.';
+      }
+    });
+  </script>
+
+  </body>
+</html>

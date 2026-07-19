@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Publication Ethics - Digital Evolution Journal</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto', sans-serif; }
+    h1, h2, h3, h4, .font-lato { font-family: 'Lato', sans-serif; }
+  </style>
+</head>
+<body class="text-[#1A1A2E] bg-white">
+
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-white shadow-sm px-8 py-4 flex justify-between items-center">
+    <div class="text-xl font-bold font-lato"><a href="/"><img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-14 w-37"></a></div>
+    <nav class="space-x-6 text-sm hidden md:flex items-center">
+      <a href="/" class="hover:text-[#3F72AF]">Home</a>
+      <a href="/researches" class="hover:text-[#3F72AF]">Published Papers</a>
+      <a href="/submit" class="hover:text-[#3F72AF]">Submit Research</a>
+      <a href="/reviewer" class="hover:text-[#3F72AF]">Review Paper</a>
+      <a href="/about.html" class="hover:text-[#3F72AF]">About</a>
+      <input type="text" placeholder="Search" class="border p-1 px-2 rounded text-sm" />
+      <span id="dashboardTab" class="relative hidden">
+        <button class="inline-flex items-center gap-1 px-3 py-1 rounded hover:bg-gray-100">Dashboards
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/></svg>
+        </button>
+        <div class="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg hidden" id="dashboardMenu">
+          <a href="/dashboard/author" class="block px-4 py-2 hover:bg-gray-100">Author</a>
+          <a href="/dashboard/reviewer" class="block px-4 py-2 hover:bg-gray-100">Reviewer</a>
+        </div>
+      </span>
+      <span id="authLinks" class="flex items-center gap-2">
+        <a href="/login" class="bg-[#F9A826] hover:bg-[#e28e0c] text-white px-6 py-1 rounded">Login</a>
+        <a href="/register" class="bg-[#3F72AF] hover:bg-[#345b8f] text-white text-sm px-4 py-1 rounded">Register</a>
+      </span>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-5xl mx-auto px-6 py-12 space-y-12">
+    <section class="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-xl shadow-sm">
+      <h1 class="text-4xl font-bold font-lato mb-4 text-[#1A1A2E]">Publication Ethics</h1>
+      <p class="text-gray-700 text-lg">At Digital Evolution Journal, we are deeply committed to upholding the highest standards of integrity in scholarly publishing. Our ethical guidelines are designed to ensure fairness, transparency, and respect for all parties involved in the publication process. These guidelines are based on the principles of the Committee on Publication Ethics (COPE).</p>
+    </section>
+
+    <section class="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+      <h2 class="text-2xl font-bold font-lato mb-4 text-[#1A1A2E]">Authorship and Originality</h2>
+      <p class="text-gray-700 mb-6">Authors must ensure that their submitted work is original and has not been published elsewhere. All individuals who have made a significant contribution to the research should be listed as co-authors.</p>
+      <div class="space-y-4">
+        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+          <h3 class="font-bold text-lg text-[#1A1A2E] mb-2">Originality</h3>
+          <p class="text-gray-700">Manuscripts must be the original work of the authors.</p>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+          <h3 class="font-bold text-lg text-[#1A1A2E] mb-2">Plagiarism</h3>
+          <p class="text-gray-700">We use advanced plagiarism detection tools to screen all submissions. Any manuscript found to contain plagiarized content will be rejected. This includes self-plagiarism.</p>
+        </div>
+        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+          <h3 class="font-bold text-lg text-[#1A1A2E] mb-2">Data Integrity</h3>
+          <p class="text-gray-700">Authors must present accurate and reliable data. Fabrication or falsification of data is a serious breach of ethics. Authors may be asked to provide the raw data in connection with a paper for editorial review.</p>
+        </div>
+        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+          <h3 class="font-bold text-lg text-[#1A1A2E] mb-2">Duplicate Submission</h3>
+          <p class="text-gray-700">Submitting the same manuscript to more than one journal concurrently constitutes unethical publishing behavior and is unacceptable.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+      <h2 class="text-2xl font-bold font-lato mb-4 text-[#1A1A2E]">Author's Responsibilities</h2>
+      <div class="space-y-4">
+        <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+          <h3 class="font-bold text-lg text-[#1A1A2E] mb-2">Reporting Standards</h3>
+          <p class="text-gray-700">Authors of reports of original research should present an accurate account of the work performed as well as an objective discussion of its significance.</p>
+        </div>
+        <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+          <h3 class="font-bold text-lg text-[#1A1A2E] mb-2">Hazards and Human or Animal Subjects</h3>
+          <p class="text-gray-700">If the work involves chemicals, procedures or equipment that have any unusual hazards inherent in their use, the author must clearly identify these in the manuscript.</p>
+        </div>
+        <div class="bg-pink-50 p-4 rounded-lg border-l-4 border-pink-500">
+          <h3 class="font-bold text-lg text-[#1A1A2E] mb-2">Disclosure and Conflicts of Interest</h3>
+          <p class="text-gray-700">All authors should disclose in their manuscript any financial or other substantive conflict of interest that might be construed to influence the results or interpretation of their manuscript.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+      <h2 class="text-2xl font-bold font-lato mb-4 text-[#1A1A2E]">Peer Reviewer Responsibilities</h2>
+      <p class="text-gray-700 mb-6">Peer reviewers play a critical role in maintaining the quality of our publications. We expect our reviewers to be objective, constructive, and timely in their evaluations.</p>
+      <div class="space-y-4">
+        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+          <h3 class="font-bold text-lg text-[#1A1A2E] mb-2">Confidentiality</h3>
+          <p class="text-gray-700">Reviewers must treat all manuscripts as confidential documents.</p>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+          <h3 class="font-bold text-lg text-[#1A1A2E] mb-2">Objectivity</h3>
+          <p class="text-gray-700">Reviews should be conducted objectively, with no personal criticism of the authors.</p>
+        </div>
+        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+          <h3 class="font-bold text-lg text-[#1A1A2E] mb-2">Conflict of Interest</h3>
+          <p class="text-gray-700">Reviewers should disclose any potential conflicts of interest and recuse themselves from the review process if necessary.</p>
+        </div>
+        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+          <h3 class="font-bold text-lg text-[#1A1A2E] mb-2">Promptness</h3>
+          <p class="text-gray-700">Any selected referee who feels unqualified to review the research reported in a manuscript or knows that its prompt review will be impossible should notify the editor and excuse himself from the review process.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+      <h2 class="text-2xl font-bold font-lato mb-4 text-[#1A1A2E]">Editorial Responsibilities</h2>
+      <p class="text-gray-700 mb-6">Our editorial team is responsible for making final decisions on all manuscripts. These decisions are based on the manuscript's quality, originality, and relevance to our journal's scope.</p>
+      <div class="space-y-4">
+        <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+          <h3 class="font-bold text-lg text-[#1A1A2E] mb-2">Fair Play</h3>
+          <p class="text-gray-700">An editor at any time evaluate manuscripts for their intellectual content without regard to race, gender, sexual orientation, religious belief, ethnic origin, citizenship, or political philosophy of the authors.</p>
+        </div>
+        <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+          <h3 class="font-bold text-lg text-[#1A1A2E] mb-2">Confidentiality</h3>
+          <p class="text-gray-700">The editor and any editorial staff must not disclose any information about a submitted manuscript to anyone other than the corresponding author, reviewers, potential reviewers, other editorial advisers, and the publisher, as appropriate.</p>
+        </div>
+        <div class="bg-pink-50 p-4 rounded-lg border-l-4 border-pink-500">
+          <h3 class="font-bold text-lg text-[#1A1A2E] mb-2">Decision on the Publication of Articles</h3>
+          <p class="text-gray-700">The editor of the journal is responsible for deciding which of the articles submitted to the journal should be published.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+      <h2 class="text-2xl font-bold font-lato mb-4 text-[#1A1A2E]">Corrections and Retractions</h2>
+      <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+        <p class="text-gray-700">We are committed to correcting errors in published work and will issue corrections or retractions as needed to maintain the integrity of the academic record. Authors who discover a significant error or inaccuracy in their own published work have an obligation to promptly notify the journal editor or publisher and cooperate with the editor to retract or correct the paper.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 text-sm text-[#1A1A2E] px-8 py-12">
+    <div class="grid grid-cols-3 gap-12 max-w-6xl mx-auto">
+      <div>
+        <h4 class="font-bold mb-2 font-lato">Digital Evolution Journal</h4>
+        <p class="text-gray-600 mb-2">
+          Premier peer-reviewed publication platform advancing technical research excellence through rigorous review processes and global collaboration.
+        </p>
+
+      </div>
+      <div>
+        <h4 class="font-bold mb-2 font-lato">For Authors</h4>
+        <ul class="space-y-1 text-gray-600">
+          <li><a href="/submit">Submit Paper</a></li>
+          <li><a href="/author-guidelines.html">Author Guidelines</a></li>
+          <li><a href="/formatting-guide.html">Formatting Guide</a></li>
+          <li><a href="/publication-ethics.html">Publication Ethics</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold mb-2 font-lato">For Reviewers</h4>
+        <ul class="space-y-1 text-gray-600">
+          <li><a href="/reviewer">Become Reviewer</a></li>
+          <li><a href="/review-guidelines.html">Review Guidelines</a></li>
+          <!-- <li><a href="/training-materials.html">Training Materials</a></li> -->
+          <li><a href="/reviewer-ethics.html">Reviewer Ethics</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center text-xs text-gray-500 mt-12">
+      <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a> · <a href="#">Accessibility</a> · <a href="#">Contact</a>
+      <div class="mt-2">© 2024 Digital Evolution Journal. All rights reserved.</div>
+    </div>
+  </footer>
+
+<script>
+(async () => {
+  try {
+    const res = await fetch('/api/me', { credentials: 'include' });
+    const data = await res.json();
+    const el = document.getElementById('authLinks');
+    const dashTab = document.getElementById('dashboardTab');
+    if (!el) return;
+    if (data && data.isAuthenticated) {
+      const u = data.user || {};
+      const displayName = u.name || u.email || 'User';
+      el.innerHTML = `
+        <span class="text-sm text-gray-700">Hello, ${displayName}</span>
+        <a href="/logout" class="border px-3 py-1 rounded hover:bg-gray-100">Logout</a>
+      `;
+      if (dashTab) {
+        dashTab.classList.remove('hidden');
+        const btn = dashTab.querySelector('button');
+        const menu = document.getElementById('dashboardMenu');
+        let open = false;
+        const toggle = (e) => { e?.preventDefault?.(); open = !open; menu.classList.toggle('hidden', !open); };
+        btn.addEventListener('click', toggle);
+        document.addEventListener('click', (e) => { if (!dashTab.contains(e.target)) { open = false; menu.classList.add('hidden'); } });
+      }
+    }
+  } catch (e) { /* noop */ }
+})();
+</script>
+
+</body>
+</html>

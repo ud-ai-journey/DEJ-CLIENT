@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviewers Management - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .slide-up { animation: slideUp 0.6s ease-out; }
+        @keyframes slideUp { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .reviewer-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .reviewer-card:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); }
+        .badge { display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; padding: 0.35rem 0.75rem; }
+    </style>
+</head>
+<body class="bg-gray-50 text-slate-900">
+    <!-- Top navigation -->
+    <nav class="bg-white/90 backdrop-blur border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <img src="/images/Logo.png" alt="DEJ Logo" class="h-8 w-auto mr-3">
+                    <h1 class="text-xl font-semibold tracking-tight">Reviewer Operations</h1>
+                </div>
+                <div class="flex items-center space-x-4 text-sm">
+                    <span class="text-slate-500" id="admin-name">Loading admin…</span>
+                    <button class="text-red-600 hover:text-red-700 font-medium" onclick="adminLogout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-slate-200 min-h-screen">
+            <div class="p-4">
+                <nav class="space-y-2 text-sm font-medium">
+                    <a href="/admin" class="flex items-center px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+                        <i class="fas fa-gauge-high mr-3"></i>
+                        Dashboard
+                    </a>
+                    <a href="/admin/submissions" class="flex items-center px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+                        <i class="fas fa-file-lines mr-3"></i>
+                        Submissions
+                    </a>
+                    <a href="/admin/authors" class="flex items-center px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+                        <i class="fas fa-users mr-3"></i>
+                        Authors
+                    </a>
+                    <a href="/admin/reviewers" class="flex items-center px-4 py-2 rounded-lg bg-blue-50 text-blue-600 border-l-4 border-blue-500">
+                        <i class="fas fa-user-check mr-3"></i>
+                        Reviewers
+                    </a>
+                    <a href="/admin/published" class="flex items-center px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+                        <i class="fas fa-book-open mr-3"></i>
+                        Published
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-1 p-8 space-y-8">
+            <!-- Page header -->
+            <section class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 fade-in">
+                <div>
+                    <h2 class="text-3xl font-bold tracking-tight">Reviewer Applications</h2>
+                    <p class="text-slate-500 mt-2">Track reviewer pipeline, approvals, and availability in real-time.</p>
+                </div>
+                <div class="flex gap-2 text-sm">
+                    <button id="refresh-btn" class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-rotate"></i>
+                        Refresh
+                    </button>
+                    <button id="export-btn" class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-file-export"></i>
+                        Export CSV
+                    </button>
+                </div>
+            </section>
+
+            <!-- Stats -->
+            <section class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4" id="stats-grid">
+                <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm slide-up">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-semibold text-slate-500">Total Reviewers</span>
+                        <span class="text-blue-500 bg-blue-50 badge"><i class="fas fa-users"></i></span>
+                    </div>
+                    <p class="mt-4 text-3xl font-bold" id="stat-total">0</p>
+                    <p class="text-xs text-slate-400 mt-1">Includes all applications and active reviewers</p>
+                </article>
+                <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm slide-up">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-semibold text-slate-500">Approved</span>
+                        <span class="text-emerald-500 bg-emerald-50 badge"><i class="fas fa-circle-check"></i></span>
+                    </div>
+                    <p class="mt-4 text-3xl font-bold" id="stat-approved">0</p>
+                    <p class="text-xs text-slate-400 mt-1">Ready to assign submissions</p>
+                </article>
+                <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm slide-up">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-semibold text-slate-500">Pending Review</span>
+                        <span class="text-amber-500 bg-amber-50 badge"><i class="fas fa-hourglass-half"></i></span>
+                    </div>
+                    <p class="mt-4 text-3xl font-bold" id="stat-pending">0</p>
+                    <p class="text-xs text-slate-400 mt-1">Awaiting approval or more info</p>
+                </article>
+                <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm slide-up">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-semibold text-slate-500">Rejected</span>
+                        <span class="text-rose-500 bg-rose-50 badge"><i class="fas fa-ban"></i></span>
+                    </div>
+                    <p class="mt-4 text-3xl font-bold" id="stat-rejected">0</p>
+                    <p class="text-xs text-slate-400 mt-1">Declined applications</p>
+                </article>
+            </section>
+
+            <!-- Filters -->
+            <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                <div class="grid gap-4 lg:grid-cols-6 items-end">
+                    <div class="lg:col-span-2">
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Search</label>
+                        <div class="relative mt-1">
+                            <span class="absolute inset-y-0 left-3 flex items-center text-slate-400"><i class="fas fa-search"></i></span>
+                            <input id="search-input" type="text" placeholder="Name, email, institution…" class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Status</label>
+                        <select id="status-filter" class="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">All statuses</option>
+                            <option value="APPROVED">Approved</option>
+                            <option value="pending">Pending</option>
+                            <option value="REJECTED">Rejected</option>
+                            <option value="SUSPENDED">Suspended</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Institution</label>
+                        <input id="institution-filter" type="text" placeholder="Institution" class="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Expertise keyword</label>
+                        <input id="expertise-filter" type="text" placeholder="e.g. AI ethics" class="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Review load</label>
+                        <select id="assignments-filter" class="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">All reviewers</option>
+                            <option value="true">Has active reviews</option>
+                            <option value="false">No reviews yet</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="apply-filters" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2 font-semibold">Apply</button>
+                        <button id="clear-filters" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg py-2 font-semibold">Reset</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reviewers list -->
+            <section class="bg-white rounded-2xl border border-slate-200 shadow-sm">
+                <header class="px-6 py-4 border-b border-slate-200 flex flex-wrap gap-3 items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold">Reviewers</h3>
+                        <p class="text-sm text-slate-500">Click a reviewer to view details, history, and take actions.</p>
+                    </div>
+                    <div class="flex items-center gap-3 text-sm">
+                        <span class="text-slate-500">Showing <span id="showing-count">0</span> of <span id="total-count">0</span></span>
+                        <label class="flex items-center gap-2">
+                            <span class="text-slate-400">Per page</span>
+                            <select id="per-page" class="border border-slate-200 rounded-lg px-2 py-1">
+                                <option value="6">6</option>
+                                <option value="12" selected>12</option>
+                                <option value="24">24</option>
+                                <option value="48">48</option>
+                            </select>
+                        </label>
+                    </div>
+                </header>
+
+                <div class="p-6">
+                    <div id="loading-state" class="text-center py-12">
+                        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                        <p class="text-slate-500">Loading reviewers…</p>
+                    </div>
+                    <div id="error-state" class="hidden text-center py-12">
+                        <i class="fas fa-triangle-exclamation text-rose-400 text-4xl mb-3"></i>
+                        <p class="text-slate-500 mb-2">We couldn’t load the reviewer list.</p>
+                        <button class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg" onclick="loadReviewers(true)">
+                            <i class="fas fa-rotate"></i>
+                            Retry
+                        </button>
+                    </div>
+                    <div id="empty-state" class="hidden text-center py-12">
+                        <i class="fas fa-user-slash text-slate-300 text-5xl mb-3"></i>
+                        <p class="text-slate-600 font-medium">No reviewers match your filters yet.</p>
+                        <p class="text-slate-400 text-sm">Adjust filters or invite new experts to join the reviewer pool.</p>
+                    </div>
+                    <div id="reviewers-grid" class="hidden grid gap-6 md:grid-cols-2 xl:grid-cols-3"></div>
+                </div>
+
+                <footer id="pagination" class="hidden px-6 py-4 border-t border-slate-200">
+                    <div class="flex flex-wrap gap-3 items-center justify-between text-sm">
+                        <button id="prev-page" class="px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="fas fa-chevron-left mr-2"></i>
+                            Previous
+                        </button>
+                        <div id="page-buttons" class="flex flex-wrap gap-1"></div>
+                        <button id="next-page" class="px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                            Next
+                            <i class="fas fa-chevron-right ml-2"></i>
+                        </button>
+                    </div>
+                </footer>
+            </section>
+        </main>
+    </div>
+
+    <!-- Reviewer modal -->
+    <div id="reviewer-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50">
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden">
+                <header class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+                    <div>
+                        <h3 id="modal-name" class="text-xl font-semibold">Reviewer details</h3>
+                        <p id="modal-email" class="text-sm text-slate-500"></p>
+                    </div>
+                    <button class="text-slate-400 hover:text-slate-600" onclick="closeModal()">
+                        <i class="fas fa-xmark text-xl"></i>
+                    </button>
+                </header>
+                <section id="modal-body" class="max-h-[70vh] overflow-y-auto px-6 py-6 space-y-6">
+                    <div id="modal-loading" class="flex justify-center py-8">
+                        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+                    </div>
+                    <div id="modal-content" class="hidden space-y-6"></div>
+                </section>
+                <footer class="px-6 py-4 border-t border-slate-200 flex flex-wrap gap-3 justify-end bg-slate-50">
+                    <button id="reject-btn" class="inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-ban"></i>
+                        Reject
+                    </button>
+                    <button id="approve-btn" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-circle-check"></i>
+                        Approve
+                    </button>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // -----------------------------
+        // Admin session helpers
+        // -----------------------------
+        function checkAdminAuth() {
+            const authFlag = localStorage.getItem('adminAuthenticated');
+            if (authFlag !== 'true') {
+                window.location.href = '/admin-login';
+                return false;
+            }
+            return true;
+        }
+
+        function adminLogout() {
+            localStorage.removeItem('adminAuthenticated');
+            window.location.href = '/admin-login';
+        }
+
+        function generateAdminToken() {
+            return 'admin-session-loratech-' + new Date().toDateString();
+        }
+
+        function getAdminToken() {
+            let token = localStorage.getItem('adminToken');
+            if (!token) {
+                token = generateAdminToken();
+                localStorage.setItem('adminToken', token);
+            }
+            return token;
+        }
+
+        async function authenticatedFetch(url, options = {}) {
+            const headers = {
+                'admin-token': getAdminToken(),
+                ...(options.headers || {})
+            };
+
+            const fetchOptions = {
+                credentials: 'include',
+                ...options,
+                headers
+            };
+
+            const response = await fetch(url, fetchOptions);
+            if (response.status === 401) {
+                showToast('Session expired. Please log in again.', 'error');
+                localStorage.removeItem('adminAuthenticated');
+                setTimeout(() => window.location.href = '/admin-login', 1500);
+                throw new Error('Unauthorized');
+            }
+            return response;
+        }
+
+        // -----------------------------
+        // Page state
+        // -----------------------------
+        let currentPage = 1;
+        let totalReviewers = 0;
+        let totalPages = 1;
+        let reviewerCache = [];
+        let activeReviewer = null;
+        const currentFilters = {
+            search: '',
+            status: '',
+            institution: '',
+            expertise: '',
+            hasReviews: ''
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!checkAdminAuth()) return;
+            initializeFiltersFromQuery();
+            bindUiEvents();
+            loadAdminName();
+            refreshAll();
+        });
+
+        function initializeFiltersFromQuery() {
+            const params = new URLSearchParams(window.location.search);
+            const status = params.get('status');
+            const search = params.get('search');
+            if (status) {
+                currentFilters.status = status;
+                document.getElementById('status-filter').value = status;
+            }
+            if (search) {
+                currentFilters.search = search;
+                document.getElementById('search-input').value = search;
+            }
+        }
+
+        function bindUiEvents() {
+            document.getElementById('apply-filters').addEventListener('click', () => {
+                currentFilters.search = document.getElementById('search-input').value.trim();
+                currentFilters.status = document.getElementById('status-filter').value;
+                currentFilters.institution = document.getElementById('institution-filter').value.trim();
+                currentFilters.expertise = document.getElementById('expertise-filter').value.trim();
+                currentFilters.hasReviews = document.getElementById('assignments-filter').value;
+                currentPage = 1;
+                loadReviewers(true);
+                updateQueryString();
+            });
+
+            document.getElementById('clear-filters').addEventListener('click', () => {
+                document.getElementById('search-input').value = '';
+                document.getElementById('status-filter').value = '';
+                document.getElementById('institution-filter').value = '';
+                document.getElementById('expertise-filter').value = '';
+                document.getElementById('assignments-filter').value = '';
+                Object.keys(currentFilters).forEach(key => currentFilters[key] = '');
+                currentPage = 1;
+                loadReviewers(true);
+                updateQueryString();
+            });
+
+            document.getElementById('per-page').addEventListener('change', () => {
+                currentPage = 1;
+                loadReviewers(true);
+            });
+
+            document.getElementById('prev-page').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadReviewers(false);
+                }
+            });
+
+            document.getElementById('next-page').addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadReviewers(false);
+                }
+            });
+
+            document.getElementById('refresh-btn').addEventListener('click', refreshAll);
+
+            document.getElementById('export-btn').addEventListener('click', exportReviewers);
+
+            document.getElementById('approve-btn').addEventListener('click', approveActiveReviewer);
+            document.getElementById('reject-btn').addEventListener('click', rejectActiveReviewer);
+        }
+
+        function updateQueryString() {
+            const params = new URLSearchParams();
+            if (currentFilters.status) params.set('status', currentFilters.status);
+            if (currentFilters.search) params.set('search', currentFilters.search);
+            const query = params.toString();
+            const newUrl = query ? `${window.location.pathname}?${query}` : window.location.pathname;
+            window.history.replaceState({}, '', newUrl);
+        }
+
+        async function loadAdminName() {
+            try {
+                // Placeholder for future enhancements (integrating /api/me)
+                document.getElementById('admin-name').textContent = 'Admin Console';
+            } catch (error) {
+                console.error('Failed to load admin info:', error);
+                document.getElementById('admin-name').textContent = 'Admin';
+            }
+        }
+
+        function refreshAll() {
+            loadStats();
+            loadReviewers(true);
+        }
+
+        async function loadStats() {
+            try {
+                const response = await authenticatedFetch('/api/admin/reviewers/statistics');
+                if (!response.ok) throw new Error('Failed to fetch stats');
+                const payload = await response.json();
+                const stats = payload.data || {};
+                document.getElementById('stat-total').textContent = stats.total_reviewers ?? 0;
+                document.getElementById('stat-approved').textContent = stats.verified_reviewers ?? 0;
+                document.getElementById('stat-pending').textContent = stats.pending_reviewers ?? 0;
+                document.getElementById('stat-rejected').textContent = stats.rejected_reviewers ?? 0;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                showToast('Unable to load reviewer statistics.', 'error');
+            }
+        }
+
+        async function loadReviewers(showLoader) {
+            const perPage = parseInt(document.getElementById('per-page').value, 10) || 12;
+            if (showLoader) showLoadingState();
+
+            try {
+                const params = new URLSearchParams();
+                params.set('limit', perPage);
+                params.set('offset', (currentPage - 1) * perPage);
+                if (currentFilters.search) params.set('search', currentFilters.search);
+                if (currentFilters.status) params.set('status', currentFilters.status);
+                if (currentFilters.institution) params.set('institution', currentFilters.institution);
+                if (currentFilters.expertise) params.set('expertise', currentFilters.expertise);
+                if (currentFilters.hasReviews !== '') params.set('hasReviews', currentFilters.hasReviews);
+
+                const response = await authenticatedFetch(`/api/admin/reviewers/enhanced?${params.toString()}`);
+                if (!response.ok) throw new Error('Failed to fetch reviewers');
+                const payload = await response.json();
+
+                reviewerCache = payload.reviewers || [];
+                const pagination = payload.pagination || { total: reviewerCache.length, limit: perPage, offset: 0 };
+                totalReviewers = pagination.total || reviewerCache.length;
+                totalPages = Math.max(1, Math.ceil((pagination.total || 0) / perPage));
+
+                renderReviewers();
+                updateListHeader(pagination);
+                updatePaginationControls();
+            } catch (error) {
+                console.error('Error loading reviewers:', error);
+                showErrorState();
+                showToast('Unable to load reviewers. Please retry.', 'error');
+            }
+        }
+
+        function renderReviewers() {
+            const grid = document.getElementById('reviewers-grid');
+            const empty = document.getElementById('empty-state');
+            const loader = document.getElementById('loading-state');
+            const error = document.getElementById('error-state');
+
+            loader.classList.add('hidden');
+            error.classList.add('hidden');
+
+            if (!reviewerCache.length) {
+                grid.classList.add('hidden');
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            grid.classList.remove('hidden');
+            grid.innerHTML = reviewerCache.map(buildReviewerCard).join('');
+
+            grid.querySelectorAll('[data-reviewer-index]').forEach(card => {
+                card.addEventListener('click', () => {
+                    const index = parseInt(card.getAttribute('data-reviewer-index'), 10);
+                    openReviewerModal(reviewerCache[index]);
+                });
+            });
+        }
+
+        function buildReviewerCard(reviewer, index) {
+            const status = normalizeStatus(reviewer.status);
+            const statusClasses = getStatusStyles(status);
+            const expertise = (reviewer.expertise_areas && reviewer.expertise_areas.length)
+                ? reviewer.expertise_areas.slice(0, 3).join(', ')
+                : (reviewer.degree || 'Expertise pending');
+            const reviews = reviewer.review_statistics || {};
+            const totalReviews = reviews.total_reviews ?? reviewer.reviews?.length ?? 0;
+            const completedReviews = reviews.completed_reviews ?? 0;
+
+            return `
+                <article class="reviewer-card bg-slate-50 border border-slate-200 rounded-xl p-5 cursor-pointer" data-reviewer-index="${index}">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <h4 class="text-lg font-semibold text-slate-800">${escapeHtml(reviewer.full_name || 'Unnamed Reviewer')}</h4>
+                            <p class="text-sm text-slate-500">${escapeHtml(reviewer.applicant_email || reviewer.email || 'Email unavailable')}</p>
+                        </div>
+                        <span class="badge ${statusClasses.bg} ${statusClasses.text}">
+                            <i class="fas ${statusClasses.icon}"></i>
+                            ${statusLabel(status)}
+                        </span>
+                    </div>
+
+                    <dl class="mt-4 space-y-3 text-sm">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-building"></i>
+                            </span>
+                            <div>
+                                <dt class="text-slate-400">Institution</dt>
+                                <dd class="text-slate-700">${escapeHtml(reviewer.institution || 'Not provided')}</dd>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-star"></i>
+                            </span>
+                            <div>
+                                <dt class="text-slate-400">Expertise</dt>
+                                <dd class="text-slate-700">${escapeHtml(expertise)}</dd>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-clipboard-list"></i>
+                            </span>
+                            <div>
+                                <dt class="text-slate-400">Reviews</dt>
+                                <dd class="text-slate-700">${completedReviews} completed · ${totalReviews} total</dd>
+                            </div>
+                        </div>
+                    </dl>
+
+                    <div class="mt-4 flex items-center justify-between text-xs text-slate-400">
+                        <span>Joined ${formatDate(reviewer.created_at)}</span>
+                        ${reviews.overdue_reviews ? `<span class="text-rose-500 font-semibold">${reviews.overdue_reviews} overdue</span>` : ''}
+                    </div>
+                </article>
+            `;
+        }
+
+        function updateListHeader(pagination) {
+            document.getElementById('total-count').textContent = pagination.total || reviewerCache.length || 0;
+            document.getElementById('showing-count').textContent = Math.min(
+                (currentPage - 1) * (pagination.limit || reviewerCache.length) + reviewerCache.length,
+                pagination.total || reviewerCache.length
+            );
+        }
+
+        function updatePaginationControls() {
+            const paginationSection = document.getElementById('pagination');
+            const prevBtn = document.getElementById('prev-page');
+            const nextBtn = document.getElementById('next-page');
+            const buttonsContainer = document.getElementById('page-buttons');
+
+            if (totalPages <= 1) {
+                paginationSection.classList.add('hidden');
+                return;
+            }
+
+            paginationSection.classList.remove('hidden');
+            prevBtn.disabled = currentPage <= 1;
+            nextBtn.disabled = currentPage >= totalPages;
+
+            const buttons = makePaginationButtons(currentPage, totalPages);
+            buttonsContainer.innerHTML = buttons.map(btn => {
+                if (btn === 'ellipsis') {
+                    return '<span class="px-3 py-2 text-slate-400">…</span>';
+                }
+                const isActive = btn === currentPage;
+                const classes = isActive
+                    ? 'px-3 py-2 rounded-lg bg-blue-600 text-white font-semibold'
+                    : 'px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 cursor-pointer';
+                return `<span class="${classes}" data-page="${btn}">${btn}</span>`;
+            }).join('');
+
+            buttonsContainer.querySelectorAll('[data-page]').forEach(el => {
+                el.addEventListener('click', () => {
+                    const page = Number(el.getAttribute('data-page'));
+                    if (!Number.isNaN(page) && page !== currentPage) {
+                        currentPage = page;
+                        loadReviewers(false);
+                    }
+                });
+            });
+        }
+
+        function makePaginationButtons(current, total) {
+            if (total <= 7) {
+                return Array.from({ length: total }, (_, i) => i + 1);
+            }
+            if (current <= 4) {
+                return [1, 2, 3, 4, 5, 'ellipsis', total];
+            }
+            if (current >= total - 3) {
+                return [1, 'ellipsis', total - 4, total - 3, total - 2, total - 1, total];
+            }
+            return [1, 'ellipsis', current - 1, current, current + 1, 'ellipsis', total];
+        }
+
+        function showLoadingState() {
+            document.getElementById('loading-state').classList.remove('hidden');
+            document.getElementById('error-state').classList.add('hidden');
+            document.getElementById('empty-state').classList.add('hidden');
+            document.getElementById('reviewers-grid').classList.add('hidden');
+        }
+
+        function showErrorState() {
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('error-state').classList.remove('hidden');
+            document.getElementById('empty-state').classList.add('hidden');
+            document.getElementById('reviewers-grid').classList.add('hidden');
+        }
+
+        // -----------------------------
+        // Modal handling
+        // -----------------------------
+        function openReviewerModal(reviewer) {
+            activeReviewer = reviewer;
+            document.getElementById('reviewer-modal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+            document.getElementById('modal-name').textContent = reviewer.full_name || 'Reviewer details';
+            document.getElementById('modal-email').textContent = reviewer.applicant_email || reviewer.email || '';
+            document.getElementById('modal-loading').classList.remove('hidden');
+            document.getElementById('modal-content').classList.add('hidden');
+            document.getElementById('approve-btn').disabled = normalizeStatus(reviewer.status) === 'APPROVED';
+            loadReviewerProfile(reviewer);
+        }
+
+        async function loadReviewerProfile(reviewer) {
+            try {
+                const email = encodeURIComponent(reviewer.applicant_email || reviewer.email || reviewer.id);
+                const response = await authenticatedFetch(`/api/admin/reviewers/${email}/profile`);
+                if (!response.ok) throw new Error('Failed to load reviewer profile');
+                const profile = await response.json();
+                renderReviewerProfile(profile);
+            } catch (error) {
+                console.error('Error loading reviewer profile:', error);
+                showToast('Unable to load reviewer details.', 'error');
+                document.getElementById('modal-loading').classList.add('hidden');
+                document.getElementById('modal-content').classList.remove('hidden');
+                document.getElementById('modal-content').innerHTML = '<p class="text-center text-slate-500">Failed to load reviewer details.</p>';
+            }
+        }
+
+        function renderReviewerProfile(profile) {
+            const container = document.getElementById('modal-content');
+            const status = normalizeStatus(profile.status);
+            const statusClasses = getStatusStyles(status);
+            const stats = profile.review_statistics || {};
+            const rawCvUrl = typeof profile.cv_url === 'string' ? profile.cv_url.trim() : '';
+            const hasCvUrl = rawCvUrl.length > 0;
+            const safeCvUrl = hasCvUrl ? encodeURI(rawCvUrl) : '';
+            const cvAction = hasCvUrl
+                ? `<a href="${safeCvUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 transition">
+                        <i class="fas fa-file-pdf"></i>
+                        View CV
+                   </a>`
+                : '<span class="text-xs text-slate-400">CV not uploaded</span>';
+
+            const expertiseChips = (profile.expertise_areas || []).length
+                ? profile.expertise_areas.map(area => `<span class="badge bg-slate-100 text-slate-600">${escapeHtml(area)}</span>`).join('')
+                : '<span class="text-slate-400 text-sm">No expertise areas recorded.</span>';
+
+            const reviews = (profile.reviews || []).map(review => `
+                <div class="border border-slate-200 rounded-xl p-4">
+                    <div class="flex justify-between text-sm">
+                        <div>
+                            <p class="font-semibold text-slate-700">${escapeHtml(review.submission?.title || 'Untitled submission')}</p>
+                            <p class="text-slate-400">Due ${formatDate(review.due_date) || 'N/A'}</p>
+                        </div>
+                        <span class="badge ${getReviewStatusStyles(review.status).bg} ${getReviewStatusStyles(review.status).text}">
+                            ${review.status || 'UNKNOWN'}
+                        </span>
+                    </div>
+                    <div class="mt-3 grid grid-cols-2 gap-3 text-xs text-slate-500">
+                        <span><i class="fas fa-envelope mr-2"></i>${escapeHtml(review.submission?.author?.email || 'Author hidden')}</span>
+                        <span><i class="fas fa-clock mr-2"></i>${formatDate(review.assigned_at) || 'Assigned date unavailable'}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <section class="space-y-6">
+                    <div class="flex flex-wrap gap-4 items-center justify-between">
+                        <div>
+                            <p class="text-sm text-slate-400">Status</p>
+                            <span class="badge ${statusClasses.bg} ${statusClasses.text}">
+                                <i class="fas ${statusClasses.icon}"></i>
+                                ${statusLabel(status)}
+                            </span>
+                        </div>
+                        <div class="text-sm text-slate-500">
+                            <p>Last updated ${formatDate(profile.updated_at) || 'Recently'}</p>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <div class="border border-slate-200 rounded-xl p-4">
+                            <h4 class="text-sm font-semibold text-slate-600 mb-3">Profile</h4>
+                            <dl class="text-sm space-y-2">
+                                <div>
+                                    <dt class="text-slate-400">Full name</dt>
+                                    <dd class="text-slate-700">${escapeHtml(profile.full_name || 'Not provided')}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-slate-400">Institution</dt>
+                                    <dd class="text-slate-700">${escapeHtml(profile.institution || 'Not provided')}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-slate-400">Experience</dt>
+                                    <dd class="text-slate-700">${escapeHtml(profile.experience || 'Not provided')}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-slate-400">Curriculum Vitae</dt>
+                                    <dd class="mt-1">${cvAction}</dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <div class="border border-slate-200 rounded-xl p-4">
+                            <h4 class="text-sm font-semibold text-slate-600 mb-3">Review statistics</h4>
+                            <dl class="grid grid-cols-2 gap-3 text-sm">
+                                <div>
+                                    <dt class="text-slate-400">Completed</dt>
+                                    <dd class="text-slate-700 font-semibold">${stats.completed_reviews ?? 0}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-slate-400">Pending</dt>
+                                    <dd class="text-slate-700 font-semibold">${stats.pending_reviews ?? 0}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-slate-400">Overdue</dt>
+                                    <dd class="text-slate-700 font-semibold">${stats.overdue_count ?? stats.overdue_reviews ?? 0}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-slate-400">Avg. score</dt>
+                                    <dd class="text-slate-700 font-semibold">${stats.average_score ?? '—'}</dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm font-semibold text-slate-600 mb-3">Expertise areas</h4>
+                        <div class="flex flex-wrap gap-2">
+                            ${expertiseChips}
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm font-semibold text-slate-600 mb-3">Review assignments</h4>
+                        <div class="space-y-3">
+                            ${reviews || '<p class="text-sm text-slate-500">No review assignments yet.</p>'}
+                        </div>
+                    </div>
+                </section>
+            `;
+
+            document.getElementById('modal-loading').classList.add('hidden');
+            container.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('reviewer-modal').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+            activeReviewer = null;
+        }
+
+        async function approveActiveReviewer() {
+            if (!activeReviewer) return;
+            if (!confirm('Approve this reviewer? They will be eligible for assignments immediately.')) {
+                return;
+            }
+            try {
+                const email = encodeURIComponent(activeReviewer.applicant_email || activeReviewer.email || activeReviewer.id);
+                const response = await authenticatedFetch(`/api/admin/reviewers/${email}/verify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'admin-token': getAdminToken() },
+                    body: JSON.stringify({ notes: 'Approved via admin UI' })
+                });
+                if (!response.ok) throw new Error('Failed to approve reviewer');
+                showToast('Reviewer approved successfully.');
+                closeModal();
+                refreshAll();
+            } catch (error) {
+                console.error('Approval failed:', error);
+                showToast(error.message || 'Unable to approve reviewer.', 'error');
+            }
+        }
+
+        async function rejectActiveReviewer() {
+            if (!activeReviewer) return;
+            const reason = prompt('Provide a short reason for rejection (required):');
+            if (!reason) {
+                showToast('Rejection cancelled. Reason is required.', 'warning');
+                return;
+            }
+            try {
+                const email = encodeURIComponent(activeReviewer.applicant_email || activeReviewer.email || activeReviewer.id);
+                const response = await authenticatedFetch(`/api/admin/reviewers/${email}/reject`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'admin-token': getAdminToken() },
+                    body: JSON.stringify({ reason })
+                });
+                if (!response.ok) throw new Error('Failed to reject reviewer');
+                showToast('Reviewer application rejected.');
+                closeModal();
+                refreshAll();
+            } catch (error) {
+                console.error('Rejection failed:', error);
+                showToast(error.message || 'Unable to reject reviewer.', 'error');
+            }
+        }
+
+        async function exportReviewers() {
+            try {
+                const params = new URLSearchParams();
+                if (currentFilters.search) params.set('search', currentFilters.search);
+                if (currentFilters.status) params.set('status', currentFilters.status);
+                if (currentFilters.institution) params.set('institution', currentFilters.institution);
+                if (currentFilters.expertise) params.set('expertise', currentFilters.expertise);
+                if (currentFilters.hasReviews !== '') params.set('hasReviews', currentFilters.hasReviews);
+                params.set('limit', 1000);
+                params.set('offset', 0);
+
+                const response = await authenticatedFetch(`/api/admin/reviewers/enhanced?${params.toString()}`);
+                if (!response.ok) throw new Error('Failed to export reviewers');
+                const payload = await response.json();
+                const reviewers = payload.reviewers || [];
+                const csv = buildCsv(reviewers);
+
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `reviewers_${new Date().toISOString().slice(0, 10)}.csv`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                showToast('Reviewer data exported.');
+            } catch (error) {
+                console.error('Export failed:', error);
+                showToast('Unable to export reviewers.', 'error');
+            }
+        }
+
+        function buildCsv(rows) {
+            const headers = ['Full Name', 'Email', 'Institution', 'Status', 'Expertise', 'Completed Reviews', 'Total Reviews'];
+            const values = rows.map(row => {
+                const stats = row.review_statistics || {};
+                const expertise = (row.expertise_areas && row.expertise_areas.length)
+                    ? row.expertise_areas.join('; ')
+                    : row.degree || '';
+                return [
+                    row.full_name || '',
+                    row.applicant_email || row.email || '',
+                    row.institution || '',
+                    normalizeStatus(row.status),
+                    expertise,
+                    stats.completed_reviews ?? '',
+                    stats.total_reviews ?? ''
+                ].map(value => `"${String(value ?? '').replace(/"/g, '""')}"`).join(',');
+            });
+            return `${headers.join(',')}` + '\n' + values.join('\n');
+        }
+
+        // -----------------------------
+        // Utilities
+        // -----------------------------
+        function normalizeStatus(status = '') {
+            const normalized = status.toString().trim().toUpperCase();
+            if (normalized === 'APPROVED') return 'APPROVED';
+            if (normalized === 'REJECTED') return 'REJECTED';
+            if (normalized === 'SUSPENDED') return 'SUSPENDED';
+            if (normalized === 'PENDING' || normalized === 'UNDER_REVIEW') return 'PENDING';
+            return normalized || 'PENDING';
+        }
+
+        function statusLabel(status) {
+            switch (status) {
+                case 'APPROVED': return 'Approved';
+                case 'REJECTED': return 'Rejected';
+                case 'SUSPENDED': return 'Suspended';
+                default: return 'Pending';
+            }
+        }
+
+        function getStatusStyles(status) {
+            switch (status) {
+                case 'APPROVED':
+                    return { bg: 'bg-emerald-100', text: 'text-emerald-700', icon: 'fa-circle-check' };
+                case 'REJECTED':
+                    return { bg: 'bg-rose-100', text: 'text-rose-700', icon: 'fa-ban' };
+                case 'SUSPENDED':
+                    return { bg: 'bg-slate-200', text: 'text-slate-700', icon: 'fa-pause' };
+                default:
+                    return { bg: 'bg-amber-100', text: 'text-amber-700', icon: 'fa-hourglass-half' };
+            }
+        }
+
+        function getReviewStatusStyles(status = '') {
+            const normalized = status.toString().toUpperCase();
+            if (normalized === 'COMPLETED') return { bg: 'bg-emerald-100', text: 'text-emerald-700' };
+            if (normalized === 'IN_PROGRESS') return { bg: 'bg-blue-100', text: 'text-blue-700' };
+            if (normalized === 'PENDING') return { bg: 'bg-amber-100', text: 'text-amber-700' };
+            if (normalized === 'DECLINED') return { bg: 'bg-rose-100', text: 'text-rose-700' };
+            return { bg: 'bg-slate-100', text: 'text-slate-600' };
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '—';
+            const date = new Date(dateString);
+            if (Number.isNaN(date.getTime())) return '—';
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function showToast(message, variant = 'success') {
+            if (!message) return;
+            const colors = {
+                success: 'bg-emerald-600',
+                error: 'bg-rose-600',
+                warning: 'bg-amber-500'
+            };
+            const toast = document.createElement('div');
+            toast.className = `${colors[variant] || colors.success} text-white px-4 py-2 rounded-lg shadow-lg fixed bottom-6 right-6 z-[100] flex items-center gap-2`;
+            toast.innerHTML = `<i class="fas fa-circle-info"></i><span>${message}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 2600);
+        }
+    </script>
+</body>
+</html>

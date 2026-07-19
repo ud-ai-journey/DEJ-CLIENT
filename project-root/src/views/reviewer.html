@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apply as Reviewer - Digital Evolution Journal</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        color: #1a1a2e;
+      }
+      h1, h2, h3, h4 {
+        font-family: "Lato", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-[#F9FAFB]">
+    <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-white shadow-sm">
+    <div class="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div class="text-xl font-bold font-lato">
+        <a href="/"><img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-12 sm:h-14 w-auto"></a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center space-x-6 text-sm">
+        <a href="/" class="hover:text-[#3F72AF]">Home</a>
+        <a href="/researches" class="hover:text-[#3F72AF]">Published Papers</a>
+        <a href="/submit" class="hover:text-[#3F72AF]">Submit your Research</a>
+        <a href="/reviewer" class="hover:text-[#3F72AF]">Apply as Reviewer</a>
+        <a href="#" class="hover:text-[#3F72AF]">About</a>
+        <input type="text" placeholder="Search" class="border p-1 px-2 rounded text-sm hidden lg:block" />
+        <span id="dashboardTab" class="relative hidden">
+          <button class="inline-flex items-center gap-1 px-3 py-1 rounded hover:bg-gray-100">Dashboards
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/></svg>
+          </button>
+          <div class="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg hidden" id="dashboardMenu">
+            <a href="/dashboard/author" class="block px-4 py-2 hover:bg-gray-100">Author</a>
+            <a href="/dashboard/reviewer" class="block px-4 py-2 hover:bg-gray-100">Reviewer</a>
+          </div>
+        </span>
+        <span id="authLinks" class="flex items-center gap-2">
+          <a href="/login" class="bg-[#F9A826] hover:bg-[#e28e0c] text-white px-4 lg:px-6 py-1 rounded text-sm">Login</a>
+          <a href="/register" class="bg-[#3F72AF] hover:bg-[#345b8f] text-white text-sm px-3 lg:px-4 py-1 rounded">Register</a>
+        </span>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobileMenuButton" class="md:hidden p-2 text-gray-600 focus:outline-none">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
+      <div class="px-4 py-2 space-y-1">
+        <a href="/" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Home</a>
+        <a href="/submit" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Submit your Research</a>
+        <a href="/reviewer" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Apply as Reviewer</a>
+        <a href="#" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">About</a>
+        <div class="px-3 py-2">
+          <input type="text" placeholder="Search" class="w-full border p-2 rounded text-sm" />
+        </div>
+        <span id="mobileDashboardTab" class="hidden">
+          <div class="px-3 py-2">
+            <div class="font-medium text-gray-900 mb-2">Dashboards</div>
+            <a href="/dashboard/author" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Author</a>
+            <a href="/dashboard/reviewer" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Reviewer</a>
+          </div>
+        </span>
+        <div id="mobileAuthLinks" class="px-3 py-2 space-y-2">
+          <a href="/login" class="block w-full text-center bg-[#F9A826] hover:bg-[#e28e0c] text-white px-4 py-2 rounded">Login</a>
+          <a href="/register" class="block w-full text-center bg-[#3F72AF] hover:bg-[#345b8f] text-white px-4 py-2 rounded">Register</a>
+        </div>
+      </div>
+    </div>
+  </header>
+    </nav>
+  </header>
+
+
+    <!-- Become Reviewer Heading -->
+    <section class="text-center px-4 sm:px-6 py-10 sm:py-14 bg-white">
+      <h1 class="text-2xl sm:text-3xl font-bold mb-4">Become a Reviewer</h1>
+      <p class="text-gray-600 max-w-2xl mx-auto leading-relaxed text-sm sm:text-base">
+        Join our expert review panel and help maintain research excellence. Your expertise will help shape the future of technical publishing.
+      </p>
+    </section>
+
+    <!-- Requirements Grid -->
+    <section class="max-w-5xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-blue-50 rounded-lg p-6 text-sm font-medium border border-blue-200">
+        <div>
+          <h3 class="font-bold mb-2 text-[#3F72AF] text-lg">Educational Background</h3>
+          <ul class="list-disc list-inside text-[#1A1A2E] space-y-1">
+            <li>PhD/Master’s degree in technical field</li>
+            <li>OR 5+ years of industry experience</li>
+            <li>2+ published papers (for academic reviewers)</li>
+            <li>Strong expertise in chosen technical areas</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold mb-2 text-[#3F72AF] text-lg">Commitment Expected</h3>
+          <ul class="list-disc list-inside text-[#1A1A2E] space-y-1">
+            <li>Review 2–3 papers per month</li>
+            <li>Complete reviews within 2 weeks</li>
+            <!-- <li>Complete platform training module</li> -->
+            <li>Maintain high quality review standards</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reviewer Benefits -->
+    <section class="max-w-5xl mx-auto px-6 py-14">
+      <div class="bg-blue-50 rounded-lg p-6 border border-blue-200">
+        <h2 class="text-xl font-bold text-center mb-8 text-[#3F72AF]">Reviewer Benefits</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center text-sm">
+          <div>
+            <div class="text-3xl mb-2">🏆</div>
+            <h4 class="font-bold text-[#1A1A2E]">Recognition</h4>
+            <p class="text-gray-600">Earn badges and credits for timely, quality reviews</p>
+          </div>
+          <div>
+            <div class="text-3xl mb-2">🔍</div>
+            <h4 class="font-bold text-[#1A1A2E]">Early Access</h4>
+            <p class="text-gray-600">Preview cutting-edge research before publication</p>
+          </div>
+          <div>
+            <div class="text-3xl mb-2">🌐</div>
+            <h4 class="font-bold text-[#1A1A2E]">Network</h4>
+            <p class="text-gray-600">Connect with leading researchers worldwide</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reviewer Application Form -->
+    <section class="max-w-4xl mx-auto px-6 py-12 bg-white shadow-md rounded-xl border border-gray-200">
+      <form class="space-y-6" id="reviewerForm">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium mb-1">Full Name*</label>
+            <input id="fullNameInput" type="text" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]" placeholder="Dr. Jane Smith" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Email Address*</label>
+            <input id="emailInput" type="email" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]" placeholder="jane@university.edu" required />
+            <div id="emailMessage" class="mt-2 hidden">
+              <!-- Message will be displayed here -->
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Highest Degree*</label>
+            <select id="degreeSelect" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]" required>
+              <option>Select degree</option>
+              <option>PhD</option>
+              <option>Master’s</option>
+              <option>Bachelor’s</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Years of Experience*
+            </label>
+            <select id="yearsExpSelect" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]" required>
+              <option>Select experience</option>
+              <option>0–2</option>
+              <option>3–5</option>
+              <option>6–10</option>
+              <option>10+</option>
+            </select>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium mb-1">Current Institution/Organization*</label>
+            <input id="institutionInput" type="text" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]" placeholder="Massachusetts Institute of Technology" required />
+          </div>
+        </div>
+
+        <!-- Expertise Checkboxes -->
+        <div>
+          <label class="block text-sm font-medium mb-2">Expertise Areas* (Select up to 5)</label>
+          <div id="expertiseChoices" class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm text-gray-800">
+            <label class="flex items-center gap-1"><input type="checkbox" /> Artificial Intelligence</label>
+            <label class="flex items-center gap-1"><input type="checkbox" /> Blockchain</label>
+            <label class="flex items-center gap-1"><input type="checkbox" /> Cybersecurity</label>
+            <label class="flex items-center gap-1"><input type="checkbox" /> Data Science</label>
+            <label class="flex items-center gap-1"><input type="checkbox" /> Internet of Things</label>
+            <label class="flex items-center gap-1"><input type="checkbox" /> Cloud Computing</label>
+            <label class="flex items-center gap-1"><input type="checkbox" /> Machine Learning</label>
+            <label class="flex items-center gap-1"><input type="checkbox" /> Software Engineering</label>
+            <label class="flex items-center gap-1"><input type="checkbox" /> Computer Networks</label>
+            <label class="flex items-center gap-1"><input type="checkbox" /> Database Systems</label>
+          </div>
+          <div class="text-xs text-gray-500 mt-1">Selected: <span id="expertiseCount">0</span>/5</div>
+        </div>
+
+        <!-- Upload Section -->
+        <div>
+          <label class="block text-sm font-medium mb-1">CV/Resume Upload*</label>
+          <div id="cvDrop" class="border-dashed border-2 border-gray-300 p-6 rounded-md text-center text-sm text-gray-600 hover:border-[#3F72AF] transition">
+            <p class="mb-2">📄 Drag and drop your CV/Resume here, or <button type="button" id="cvBrowse" class="text-[#3F72AF] hover:underline">browse</button></p>
+            <p class="text-xs text-gray-500">PDF format, max 5MB</p>
+          </div>
+          <input id="cvFile" type="file" accept=".pdf" class="hidden" />
+          <div id="cvStatus" class="mt-3 hidden">
+            <div class="flex items-center justify-between bg-blue-50 border border-blue-200 rounded px-3 py-2">
+              <span id="cvName" class="text-xs truncate"></span>
+              <div class="flex items-center gap-3">
+                <button type="button" id="cvChange" class="text-xs text-[#3F72AF] hover:underline">Change</button>
+                <button type="button" id="cvRemove" class="text-xs text-red-600 hover:underline">Remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+          <button type="submit" id="submitBtn" class="bg-[#3F72AF] hover:bg-[#345b8f] text-white py-2 px-6 rounded flex items-center justify-center gap-2 mx-auto transition-all">
+            <span>👤</span> Submit Application
+          </button>
+          <div id="loadingIndicator" class="hidden mt-4">
+            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-[#3F72AF] mx-auto"></div>
+            <p class="text-sm text-gray-600 mt-2">Submitting your application...</p>
+          </div>
+        </div>
+      </form>
+    </section>
+
+ <!-- Footer -->
+  <footer class="bg-gray-100 text-sm text-[#1A1A2E] px-8 py-12">
+    <div class="grid grid-cols-3 gap-12 max-w-6xl mx-auto">
+      <div>
+        <h4 class="font-bold mb-2 font-lato">Digital Evolution Journal</h4>
+        <p class="text-gray-600 mb-2">
+          Premier peer-reviewed publication platform advancing technical research excellence through rigorous review processes and global collaboration.
+        </p>
+
+      </div>
+      <div>
+        <h4 class="font-bold mb-2 font-lato">For Authors</h4>
+        <ul class="space-y-1 text-gray-600">
+          <li><a href="#">Submit Paper</a></li>
+          <li><a href="#">Author Guidelines</a></li>
+          <li><a href="#">Formatting Guide</a></li>
+          <li><a href="#">Publication Ethics</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold mb-2 font-lato">For Reviewers</h4>
+        <ul class="space-y-1 text-gray-600">
+          <li><a href="#">Become Reviewer</a></li>
+          <li><a href="#">Review Guidelines</a></li>
+          <!-- <li><a href="#">Training Materials</a></li> -->
+          <li><a href="#">Reviewer Ethics</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center text-xs text-gray-500 mt-12">
+      <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a> · <a href="#">Accessibility</a> · <a href="#">Contact</a>
+      <div class="mt-2">© 2025 Digital Evolution Journal. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    async function uploadFileToR2(file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', 'cv'); // Specify this is a CV upload
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }
+
+    // Wire up CV drag-drop/browse UI
+    const cvInput = document.getElementById('cvFile');
+    const cvDrop = document.getElementById('cvDrop');
+    const cvBrowse = document.getElementById('cvBrowse');
+    const cvStatus = document.getElementById('cvStatus');
+    const cvName = document.getElementById('cvName');
+    const cvRemove = document.getElementById('cvRemove');
+    const cvChange = document.getElementById('cvChange');
+
+    function isValidCv(file) {
+      const maxBytes = 5 * 1024 * 1024; // 5MB
+      const okExt = /\.(pdf)$/i.test(file.name || '');
+      const okType = (file.type || '').toLowerCase() === 'application/pdf' || okExt;
+      return okType && okExt && file.size <= maxBytes;
+    }
+
+    function showCv(file) {
+      cvName.textContent = `${file.name} (${(file.size / 1048576).toFixed(2)} MB)`;
+      cvStatus.classList.remove('hidden');
+    }
+
+    function clearCv() {
+      cvInput.value = '';
+      cvStatus.classList.add('hidden');
+      cvName.textContent = '';
+    }
+
+    cvBrowse.addEventListener('click', () => cvInput.click());
+    cvInput.addEventListener('change', () => {
+      const f = cvInput.files && cvInput.files[0];
+      if (!f) return clearCv();
+      if (!isValidCv(f)) { alert('Please select a PDF up to 5MB.'); return clearCv(); }
+      showCv(f);
+    });
+    cvRemove.addEventListener('click', clearCv);
+    cvChange.addEventListener('click', () => cvInput.click());
+    ['dragenter', 'dragover'].forEach(evt => cvDrop.addEventListener(evt, e => { e.preventDefault(); cvDrop.classList.add('border-[#3F72AF]'); }));
+    ;['dragleave', 'drop'].forEach(evt => cvDrop.addEventListener(evt, e => { e.preventDefault(); cvDrop.classList.remove('border-[#3F72AF]'); }));
+    cvDrop.addEventListener('drop', e => {
+      const files = e.dataTransfer.files;
+      if (files && files.length) {
+        const dt = new DataTransfer();
+        Array.from(files).forEach(f => dt.items.add(f));
+        cvInput.files = dt.files;
+        const f = dt.files[0];
+        if (!isValidCv(f)) { alert('Please select a PDF up to 5MB.'); return clearCv(); }
+        showCv(f);
+      }
+    });
+
+    // Helper function to show field validation errors
+    function showFieldError(fieldId, message) {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        field.classList.add('border-red-500', 'bg-red-50');
+        field.focus();
+        // Remove error styling after user starts typing
+        const removeError = () => {
+          field.classList.remove('border-red-500', 'bg-red-50');
+          field.removeEventListener('input', removeError);
+          field.removeEventListener('change', removeError);
+        };
+        field.addEventListener('input', removeError);
+        field.addEventListener('change', removeError);
+      }
+    }
+
+    // Helper function to clear all field errors
+    function clearFieldErrors() {
+      const fields = ['fullNameInput', 'emailInput', 'degreeSelect', 'yearsExpSelect', 'institutionInput'];
+      fields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+          field.classList.remove('border-red-500', 'bg-red-50');
+        }
+      });
+    }
+
+    const reviewerForm = document.getElementById('reviewerForm');
+    reviewerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Show loading indicator and disable submit button
+      const submitBtn = document.getElementById('submitBtn');
+      const loadingIndicator = document.getElementById('loadingIndicator');
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
+      loadingIndicator.classList.remove('hidden');
+      
+      const form = document.getElementById('reviewerForm');
+      const expertiseEls = Array.from(document.getElementById('expertiseChoices').querySelectorAll('input[type="checkbox"]:checked'));
+      const expertiseArray = expertiseEls.map(el => el.parentElement.textContent.trim());
+      const expertise = expertiseArray.join(', ');
+      const fullName = document.getElementById('fullNameInput').value.trim();
+      const degree = document.getElementById('degreeSelect').value;
+      const experience = document.getElementById('yearsExpSelect').value;
+      const institution = document.getElementById('institutionInput').value.trim();
+      let cvUrl = null;
+      const cvFile = cvInput.files && cvInput.files[0];
+      
+      try {
+        // Clear any previous field errors
+        clearFieldErrors();
+        
+        // Validate all required fields
+        if (!fullName || fullName.length < 2) {
+          showFieldError('fullNameInput');
+          throw new Error('Please enter your full name (at least 2 characters).');
+        }
+        
+        const emailInput = document.getElementById('emailInput');
+        const email = emailInput.value.trim();
+        if (!email || !emailInput.checkValidity()) {
+          showFieldError('emailInput');
+          throw new Error('Please enter a valid email address.');
+        }
+        
+        if (!degree || degree === 'Select degree') {
+          showFieldError('degreeSelect');
+          throw new Error('Please select your highest degree.');
+        }
+        
+        if (!experience || experience === 'Select experience') {
+          showFieldError('yearsExpSelect');
+          throw new Error('Please select your years of experience.');
+        }
+        
+        if (!institution || institution.length < 2) {
+          showFieldError('institutionInput');
+          throw new Error('Please enter your current institution/organization (at least 2 characters).');
+        }
+        
+        // Validate expertise selection
+        if (expertiseArray.length === 0) {
+          // Highlight expertise section
+          const expertiseContainer = document.getElementById('expertiseChoices');
+          if (expertiseContainer) {
+            expertiseContainer.classList.add('border', 'border-red-500', 'rounded', 'p-2');
+            setTimeout(() => {
+              expertiseContainer.classList.remove('border', 'border-red-500', 'rounded', 'p-2');
+            }, 3000);
+          }
+          throw new Error('Please select at least one expertise area.');
+        }
+        
+        if (expertiseArray.length > 5) {
+          throw new Error('Please select no more than 5 expertise areas.');
+        }
+        
+        if (!cvFile) { 
+          // Highlight CV upload area
+          const cvDrop = document.getElementById('cvDrop');
+          if (cvDrop) {
+            cvDrop.classList.add('border-red-500', 'bg-red-50');
+            setTimeout(() => {
+              cvDrop.classList.remove('border-red-500', 'bg-red-50');
+            }, 3000);
+          }
+          throw new Error('Please upload your CV (PDF).');
+        }
+        
+        if (!isValidCv(cvFile)) { 
+          throw new Error('Please select a PDF up to 5MB.');
+        }
+        
+        // Upload CV file
+        const upload = await uploadFileToR2(cvFile);
+        cvUrl = upload?.url || upload?.key || null;
+        
+        if (!cvUrl) {
+          throw new Error('CV upload failed. Please try again.');
+        }
+        
+        // Submit application
+        const res = await fetch('/api/reviewer-applications', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            fullName,
+            expertise, 
+            department: degree, 
+            experience, 
+            institution, 
+            cvUrl 
+          })
+        });
+        
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`Submission failed: ${errorText}`);
+        }
+        
+        const data = await res.json();
+        
+        // Check if the response indicates a redirect (user already has an application)
+        if (data.redirect) {
+          loadingIndicator.innerHTML = `
+            <div class="text-center">
+              <div class="text-blue-500 text-4xl mb-2">ℹ️</div>
+              <p class="text-blue-700 font-medium">${data.message || 'You already have a reviewer application'}</p>
+              <p class="text-sm text-gray-600 mt-2">Redirecting to your dashboard...</p>
+            </div>
+          `;
+          
+          // Redirect to the specified location
+          setTimeout(() => {
+            window.location.href = data.redirect;
+          }, 1500);
+          
+          return;
+        }
+        
+        // Show success message before redirecting
+        loadingIndicator.innerHTML = `
+          <div class="text-center">
+            <div class="text-green-500 text-4xl mb-2">✓</div>
+            <p class="text-green-700 font-medium">Application submitted successfully!</p>
+            <p class="text-sm text-gray-600 mt-2">Redirecting to your dashboard...</p>
+          </div>
+        `;
+        
+        // Redirect after a short delay to show the success message
+        setTimeout(() => {
+          window.location.href = '/dashboard/reviewer';
+        }, 1500);
+        
+      } catch (err) {
+        // Reset UI
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+        loadingIndicator.classList.add('hidden');
+        
+        // Show error message
+        alert(err.message || 'An error occurred. Please try again.');
+      }
+    });
+
+    reviewerForm.addEventListener('reset', () => {
+      setTimeout(() => {
+        clearCv();
+        clearFieldErrors();
+        // Reset expertise counter
+        const counter = document.getElementById('expertiseCount');
+        if (counter) counter.textContent = '0';
+        
+        // Reset submit button and clear email message
+        const submitBtn = document.getElementById('submitBtn');
+        const emailMessage = document.getElementById('emailMessage');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          submitBtn.innerHTML = '<span>👤</span> Submit Application';
+        }
+        if (emailMessage) {
+          emailMessage.classList.add('hidden');
+        }
+      }, 0);
+    });
+
+    // Enforce max 5 expertise selections
+    (function () {
+      const container = document.getElementById('expertiseChoices');
+      const counter = document.getElementById('expertiseCount');
+      if (!container || !counter) return;
+      const limit = 5;
+      const update = () => {
+        const boxes = container.querySelectorAll('input[type="checkbox"]');
+        const checked = Array.from(boxes).filter(b => b.checked);
+        counter.textContent = String(checked.length);
+        const disable = checked.length >= limit;
+        Array.from(boxes).forEach(b => { if (!b.checked) b.disabled = disable; });
+      };
+      container.addEventListener('change', update);
+      update();
+    })();
+
+    // Add real-time validation feedback
+    (function () {
+      const fullNameInput = document.getElementById('fullNameInput');
+      const emailInput = document.getElementById('emailInput');
+      const institutionInput = document.getElementById('institutionInput');
+      
+      // Full name validation
+      if (fullNameInput) {
+        fullNameInput.addEventListener('blur', () => {
+          const value = fullNameInput.value.trim();
+          if (value && value.length < 2) {
+            showFieldError('fullNameInput');
+          }
+        });
+      }
+      
+      // Email validation and reviewer existence check
+      if (emailInput) {
+        let emailCheckTimeout;
+        
+        const checkReviewerExists = async (email) => {
+          const emailMessage = document.getElementById('emailMessage');
+          const submitBtn = document.getElementById('submitBtn');
+          
+          if (!email || !emailInput.checkValidity()) {
+            emailMessage.classList.add('hidden');
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            return;
+          }
+          
+          try {
+            const response = await fetch(`/api/reviewer-applications/check/${encodeURIComponent(email)}`, {
+              method: 'GET',
+              credentials: 'include'
+            });
+            
+            if (response.ok) {
+              const data = await response.json();
+              
+              if (data.exists) {
+                // Show message and disable submit button
+                emailMessage.innerHTML = `
+                  <div class="flex items-center space-x-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div class="text-blue-500">ℹ️</div>
+                    <div class="text-blue-700 text-sm">
+                      <p class="font-medium">${data.message}</p>
+                      <p class="text-xs mt-1">You can access your dashboard to view your application status.</p>
+                    </div>
+                  </div>
+                `;
+                emailMessage.classList.remove('hidden');
+                
+                // Disable submit button
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                submitBtn.innerHTML = '<span>Application Already Submitted</span>';
+              } else {
+                // Clear message and enable submit button
+                emailMessage.classList.add('hidden');
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                submitBtn.innerHTML = '<span>👤</span> Submit Application';
+              }
+            }
+          } catch (error) {
+            console.error('Error checking reviewer application:', error);
+            // On error, allow submission
+            emailMessage.classList.add('hidden');
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          }
+        };
+        
+        emailInput.addEventListener('blur', () => {
+          const value = emailInput.value.trim();
+          if (value && !emailInput.checkValidity()) {
+            showFieldError('emailInput');
+          } else {
+            clearTimeout(emailCheckTimeout);
+            emailCheckTimeout = setTimeout(() => checkReviewerExists(value), 300);
+          }
+        });
+        
+        emailInput.addEventListener('input', () => {
+          clearTimeout(emailCheckTimeout);
+          const value = emailInput.value.trim();
+          emailCheckTimeout = setTimeout(() => checkReviewerExists(value), 500);
+        });
+      }
+      
+      // Institution validation
+      if (institutionInput) {
+        institutionInput.addEventListener('blur', () => {
+          const value = institutionInput.value.trim();
+          if (value && value.length < 2) {
+            showFieldError('institutionInput');
+          }
+        });
+      }
+    })();
+
+  (async () => {
+    try {
+      const res = await fetch('/api/me', { credentials: 'include' });
+      const data = await res.json();
+      const el = document.getElementById('authLinks');
+      const mobileEl = document.getElementById('mobileAuthLinks');
+      const dashTab = document.getElementById('dashboardTab');
+      const mobileDashTab = document.getElementById('mobileDashboardTab');
+      
+      if (data && data.isAuthenticated) {
+        const u = data.user || {};
+        const displayName = u.name || u.email || 'User';
+        const authContent = `
+          <span class="text-sm text-gray-700">Hello, ${displayName}</span>
+          <a href="/logout" class="border px-3 py-1 rounded hover:bg-gray-100">Logout</a>
+        `;
+        const mobileAuthContent = `
+          <div class="text-sm text-gray-700 mb-2">Hello, ${displayName}</div>
+          <a href="/logout" class="block w-full text-center border px-4 py-2 rounded hover:bg-gray-100">Logout</a>
+        `;
+        
+        if (el) el.innerHTML = authContent;
+        if (mobileEl) mobileEl.innerHTML = mobileAuthContent;
+        
+        // Prefill email input if available
+        const emailInput = document.getElementById('emailInput');
+        if (emailInput && u.email) {
+          emailInput.value = u.email;
+          
+          // Check if reviewer already exists for this email
+          setTimeout(() => {
+            const event = new Event('blur');
+            emailInput.dispatchEvent(event);
+          }, 100);
+        }
+        
+        if (dashTab) {
+          dashTab.classList.remove('hidden');
+          const btn = dashTab.querySelector('button');
+          const menu = document.getElementById('dashboardMenu');
+          let open = false;
+          const toggle = (e) => { e?.preventDefault?.(); open = !open; menu.classList.toggle('hidden', !open); };
+          btn.addEventListener('click', toggle);
+          document.addEventListener('click', (e) => { if (!dashTab.contains(e.target)) { open = false; menu.classList.add('hidden'); } });
+        }
+        
+        if (mobileDashTab) {
+          mobileDashTab.classList.remove('hidden');
+        }
+      }
+    } catch (e) { /* noop */ }
+  })();
+
+  // Mobile menu functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+      
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+          mobileMenu.classList.add('hidden');
+        }
+      });
+      
+      // Close mobile menu when window is resized to desktop
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) { // md breakpoint
+          mobileMenu.classList.add('hidden');
+        }
+      });
+    }
+  });
+  </script>
+
+  </body>
+</html>

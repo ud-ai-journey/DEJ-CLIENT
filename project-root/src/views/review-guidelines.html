@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Review Guidelines - Digital Evolution Journal</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto', sans-serif; }
+    h1, h2, h3, h4, .font-lato { font-family: 'Lato', sans-serif; }
+  </style>
+</head>
+<body class="text-[#1A1A2E] bg-white">
+
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-white shadow-sm px-8 py-4 flex justify-between items-center">
+    <div class="text-xl font-bold font-lato"><a href="/"><img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-14 w-37"></a></div>
+    <nav class="space-x-6 text-sm hidden md:flex items-center">
+      <a href="/" class="hover:text-[#3F72AF]">Home</a>
+      <a href="/researches" class="hover:text-[#3F72AF]">Published Papers</a>
+      <a href="/submit" class="hover:text-[#3F72AF]">Submit Research</a>
+      <a href="/reviewer" class="hover:text-[#3F72AF]">Review Paper</a>
+      <a href="/about.html" class="hover:text-[#3F72AF]">About</a>
+      <input type="text" placeholder="Search" class="border p-1 px-2 rounded text-sm" />
+      <span id="dashboardTab" class="relative hidden">
+        <button class="inline-flex items-center gap-1 px-3 py-1 rounded hover:bg-gray-100">Dashboards
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/></svg>
+        </button>
+        <div class="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg hidden" id="dashboardMenu">
+          <a href="/dashboard/author" class="block px-4 py-2 hover:bg-gray-100">Author</a>
+          <a href="/dashboard/reviewer" class="block px-4 py-2 hover:bg-gray-100">Reviewer</a>
+        </div>
+      </span>
+      <span id="authLinks" class="flex items-center gap-2">
+        <a href="/login" class="bg-[#F9A826] hover:bg-[#e28e0c] text-white px-6 py-1 rounded">Login</a>
+        <a href="/register" class="bg-[#3F72AF] hover:bg-[#345b8f] text-white text-sm px-4 py-1 rounded">Register</a>
+      </span>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-5xl mx-auto px-6 py-12 space-y-10">
+    <section class="bg-white p-8 rounded-lg shadow-md mb-8">
+      <h1 class="text-4xl font-bold font-lato mb-4 text-[#2A3B5B]">Reviewer Guidelines</h1>
+      <p class="text-gray-700 leading-relaxed">Thank you for your essential contribution to Digital Evolution Journal. Your expertise ensures the quality and integrity of our publications. These guidelines will help you conduct a thorough and constructive peer review.</p>
+    </section>
+
+    <section class="bg-white p-8 rounded-lg shadow-md mb-8">
+      <h2 class="text-2xl font-bold font-lato mb-4 text-[#2A3B5B]">The Review Process</h2>
+      <p class="text-gray-700 leading-relaxed mb-4">Our journal uses a <strong>double-blind, 10-reviewer system</strong> to ensure impartiality. Neither the authors nor the reviewers are aware of each other's identities. The process is as follows:</p>
+      <ol class="list-decimal list-inside space-y-3 text-gray-700">
+        <li><strong>Invitation:</strong> You will receive an email invitation with the manuscript's abstract to determine if the topic aligns with your expertise.</li>
+        <li><strong>Acceptance:</strong> If you accept, you will gain access to the full manuscript. Please accept only if you can complete the review within the specified timeframe (typically 21 days).</li>
+        <li><strong>Review:</strong> Evaluate the manuscript based on the criteria below. Your review should be submitted through our online portal.</li>
+        <li><strong>Decision:</strong> The handling editor will make a final decision based on the feedback from all 10 reviewers.</li>
+      </ol>
+    </section>
+
+    <section class="bg-white p-8 rounded-lg shadow-md mb-8">
+      <h2 class="text-2xl font-bold font-lato mb-4 text-[#2A3B5B]">Evaluation Criteria</h2>
+      <p class="text-gray-700 leading-relaxed mb-4">Please assess the manuscript on the following key dimensions:</p>
+      <ul class="list-disc list-inside space-y-4 text-gray-700">
+        <li><strong>Originality and Novelty:</strong> Is the research question original? Does it present new findings or a novel approach to an existing problem? Does it advance the current body of knowledge?</li>
+        <li><strong>Methodology and Technical Soundness:</strong> Is the methodology robust, well-described, and appropriate for the research question? Are the experiments, simulations, or analyses technically sound and replicable?</li>
+        <li><strong>Clarity and Presentation:</strong> Is the manuscript well-written, clearly organized, and logically structured? Are the figures, tables, and supplementary materials clear and relevant?</li>
+        <li><strong>Impact and Relevance:</strong> Does the work have a significant impact on the field? Is it relevant to the journal's scope and readership?</li>
+        <li><strong>Literature Review:</strong> Does the manuscript adequately cite relevant prior work? Is the literature review comprehensive and up-to-date?</li>
+      </ul>
+    </section>
+
+    <section class="bg-white p-8 rounded-lg shadow-md mb-8">
+      <h2 class="text-2xl font-bold font-lato mb-4 text-[#2A3B5B]">Structuring Your Review</h2>
+      <p class="text-gray-700 leading-relaxed mb-4">To provide the most effective feedback, please structure your review into two parts:</p>
+      <div class="space-y-3 text-gray-700">
+        <p><strong>1. Confidential Comments to the Editor:</strong> This section is for your private feedback to the editor. Include your overall assessment and any concerns about potential ethical issues (e.g., plagiarism, data fabrication).</p>
+        <p><strong>2. Comments to the Author:</strong> This is the core of your review. Be constructive and specific. Start with a summary of the work and your main impressions. Then, provide detailed, numbered comments for major and minor revisions. Frame your feedback to help the authors improve their manuscript, even if you recommend rejection.</p>
+      </div>
+    </section>
+
+    <section class="bg-white p-8 rounded-lg shadow-md mb-8">
+      <h2 class="text-2xl font-bold font-lato mb-4 text-[#2A3B5B]">Confidentiality and Conflict of Interest</h2>
+      <p class="text-gray-700 leading-relaxed">Manuscripts are confidential documents. Do not share them or discuss their content. If you have a potential conflict of interest (e.g., recent collaboration with the author, direct competition), please decline the review and inform the editor. For more, see our <a href="/reviewer-ethics.html" class="text-[#3F72AF] hover:underline">Reviewer Ethics</a> page.</p>
+    </section>
+
+    <section class="bg-white p-8 rounded-lg shadow-md mb-8">
+      <h2 class="text-2xl font-bold font-lato mb-4 text-[#2A3B5B]">Becoming a Reviewer</h2>
+      <p class="text-gray-700 leading-relaxed">Interested in joining our reviewer community? Visit our <a href="/reviewer" class="text-[#3F72AF] hover:underline">Become a Reviewer</a> page to apply.</p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 text-sm text-[#1A1A2E] px-8 py-12">
+    <div class="grid grid-cols-3 gap-12 max-w-6xl mx-auto">
+      <div>
+        <h4 class="font-bold mb-2 font-lato">Digital Evolution Journal</h4>
+        <p class="text-gray-600 mb-2">
+          Premier peer-reviewed publication platform advancing technical research excellence through rigorous review processes and global collaboration.
+        </p>
+
+      </div>
+      <div>
+        <h4 class="font-bold mb-2 font-lato">For Authors</h4>
+        <ul class="space-y-1 text-gray-600">
+          <li><a href="/submit">Submit Paper</a></li>
+          <li><a href="/author-guidelines.html">Author Guidelines</a></li>
+          <li><a href="/formatting-guide.html">Formatting Guide</a></li>
+          <li><a href="/publication-ethics.html">Publication Ethics</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold mb-2 font-lato">For Reviewers</h4>
+        <ul class="space-y-1 text-gray-600">
+          <li><a href="/reviewer">Become Reviewer</a></li>
+          <li><a href="/review-guidelines.html">Review Guidelines</a></li>
+          <!-- <li><a href="/training-materials.html">Training Materials</a></li> -->
+          <li><a href="/reviewer-ethics.html">Reviewer Ethics</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center text-xs text-gray-500 mt-12">
+      <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a> · <a href="#">Accessibility</a> · <a href="#">Contact</a>
+      <div class="mt-2">© 2024 Digital Evolution Journal. All rights reserved.</div>
+    </div>
+  </footer>
+
+<script>
+(async () => {
+  try {
+    const res = await fetch('/api/me', { credentials: 'include' });
+    const data = await res.json();
+    const el = document.getElementById('authLinks');
+    const dashTab = document.getElementById('dashboardTab');
+    if (!el) return;
+    if (data && data.isAuthenticated) {
+      const u = data.user || {};
+      const displayName = u.name || u.email || 'User';
+      el.innerHTML = `
+        <span class="text-sm text-gray-700">Hello, ${displayName}</span>
+        <a href="/logout" class="border px-3 py-1 rounded hover:bg-gray-100">Logout</a>
+      `;
+      if (dashTab) {
+        dashTab.classList.remove('hidden');
+        const btn = dashTab.querySelector('button');
+        const menu = document.getElementById('dashboardMenu');
+        let open = false;
+        const toggle = (e) => { e?.preventDefault?.(); open = !open; menu.classList.toggle('hidden', !open); };
+        btn.addEventListener('click', toggle);
+        document.addEventListener('click', (e) => { if (!dashTab.contains(e.target)) { open = false; menu.classList.add('hidden'); } });
+      }
+    }
+  } catch (e) { /* noop */ }
+})();
+</script>
+
+</body>
+</html>

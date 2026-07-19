@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Paper Details - Digital Evolution Journal</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto', sans-serif; }
+    h1, h2, h3, h4 { font-family: 'Lato', sans-serif; }
+    
+    /* Improve text rendering and word wrapping */
+    .prose p {
+      text-align: justify;
+      hyphens: auto;
+      word-break: break-word;
+    }
+    
+    /* Better line height for readability */
+    .prose {
+      line-height: 1.7;
+    }
+    
+    /* Ensure long URLs break properly */
+    .break-all {
+      word-break: break-all;
+    }
+    
+    /* Better spacing for monospace text */
+    .font-mono {
+      font-feature-settings: "liga" 0, "calt" 0;
+    }
+  </style>
+</head>
+<body class="text-[#1A1A2E] bg-white">
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-white shadow-sm">
+    <div class="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div class="text-xl font-bold font-lato">
+        <a href="/"><img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-12 sm:h-14 w-auto"></a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center space-x-6 text-sm">
+        <a href="/" class="hover:text-[#3F72AF]">Home</a>
+        <a href="/researches" class="hover:text-[#3F72AF]">Published Papers</a>
+        <a href="/submit" class="hover:text-[#3F72AF]">Submit Research</a>
+        <a href="/reviewer" class="hover:text-[#3F72AF]">Review Paper</a>
+        <a href="/about.html" class="hover:text-[#3F72AF]">About</a>
+        <input type="text" placeholder="Search" class="border p-1 px-2 rounded text-sm hidden lg:block" />
+        <span id="dashboardTab" class="relative hidden">
+          <button class="inline-flex items-center gap-1 px-3 py-1 rounded hover:bg-gray-100">Dashboards
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/></svg>
+          </button>
+          <div class="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg hidden" id="dashboardMenu">
+            <a href="/dashboard/author" class="block px-4 py-2 hover:bg-gray-100">Author</a>
+            <a href="/dashboard/reviewer" class="block px-4 py-2 hover:bg-gray-100">Reviewer</a>
+          </div>
+        </span>
+        <span id="authLinks" class="flex items-center gap-2">
+          <a href="/login" class="bg-[#F9A826] hover:bg-[#e28e0c] text-white px-4 lg:px-6 py-1 rounded text-sm">Login</a>
+          <a href="/register" class="bg-[#3F72AF] hover:bg-[#345b8f] text-white text-sm px-3 lg:px-4 py-1 rounded">Register</a>
+        </span>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobileMenuButton" class="md:hidden p-2 text-gray-600 focus:outline-none">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
+      <div class="px-4 py-2 space-y-1">
+        <a href="/" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Home</a>
+        <a href="/researches" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Published Papers</a>
+        <a href="/submit" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Submit Research</a>
+        <a href="/reviewer" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">Review Paper</a>
+        <a href="/about.html" class="block px-3 py-2 text-base hover:bg-gray-100 rounded">About</a>
+        <div class="px-3 py-2">
+          <input type="text" placeholder="Search" class="w-full border p-2 rounded text-sm" />
+        </div>
+        <span id="mobileDashboardTab" class="hidden">
+          <div class="px-3 py-2">
+            <div class="font-medium text-gray-900 mb-2">Dashboards</div>
+            <a href="/dashboard/author" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Author</a>
+            <a href="/dashboard/reviewer" class="block px-3 py-1 text-sm hover:bg-gray-100 rounded">Reviewer</a>
+          </div>
+        </span>
+        <div id="mobileAuthLinks" class="px-3 py-2 space-y-2">
+          <a href="/login" class="block w-full text-center bg-[#F9A826] hover:bg-[#e28e0c] text-white px-4 py-2 rounded">Login</a>
+          <a href="/register" class="block w-full text-center bg-[#3F72AF] hover:bg-[#345b8f] text-white px-4 py-2 rounded">Register</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Paper Details Section -->
+  <section class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Breadcrumb -->
+      <nav class="mb-12 mt-8">
+        <ol class="flex items-center space-x-2 text-sm text-gray-500">
+          <li><a href="/" class="hover:text-[#3F72AF]">Home</a></li>
+          <li><span>/</span></li>
+          <li><a href="/researches.html" class="hover:text-[#3F72AF]">Research Papers</a></li>
+          <li><span>/</span></li>
+          <li class="text-gray-900 font-medium">Paper Details</li>
+        </ol>
+      </nav>
+
+      <!-- Paper Header -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+        <div class="relative">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#3F72AF] to-[#F9A826]"></div>
+          <div class="p-8">
+            <!-- Paper Type & Status -->
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center gap-3">
+                <span class="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-emerald-100 to-emerald-50 text-emerald-700 text-sm font-medium rounded-full">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+                  </svg>
+                  Research Article
+                </span>
+                <span class="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-100 to-green-50 text-green-700 text-sm font-medium rounded-full">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                  Published
+                </span>
+              </div>
+            
+            </div>
+
+            <!-- Title -->
+            <h1 class="text-3xl font-bold font-lato text-gray-900 mb-4 leading-tight break-words hyphens-auto">
+              <!-- TODO: Replace with dynamic title from submissions.title -->
+             Loading...
+            </h1>
+
+            <!-- DOI & Citation -->
+            <div class="flex items-center gap-4 mb-6 text-sm text-gray-600">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                </svg>
+                <!-- TODO: Replace with dynamic DOI from submissions.doi -->
+                
+              </div>
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <!-- TODO: Replace with dynamic volume/issue/pages from submissions table -->
+                Vol. 1, Issue 1, Pages 1-25
+              </div>
+            </div>
+
+            <!-- Keywords -->
+            <div class="mb-6">
+              <h3 class="text-sm font-semibold text-gray-900 mb-3">Keywords</h3>
+              <div class="flex flex-wrap gap-2 justify-start">
+                <!-- TODO: Replace with dynamic keywords from submissions.keywords_text (split by comma) -->
+                <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full whitespace-nowrap">loading..</span>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two Column Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
+
+        <!-- Main Content -->
+        <div class="lg:col-span-3 space-y-12">
+
+          <!-- Abstract -->
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold font-lato text-gray-900 mb-6">Abstract</h2>
+            <div class="prose prose-gray max-w-none leading-relaxed">
+              <!-- TODO: Replace with dynamic abstract from submissions.abstract -->
+              <p class="text-gray-700 leading-relaxed text-justify mb-4">
+   loading...
+              </p>
+             
+            </div>
+          </div>
+
+          <!-- Download Section -->
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold font-lato text-gray-900 mb-6">Download Full Paper</h2>
+            <div class="space-y-6">
+              <!-- TODO: Replace with dynamic file information from submission_files table -->
+              <!-- TODO: Generate download URLs from storage_bucket and storage_key -->
+              <div class="flex items-center justify-between p-6 border border-gray-200 rounded-lg gap-4">
+                <div class="flex items-center gap-4 flex-1 min-w-0">
+                  <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="font-medium text-gray-900 break-words">
+                      <!-- TODO: Replace with original_filename from submission_files -->
+                      loading..
+                    </div>
+                    <div class="text-sm text-gray-500 mt-1">
+                      <!-- TODO: Replace with byte_size and mime_type from submission_files -->
+                      loading..
+                    </div>
+                  </div>
+                </div>
+                <button class="inline-flex items-center gap-2 px-6 py-3 bg-[#3F72AF] text-white font-medium rounded-lg hover:bg-[#345b8f] transition-colors flex-shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                  Download
+                </button>
+              </div>
+
+              <!-- Additional Formats (if available) -->
+              <div class="text-sm text-gray-600 leading-relaxed">
+                <p>This paper is available in Microsoft Word format. For other formats or accessibility options, please contact the journal administration.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-10">
+
+          <!-- Author Information -->
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 class="text-lg font-bold font-lato text-gray-900 mb-6">Author Information</h3>
+            <div class="space-y-6">
+              <!-- TODO: Replace with dynamic author data from authors table -->
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-[#3F72AF] to-[#16213E] rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="font-semibold text-gray-900 mb-2 break-words">
+                    <!-- TODO: Replace with full_name from authors table -->
+                    Loading..
+                  </div>
+                  <div class="text-sm text-gray-600 mb-2 leading-relaxed break-words">
+                    <!-- TODO: Replace with affiliation from authors table -->
+                    Loading..
+                  </div>
+                  <div id="authorLocation" class="text-sm text-gray-600 mb-3 break-words">
+                    <!-- Dynamic location -->
+                    Loading location...
+                  </div>
+            
+               
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Publication Info -->
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 class="text-lg font-bold font-lato text-gray-900 mb-6">Publication Details</h3>
+            <div class="space-y-4 text-sm">
+              <div class="flex justify-between items-start gap-4">
+                <span class="text-gray-600 font-medium flex-shrink-0 w-20">Journal:</span>
+                <span class="font-medium text-gray-900 text-right break-words">Digital Evolution Journal</span>
+              </div>
+              <div class="flex justify-between items-center gap-4">
+                <span class="text-gray-600 font-medium flex-shrink-0 w-20">Volume:</span>
+                <!-- TODO: Replace with volume from submissions table -->
+                <span class="font-medium text-gray-900 text-right">1</span>
+              </div>
+              <div class="flex justify-between items-center gap-4">
+                <span class="text-gray-600 font-medium flex-shrink-0 w-20">Issue:</span>
+                <!-- TODO: Replace with issue from submissions table -->
+                <span class="font-medium text-gray-900 text-right">1</span>
+              </div>
+              <div class="flex justify-between items-center gap-4">
+                <span class="text-gray-600 font-medium flex-shrink-0 w-20">Pages:</span>
+                <!-- TODO: Replace with pages from submissions table -->
+                <span class="font-medium text-gray-900 text-right">1-25</span>
+              </div>
+            
+              <div class="flex justify-between items-center gap-4">
+                <span class="text-gray-600 font-medium flex-shrink-0 w-20">Published:</span>
+                <!-- TODO: Replace with published_at from submissions table -->
+                <span class="font-medium text-gray-900 text-right">
+    
+
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Related Papers -->
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 class="text-lg font-bold font-lato text-gray-900 mb-4">Related Papers</h3>
+            <div class="space-y-3">
+              <!-- TODO: Implement related papers based on keywords, author, or similar topics -->
+              <div class="text-sm text-gray-500 italic">
+                Related papers will be suggested based on keywords and research topics.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 text-sm text-[#1A1A2E] px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 max-w-6xl mx-auto">
+      <div class="sm:col-span-2 lg:col-span-1">
+        <h4 class="font-bold mb-2 font-lato">Digital Evolution Journal</h4>
+        <p class="text-gray-600 mb-2 text-sm">
+          Premier peer-reviewed publication platform advancing technical research excellence through rigorous review processes and global collaboration.
+        </p>
+      </div>
+      <div>
+        <h4 class="font-bold mb-2 font-lato">For Authors</h4>
+        <ul class="space-y-1 text-gray-600">
+          <li><a href="/submit" class="hover:text-[#3F72AF]">Submit Paper</a></li>
+          <li><a href="/author-guidelines.html" class="hover:text-[#3F72AF]">Author Guidelines</a></li>
+          <li><a href="/formatting-guide.html" class="hover:text-[#3F72AF]">Formatting Guide</a></li>
+          <li><a href="/publication-ethics.html" class="hover:text-[#3F72AF]">Publication Ethics</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold mb-2 font-lato">For Reviewers</h4>
+        <ul class="space-y-1 text-gray-600">
+          <li><a href="/reviewer" class="hover:text-[#3F72AF]">Become Reviewer</a></li>
+          <li><a href="/review-guidelines.html" class="hover:text-[#3F72AF]">Review Guidelines</a></li>
+          <li><a href="/reviewer-ethics.html" class="hover:text-[#3F72AF]">Reviewer Ethics</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center text-xs text-gray-500 mt-8 sm:mt-12">
+      <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
+        <a href="#" class="hover:text-[#3F72AF]">Privacy Policy</a>
+        <span>·</span>
+        <a href="#" class="hover:text-[#3F72AF]">Terms of Service</a>
+        <span>·</span>
+        <a href="#" class="hover:text-[#3F72AF]">Accessibility</a>
+        <span>·</span>
+        <a href="#" class="hover:text-[#3F72AF]">Contact</a>
+      </div>
+      <div class="mt-2">© 2025 Digital Evolution Journal. All rights reserved.</div>
+    </div>
+  </footer>
+
+<script>
+(async () => {
+  try {
+    const res = await fetch('/api/me', { credentials: 'include' });
+    const data = await res.json();
+    const el = document.getElementById('authLinks');
+    const mobileEl = document.getElementById('mobileAuthLinks');
+    const dashTab = document.getElementById('dashboardTab');
+    const mobileDashTab = document.getElementById('mobileDashboardTab');
+
+    if (data && data.isAuthenticated) {
+      const u = data.user || {};
+      const displayName = u.name || u.email || 'User';
+      const authContent = `
+        <span class="text-sm text-gray-700">Hello, ${displayName}</span>
+        <a href="/logout" class="border px-3 py-1 rounded hover:bg-gray-100">Logout</a>
+      `;
+      const mobileAuthContent = `
+        <div class="text-sm text-gray-700 mb-2">Hello, ${displayName}</div>
+        <a href="/logout" class="block w-full text-center border px-4 py-2 rounded hover:bg-gray-100">Logout</a>
+      `;
+
+      if (el) el.innerHTML = authContent;
+      if (mobileEl) mobileEl.innerHTML = mobileAuthContent;
+
+      if (dashTab) {
+        dashTab.classList.remove('hidden');
+        const btn = dashTab.querySelector('button');
+        const menu = document.getElementById('dashboardMenu');
+        let open = false;
+        const toggle = (e) => { e?.preventDefault?.(); open = !open; menu.classList.toggle('hidden', !open); };
+        btn.addEventListener('click', toggle);
+        document.addEventListener('click', (e) => { if (!dashTab.contains(e.target)) { open = false; menu.classList.add('hidden'); } });
+      }
+
+      if (mobileDashTab) {
+        mobileDashTab.classList.remove('hidden');
+      }
+    }
+  } catch (e) { /* noop */ }
+})();
+
+// Function to get URL parameter
+function getUrlParameter(name) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
+}
+
+// Function to format date
+function formatPublishedDate(dateString) {
+  if (!dateString) return 'Date not available';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return 'Invalid date';
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                     'July', 'August', 'September', 'October', 'November', 'December'];
+  return `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+// Function to format file size
+function formatFileSize(bytes) {
+  if (!bytes) return 'Unknown size';
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  if (bytes === 0) return '0 Bytes';
+  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+  return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+}
+
+// Function to load paper details
+async function loadPaperDetails() {
+  const paperId = getUrlParameter('id');
+  if (!paperId) {
+    showError('Paper ID is required');
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/paper/${paperId}`);
+    const data = await response.json();
+
+    if (!data.success || !data.paper) {
+      throw new Error(data.error || 'Paper not found');
+    }
+
+    const paper = data.paper;
+    updatePaperDetails(paper);
+
+  } catch (error) {
+    console.error('Error loading paper details:', error);
+    showError('Failed to load paper details. Please try again later.');
+  }
+}
+
+// Function to update paper details in the DOM
+function updatePaperDetails(paper) {
+  // Update title
+  const titleElement = document.querySelector('h1');
+  if (titleElement) {
+    titleElement.textContent = paper.title || 'Untitled Paper';
+  }
+
+  // Update document title
+  document.title = `${paper.title || 'Paper Details'} - Digital Evolution Journal`;
+
+  // Update paper type badge
+  const paperTypeElement = document.querySelector('.inline-flex.items-center.gap-2.px-3.py-1.bg-gradient-to-r.from-emerald-100.to-emerald-50.text-emerald-700');
+  if (paperTypeElement) {
+    // Clear existing content and add new text after the SVG
+    const svg = paperTypeElement.querySelector('svg');
+    if (svg) {
+      // Remove all text nodes and other elements after the SVG
+      let child = svg.nextSibling;
+      while (child) {
+        const nextChild = child.nextSibling;
+        paperTypeElement.removeChild(child);
+        child = nextChild;
+      }
+      
+      // Add the new text
+      const typeText = paper.paper_type ? paper.paper_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Research Article';
+      paperTypeElement.appendChild(document.createTextNode(typeText));
+    }
+  }
+
+  // Update published date
+  const dateElement = document.querySelector('.text-sm.text-gray-500');
+  if (dateElement) {
+    dateElement.textContent = `Published: ${formatPublishedDate(paper.published_at)}`;
+  }
+
+  // Update DOI
+  const doiContainer = document.querySelector('.flex.items-center.gap-4.mb-6.text-sm.text-gray-600 .flex.items-center.gap-2');
+  if (doiContainer && paper.doi) {
+    doiContainer.textContent = `DOI: ${paper.doi}`;
+  }
+
+  // Update volume/issue/pages
+  const vipContainer = document.querySelector('.flex.items-center.gap-4.mb-6.text-sm.text-gray-600 .flex.items-center.gap-2 + .flex.items-center.gap-2');
+  if (vipContainer) {
+    const vipText = [];
+    if (paper.volume) vipText.push(`Vol. ${paper.volume}`);
+    if (paper.issue) vipText.push(`Issue ${paper.issue}`);
+    if (paper.pages) vipText.push(`Pages ${paper.pages}`);
+    vipContainer.textContent = vipText.length > 0 ? vipText.join(', ') : 'Vol. 1, Issue 1, Pages 1-25';
+  }
+
+  // Update keywords
+  const keywordsContainer = document.querySelector('.flex.flex-wrap.gap-2.justify-start');
+  if (keywordsContainer && paper.keywords && paper.keywords.length > 0) {
+    keywordsContainer.innerHTML = paper.keywords.map(keyword => `
+      <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full whitespace-nowrap">${keyword}</span>
+    `).join('');
+  }
+
+  // Update abstract
+  const abstractElement = document.querySelector('.prose.prose-gray.max-w-none.leading-relaxed p');
+  if (abstractElement) {
+    abstractElement.textContent = paper.abstract || 'No abstract available.';
+  }
+
+  // Update download section
+  const downloadContainer = document.querySelector('.flex.items-center.justify-between.p-6.border.border-gray-200.rounded-lg.gap-4');
+  if (downloadContainer && paper.submission_files && paper.submission_files.length > 0) {
+    const mainFile = paper.submission_files[0]; // Use first file as main download
+    const fileInfo = downloadContainer.querySelector('.flex-1.min-w-0');
+    if (fileInfo) {
+      const fileNameElement = fileInfo.querySelector('.font-medium.text-gray-900.break-words');
+      const fileSizeElement = fileInfo.querySelector('.text-sm.text-gray-500.mt-1');
+
+      if (fileNameElement) {
+        fileNameElement.textContent = mainFile.original_filename || 'paper.docx';
+      }
+      if (fileSizeElement) {
+        fileSizeElement.textContent = `${formatFileSize(mainFile.byte_size)} • ${mainFile.mime_type || 'Document'}`;
+      }
+    }
+
+    // Update download button
+    const downloadButton = downloadContainer.querySelector('button');
+    if (downloadButton) {
+      downloadButton.onclick = async () => {
+        try {
+          // Check authentication status
+          const authResponse = await fetch('/api/me', { credentials: 'include' });
+          const authData = await authResponse.json();
+
+          if (!authData || !authData.isAuthenticated) {
+            // User is not logged in, show login prompt
+            const loginModal = document.createElement('div');
+            loginModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            loginModal.innerHTML = `
+              <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                <div class="text-center">
+                  <svg class="w-16 h-16 text-[#3F72AF] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  </svg>
+                  <h3 class="text-lg font-bold text-gray-900 mb-2">Login Required</h3>
+                  <p class="text-gray-600 mb-6">Please log in to download published papers.</p>
+                  <div class="flex gap-3 justify-center">
+                    <a href="/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}"
+                       class="inline-flex items-center px-4 py-2 bg-[#3F72AF] text-white rounded-lg hover:bg-[#345b8f] transition-colors">
+                      Login
+                    </a>
+                    <button onclick="document.body.removeChild(this.closest('.fixed'))"
+                            class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+            document.body.appendChild(loginModal);
+            return;
+          }
+
+          // User is authenticated, proceed with download
+          if (mainFile.storage_key) {
+            window.open(mainFile.storage_key, '_blank');
+          } else {
+            alert('Download link not available');
+          }
+        } catch (error) {
+          console.error('Error checking authentication:', error);
+          alert('Unable to verify login status. Please try again.');
+        }
+      };
+    }
+  }
+
+  // Update author information
+  const authorNameElement = document.querySelector('.font-semibold.text-gray-900.mb-2.break-words');
+  const authorAffiliationElement = document.querySelector('.text-sm.text-gray-600.mb-2.leading-relaxed.break-words');
+  const authorEmailElement = document.getElementById('authorEmail');
+  const authorLocationElement = document.getElementById('authorLocation');
+  const authorInterestsElement = document.getElementById('authorInterests');
+
+  if (authorNameElement) {
+    authorNameElement.textContent = paper.author_name || 'Unknown Author';
+  }
+  if (authorAffiliationElement) {
+    authorAffiliationElement.textContent = paper.affiliation || 'No affiliation';
+  }
+  if (authorEmailElement) {
+    authorEmailElement.textContent = paper.author_email || paper.author?.email || 'Email not provided';
+  }
+  if (authorLocationElement) {
+    const loc = paper.author_location || paper.location || paper.author?.location;
+    authorLocationElement.textContent = loc || 'Location not provided';
+  }
+  if (authorInterestsElement) {
+    let interests = paper.author_research_interests || paper.research_interests || paper.author?.research_interests;
+    if (Array.isArray(interests)) {
+      interests = interests.join(', ');
+    }
+    if (typeof interests === 'string') {
+      authorInterestsElement.textContent = interests.trim() || 'No research interests provided';
+    } else {
+      authorInterestsElement.textContent = 'No research interests provided';
+    }
+  }
+
+  // Update publication details
+  const publicationDetails = document.querySelector('.space-y-4.text-sm');
+  if (publicationDetails) {
+    const detailRows = publicationDetails.querySelectorAll('.flex.justify-between');
+    
+    // Volume (2nd row)
+    if (detailRows[1]) {
+      const volumeSpan = detailRows[1].querySelector('.font-medium.text-gray-900.text-right');
+      if (volumeSpan) volumeSpan.textContent = paper.volume || '1';
+    }
+    
+    // Issue (3rd row)
+    if (detailRows[2]) {
+      const issueSpan = detailRows[2].querySelector('.font-medium.text-gray-900.text-right');
+      if (issueSpan) issueSpan.textContent = paper.issue || '1';
+    }
+    
+    // Pages (4th row)
+    if (detailRows[3]) {
+      const pagesSpan = detailRows[3].querySelector('.font-medium.text-gray-900.text-right');
+      if (pagesSpan) pagesSpan.textContent = paper.pages || '1-25';
+    }
+    
+    // Published (5th row)
+    if (detailRows[4]) {
+      const publishedSpan = detailRows[4].querySelector('.font-medium.text-gray-900.text-right');
+      if (publishedSpan) publishedSpan.textContent = formatPublishedDate(paper.published_at);
+    }
+  }
+
+  // Hide loading state
+  const loadingElements = document.querySelectorAll('.animate-pulse, .bg-gray-200');
+  loadingElements.forEach(el => el.classList.remove('animate-pulse', 'bg-gray-200'));
+}
+
+// Function to show error message
+function showError(message) {
+  const mainContent = document.querySelector('.grid.grid-cols-1.lg\\:grid-cols-4.gap-12');
+  if (mainContent) {
+    mainContent.innerHTML = `
+      <div class="lg:col-span-3">
+        <div class="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
+          <svg class="w-16 h-16 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+          </svg>
+          <h2 class="text-xl font-semibold text-red-800 mb-2">Error Loading Paper</h2>
+          <p class="text-red-600">${message}</p>
+          <a href="/researches" class="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Research Papers
+          </a>
+        </div>
+      </div>
+    `;
+  }
+}
+
+// Mobile menu functionality
+document.addEventListener('DOMContentLoaded', () => {
+  const mobileMenuButton = document.getElementById('mobileMenuButton');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  if (mobileMenuButton && mobileMenu) {
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+        mobileMenu.classList.add('hidden');
+      }
+    });
+
+    // Close mobile menu when window is resized to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768) { // md breakpoint
+        mobileMenu.classList.add('hidden');
+      }
+    });
+  }
+
+  // Load paper details when page loads
+  loadPaperDetails();
+});
+</script></body>
+</html>

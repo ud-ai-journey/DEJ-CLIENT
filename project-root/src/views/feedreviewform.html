@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEJ Review Form</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 20px;
+      background-color: #f3f6fb;
+    }
+    form {
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      max-width: 950px;
+      margin: auto;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+    }
+    h2, h3 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    label {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+      color: #222;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccd5e0;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+    .score-input {
+      width: 120px;
+    }
+    .criterion {
+      background: #f9fbfd;
+      border: 1px solid #e2e6ed;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 8px;
+    }
+    .btn {
+      display: block;
+      margin: 25px auto 0;
+      padding: 12px 28px;
+      background: #4671C3;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: #365a9d;
+    }
+    .result-box {
+      background: #eef3fa;
+      padding: 15px;
+      margin-top: 25px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+      color: #333;
+      font-size: 16px;
+    }
+    .info {
+      margin-left: 8px;
+      color: #4671C3;
+      cursor: help;
+      font-size: 14px;
+    }
+    .info:hover::after {
+      content: attr(data-tip);
+      position: absolute;
+      background: #333;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      max-width: 250px;
+      margin-left: 5px;
+      white-space: normal;
+      z-index: 100;
+    }
+    /* Readonly field styling */
+    input[readonly] {
+      background-color: #f8f9fa;
+      color: #6c757d;
+      border: 1px solid #e9ecef;
+      cursor: not-allowed;
+    }
+    input[readonly]:focus {
+      box-shadow: none;
+      outline: none;
+    }
+    /* Disabled form styling for completed reviews */
+    .form-disabled input:not([readonly]),
+    .form-disabled textarea:not([readonly]),
+    .form-disabled select {
+      background-color: #f8f9fa;
+      color: #6c757d;
+      border: 1px solid #e9ecef;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .btn:disabled {
+      background-color: #6c757d;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    .btn:disabled:hover {
+      background-color: #6c757d;
+    }
+    .completed-review-notice {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .auto-save-indicator {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 8px 12px;
+      background: #28a745;
+      color: white;
+      border-radius: 4px;
+      font-size: 12px;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .auto-save-indicator.show {
+      opacity: 1;
+    }
+    .auto-save-indicator.saving {
+      background: #ffc107;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <!-- Auto-save indicator -->
+  <div id="autoSaveIndicator" class="auto-save-indicator">
+    💾 Draft saved
+  </div>
+  
+  <form id="reviewForm">
+    <h2>DEJ Review Form</h2>
+    
+    <!-- Completed review notification (hidden by default) -->
+    <div id="completedNotice" class="completed-review-notice" style="display: none;">
+      ✅ This review has already been submitted and cannot be modified.
+    </div>
+
+    <label for="paperId">Paper ID</label>
+    <input type="text" id="paperId" name="paperId" readonly required>
+
+    <label for="title">Paper Title</label>
+    <input type="text" id="title" name="title" readonly required>
+
+    <label for="reviewerName">Reviewer Name</label>
+    <input type="text" id="reviewerName" name="reviewerName" readonly required>
+
+    <label for="reviewerEmail">Reviewer Email</label>
+    <input type="email" id="reviewerEmail" name="reviewerEmail" readonly required>
+
+    <h3>Evaluation Criteria (Score 1–10)</h3>
+
+    <div class="criterion">
+      <label for="originality">1. Originality of the Work 
+        <span class="info" data-tip="Does the paper present novel ideas or approaches not previously published?">ℹ️</span>
+      </label>
+      <input type="number" id="originality" name="originality" min="1" max="10" class="score-input" required> <span style="color: #666; font-size: 14px; margin-left: 8px;">(out of 10)</span>
+            <textarea name="originalityComment" placeholder="Comments on originality..." required></textarea>
+    </div>
+
+    <div class="criterion">
+      <label for="relevance">2. Relevance to the Field / Journal Scope 
+        <span class="info" data-tip="Is the topic aligned with the journal’s scope and of interest to the research community?">ℹ️</span>
+      </label>
+      <input type="number" id="relevance" name="relevance" min="1" max="10" class="score-input" required> <span style="color: #666; font-size: 14px; margin-left: 8px;">(out of 10)</span>
+            <textarea name="relevanceComment" placeholder="Comments on relevance..." required></textarea>
+    </div>
+
+    <div class="criterion">
+      <label for="literature">3. Adequacy of Literature Review 
+        <span class="info" data-tip="Has the author reviewed relevant and recent work in the field, citing key sources?">ℹ️</span>
+      </label>
+      <input type="number" id="literature" name="literature" min="1" max="10" class="score-input" required> <span style="color: #666; font-size: 14px; margin-left: 8px;">(out of 10)</span>
+            <textarea name="literatureComment" placeholder="Comments on literature review..." required></textarea>
+    </div>
+
+    <div class="criterion">
+      <label for="methodology">4. Soundness of Research Methodology 
+        <span class="info" data-tip="Is the methodology scientifically rigorous, appropriate, and well described?">ℹ️</span>
+      </label>
+      <input type="number" id="methodology" name="methodology" min="1" max="10" class="score-input" required> <span style="color: #666; font-size: 14px; margin-left: 8px;">(out of 10)</span>
+            <textarea name="methodologyComment" placeholder="Comments on methodology..." required></textarea>
+    </div>
+
+    <div class="criterion">
+      <label for="analysis">5. Depth and Quality of Analysis 
+        <span class="info" data-tip="Are the data analysis techniques appropriate, thorough, and well executed?">ℹ️</span>
+      </label>
+      <input type="number" id="analysis" name="analysis" min="1" max="10" class="score-input" required> <span style="color: #666; font-size: 14px; margin-left: 8px;">(out of 10)</span>
+            <textarea name="analysisComment" placeholder="Comments on analysis..." required></textarea>
+    </div>
+
+    <div class="criterion">
+      <label for="clarity">6. Clarity and Organization of Writing 
+        <span class="info" data-tip="Is the paper clearly written, logically structured, and easy to follow?">ℹ️</span>
+      </label>
+      <input type="number" id="clarity" name="clarity" min="1" max="10" class="score-input" required> <span style="color: #666; font-size: 14px; margin-left: 8px;">(out of 10)</span>
+            <textarea name="clarityComment" placeholder="Comments on clarity..." required></textarea>
+    </div>
+
+    <div class="criterion">
+      <label for="presentation">7. Quality of Figures, Tables, and References 
+        <span class="info" data-tip="Are figures, tables, and references accurate, well formatted, and informative?">ℹ️</span>
+      </label>
+      <input type="number" id="presentation" name="presentation" min="1" max="10" class="score-input" required> <span style="color: #666; font-size: 14px; margin-left: 8px;">(out of 10)</span>
+      <textarea name="presentationComment" placeholder="Comments on presentation..." required></textarea>
+    </div>
+
+    <div class="criterion">
+      <label for="significance">8. Significance and Practical Implications of Findings 
+        <span class="info" data-tip="Do the findings contribute to advancing knowledge or have real-world applications?">ℹ️</span>
+      </label>
+      <input type="number" id="significance" name="significance" min="1" max="10" class="score-input" required> <span style="color: #666; font-size: 14px; margin-left: 8px;">(out of 10)</span>
+      <textarea name="significanceComment" placeholder="Comments on significance..." required></textarea>
+    </div>
+
+    <div class="criterion">
+      <label for="ethics">9. Ethical Considerations and Research Integrity 
+        <span class="info" data-tip="Has the research followed ethical guidelines, avoiding plagiarism or misconduct?">ℹ️</span>
+      </label>
+            <input type="number" id="ethics" name="ethics" min="1" max="10" class="score-input" required> <span style="color: #666; font-size: 14px; margin-left: 8px;">(out of 10)</span>
+      <textarea name="ethicsComment" placeholder="Comments on ethics..." required></textarea>
+    </div>
+
+    <h3>General Feedback</h3>
+
+    <label for="strengths">Strengths of the Paper</label>
+    <textarea id="strengths" name="strengths" required></textarea>
+
+    <label for="weaknesses">Areas for Improvement</label>
+    <textarea id="weaknesses" name="weaknesses" required></textarea>
+
+    <label for="comments">Additional Reviewer Comments</label>
+    <textarea id="comments" name="comments" required></textarea>
+
+    <label for="recommendation">Final Recommendation</label>
+    <select id="recommendation" name="recommendation" required>
+      <option value="accept">Accept</option>
+      <option value="minor">Minor Revision</option>
+      <option value="major">Major Revision</option>
+      <option value="reject">Reject</option>
+    </select>
+
+    <div class="result-box" id="averageScore">Final Average Score: N/A</div>
+
+    <button type="submit" class="btn" id="submitButton">Submit Review</button>
+  </form>
+
+  <script>
+    const inputs = document.querySelectorAll('.score-input');
+    const avgBox = document.getElementById('averageScore');
+    let submissionId = null;
+    let existingReview = null;
+    let autoSaveTimeout = null;
+
+    // Local storage key for caching form data
+    function getCacheKey() {
+      return `review_form_${submissionId}`;
+    }
+
+    // Save form data to localStorage
+    function saveFormToCache() {
+      if (!submissionId) return;
+      
+      try {
+        const formData = {
+          // Scores
+          originality: document.getElementById('originality').value,
+          relevance: document.getElementById('relevance').value,
+          literature: document.getElementById('literature').value,
+          methodology: document.getElementById('methodology').value,
+          analysis: document.getElementById('analysis').value,
+          clarity: document.getElementById('clarity').value,
+          presentation: document.getElementById('presentation').value,
+          significance: document.getElementById('significance').value,
+          ethics: document.getElementById('ethics').value,
+          
+          // Comments
+          originalityComment: document.querySelector('textarea[name="originalityComment"]').value,
+          relevanceComment: document.querySelector('textarea[name="relevanceComment"]').value,
+          literatureComment: document.querySelector('textarea[name="literatureComment"]').value,
+          methodologyComment: document.querySelector('textarea[name="methodologyComment"]').value,
+          analysisComment: document.querySelector('textarea[name="analysisComment"]').value,
+          clarityComment: document.querySelector('textarea[name="clarityComment"]').value,
+          presentationComment: document.querySelector('textarea[name="presentationComment"]').value,
+          significanceComment: document.querySelector('textarea[name="significanceComment"]').value,
+          ethicsComment: document.querySelector('textarea[name="ethicsComment"]').value,
+          
+          // General feedback
+          strengths: document.getElementById('strengths').value,
+          weaknesses: document.getElementById('weaknesses').value,
+          comments: document.getElementById('comments').value,
+          recommendation: document.getElementById('recommendation').value,
+          
+          // Metadata
+          lastSaved: new Date().toISOString()
+        };
+        
+        localStorage.setItem(getCacheKey(), JSON.stringify(formData));
+        showAutoSaveIndicator('saved');
+      } catch (error) {
+        console.warn('Failed to save form to cache:', error);
+      }
+    }
+
+    // Load form data from localStorage
+    function loadFormFromCache() {
+      if (!submissionId) return false;
+      
+      try {
+        const cachedData = localStorage.getItem(getCacheKey());
+        if (!cachedData) return false;
+        
+        const formData = JSON.parse(cachedData);
+        
+        // Populate scores
+        if (formData.originality) document.getElementById('originality').value = formData.originality;
+        if (formData.relevance) document.getElementById('relevance').value = formData.relevance;
+        if (formData.literature) document.getElementById('literature').value = formData.literature;
+        if (formData.methodology) document.getElementById('methodology').value = formData.methodology;
+        if (formData.analysis) document.getElementById('analysis').value = formData.analysis;
+        if (formData.clarity) document.getElementById('clarity').value = formData.clarity;
+        if (formData.presentation) document.getElementById('presentation').value = formData.presentation;
+        if (formData.significance) document.getElementById('significance').value = formData.significance;
+        if (formData.ethics) document.getElementById('ethics').value = formData.ethics;
+        
+        // Populate comments
+        if (formData.originalityComment) document.querySelector('textarea[name="originalityComment"]').value = formData.originalityComment;
+        if (formData.relevanceComment) document.querySelector('textarea[name="relevanceComment"]').value = formData.relevanceComment;
+        if (formData.literatureComment) document.querySelector('textarea[name="literatureComment"]').value = formData.literatureComment;
+        if (formData.methodologyComment) document.querySelector('textarea[name="methodologyComment"]').value = formData.methodologyComment;
+        if (formData.analysisComment) document.querySelector('textarea[name="analysisComment"]').value = formData.analysisComment;
+        if (formData.clarityComment) document.querySelector('textarea[name="clarityComment"]').value = formData.clarityComment;
+        if (formData.presentationComment) document.querySelector('textarea[name="presentationComment"]').value = formData.presentationComment;
+        if (formData.significanceComment) document.querySelector('textarea[name="significanceComment"]').value = formData.significanceComment;
+        if (formData.ethicsComment) document.querySelector('textarea[name="ethicsComment"]').value = formData.ethicsComment;
+        
+        // Populate general feedback
+        if (formData.strengths) document.getElementById('strengths').value = formData.strengths;
+        if (formData.weaknesses) document.getElementById('weaknesses').value = formData.weaknesses;
+        if (formData.comments) document.getElementById('comments').value = formData.comments;
+        if (formData.recommendation) document.getElementById('recommendation').value = formData.recommendation;
+        
+        // Recalculate average
+        calculateAverage();
+        
+        console.log('Form data loaded from cache (saved:', formData.lastSaved, ')');
+        return true;
+      } catch (error) {
+        console.warn('Failed to load form from cache:', error);
+        return false;
+      }
+    }
+
+    // Clear cached form data
+    function clearFormCache() {
+      if (!submissionId) return;
+      try {
+        localStorage.removeItem(getCacheKey());
+        console.log('Form cache cleared');
+      } catch (error) {
+        console.warn('Failed to clear form cache:', error);
+      }
+    }
+    
+    // Utility function to clear all review form caches (for debugging)
+    function clearAllReviewCaches() {
+      try {
+        const keys = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith('review_form_')) {
+            keys.push(key);
+          }
+        }
+        keys.forEach(key => localStorage.removeItem(key));
+        console.log(`Cleared ${keys.length} review form caches`);
+        return keys.length;
+      } catch (error) {
+        console.warn('Failed to clear all review caches:', error);
+        return 0;
+      }
+    }
+
+    // Show auto-save indicator
+    function showAutoSaveIndicator(status = 'saving') {
+      const indicator = document.getElementById('autoSaveIndicator');
+      
+      if (status === 'saving') {
+        indicator.textContent = '💾 Saving...';
+        indicator.className = 'auto-save-indicator saving show';
+      } else {
+        indicator.textContent = '💾 Draft saved';
+        indicator.className = 'auto-save-indicator show';
+        
+        // Hide after 2 seconds
+        setTimeout(() => {
+          indicator.classList.remove('show');
+        }, 2000);
+      }
+    }
+
+    // Debounced auto-save function
+    function triggerAutoSave() {
+      // Clear existing timeout
+      if (autoSaveTimeout) {
+        clearTimeout(autoSaveTimeout);
+      }
+      
+      // Show saving indicator immediately
+      showAutoSaveIndicator('saving');
+      
+      // Set new timeout for actual save
+      autoSaveTimeout = setTimeout(() => {
+        saveFormToCache();
+      }, 1000); // Save after 1 second of inactivity
+    }
+
+    // Get submission ID from URL
+    function getSubmissionIdFromUrl() {
+      const path = window.location.pathname;
+      // Match UUID pattern: /review/uuid-string
+      const match = path.match(/\/review\/([a-f0-9-]+)/);
+      return match ? match[1] : null; // Return UUID string, not parseInt
+    }
+
+    // Calculate average score
+    function calculateAverage() {
+      let total = 0;
+      let count = 0;
+
+      inputs.forEach(input => {
+        if (input.value && input.value >= 1 && input.value <= 10) {
+          total += parseInt(input.value, 10);
+          count++;
+        } else if (input.value) {
+          input.value = ""; // reset if invalid
+          alert("Scores must be between 1 and 10.");
+        }
+      });
+
+      if (count > 0) {
+        let avg = (total / count).toFixed(2);
+        avgBox.textContent = `Final Average Score: ${avg}/10`;
+      } else {
+        avgBox.textContent = "Final Average Score: N/A";
+      }
+    }
+
+    // Load existing review data
+    async function loadReviewData() {
+      try {
+        const response = await fetch(`/api/review/${submissionId}`, {
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.review) {
+            existingReview = data.review;
+            populateForm(data.review);
+          }
+        } else if (response.status === 404) {
+          console.log('No existing review found - starting fresh');
+        } else {
+          console.error('Error loading review data:', await response.text());
+        }
+      } catch (error) {
+        console.error('Error loading review data:', error);
+      }
+    }
+
+    // Populate form with existing review data
+    function populateForm(review) {
+      // Check if review is completed
+      const isCompleted = review.status === 'COMPLETED';
+      
+      if (isCompleted) {
+        handleCompletedReview();
+        // Clear any cached data for completed reviews
+        clearFormCache();
+        return;
+      }
+      
+      // Populate submission info
+      if (review.submission) {
+        document.getElementById('paperId').value = review.submission.id || '';
+        document.getElementById('title').value = review.submission.title || '';
+      }
+
+      // Populate reviewer info
+      if (review.reviewer) {
+        document.getElementById('reviewerName').value = review.reviewer.full_name || '';
+        document.getElementById('reviewerEmail').value = review.reviewer.applicant_email || '';
+      }
+
+      // Populate scores
+      if (review.originality_score) document.getElementById('originality').value = review.originality_score;
+      if (review.relevance_score) document.getElementById('relevance').value = review.relevance_score;
+      if (review.literature_score) document.getElementById('literature').value = review.literature_score;
+      if (review.methodology_score) document.getElementById('methodology').value = review.methodology_score;
+      if (review.analysis_score) document.getElementById('analysis').value = review.analysis_score;
+      if (review.clarity_score) document.getElementById('clarity').value = review.clarity_score;
+      if (review.presentation_score) document.getElementById('presentation').value = review.presentation_score;
+      if (review.significance_score) document.getElementById('significance').value = review.significance_score;
+      if (review.ethics_score) document.getElementById('ethics').value = review.ethics_score;
+
+      // Populate comments
+      if (review.originality_comment) document.querySelector('textarea[name="originalityComment"]').value = review.originality_comment;
+      if (review.relevance_comment) document.querySelector('textarea[name="relevanceComment"]').value = review.relevance_comment;
+      if (review.literature_comment) document.querySelector('textarea[name="literatureComment"]').value = review.literature_comment;
+      if (review.methodology_comment) document.querySelector('textarea[name="methodologyComment"]').value = review.methodology_comment;
+      if (review.analysis_comment) document.querySelector('textarea[name="analysisComment"]').value = review.analysis_comment;
+      if (review.clarity_comment) document.querySelector('textarea[name="clarityComment"]').value = review.clarity_comment;
+      if (review.presentation_comment) document.querySelector('textarea[name="presentationComment"]').value = review.presentation_comment;
+      if (review.significance_comment) document.querySelector('textarea[name="significanceComment"]').value = review.significance_comment;
+      if (review.ethics_comment) document.querySelector('textarea[name="ethicsComment"]').value = review.ethics_comment;
+
+      // Populate general feedback
+      if (review.strengths) document.getElementById('strengths').value = review.strengths;
+      if (review.weaknesses) document.getElementById('weaknesses').value = review.weaknesses;
+      if (review.additional_comments) document.getElementById('comments').value = review.additional_comments;
+      if (review.recommendation) document.getElementById('recommendation').value = review.recommendation;
+
+      // Recalculate average
+      calculateAverage();
+    }
+
+    // Handle completed review - disable form and show notification
+    function handleCompletedReview() {
+      // Show completed notice
+      document.getElementById('completedNotice').style.display = 'block';
+      
+      // Add disabled class to form
+      document.getElementById('reviewForm').classList.add('form-disabled');
+      
+      // Disable all form inputs (except readonly ones)
+      const inputs = document.querySelectorAll('#reviewForm input:not([readonly]), #reviewForm textarea:not([readonly]), #reviewForm select');
+      inputs.forEach(input => {
+        input.disabled = true;
+      });
+      
+      // Disable and update submit button
+      const submitButton = document.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.textContent = 'Review Already Submitted';
+      
+      // Remove event listeners to prevent form submission
+      const form = document.getElementById('reviewForm');
+      const newForm = form.cloneNode(true);
+      form.parentNode.replaceChild(newForm, form);
+    }
+
+    // Submit review
+    async function submitReview(formData) {
+      try {
+        // First mark review as started if not already
+        await fetch(`/api/review/${submissionId}/start`, {
+          method: 'POST',
+          credentials: 'include'
+        });
+
+        // Submit the review
+        const response = await fetch(`/api/review/${submissionId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Clear cached data on successful submission
+          clearFormCache();
+          alert('Review submitted successfully!');
+          // Redirect to reviewer dashboard
+          window.location.href = '/dashboard/reviewer';
+        } else {
+          alert('Error submitting review: ' + result.error);
+        }
+      } catch (error) {
+        console.error('Error submitting review:', error);
+        alert('Error submitting review: ' + error.message);
+      }
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', async () => {
+      submissionId = getSubmissionIdFromUrl();
+      
+      if (!submissionId) {
+        alert('Invalid submission ID');
+        window.location.href = '/dashboard/reviewer';
+        return;
+      }
+
+      // Load existing review data from server
+      await loadReviewData();
+      
+      // If no server data was loaded, try to load from cache
+      if (!existingReview) {
+        const cacheLoaded = loadFormFromCache();
+        if (cacheLoaded) {
+          console.log('Form data restored from local cache');
+        }
+      }
+
+      // Add event listeners for score calculation
+      inputs.forEach(input => {
+        input.addEventListener('input', calculateAverage);
+      });
+      
+      // Add auto-save event listeners to all form inputs
+      const allInputs = document.querySelectorAll('#reviewForm input:not([readonly]), #reviewForm textarea:not([readonly]), #reviewForm select');
+      allInputs.forEach(input => {
+        input.addEventListener('input', triggerAutoSave);
+        input.addEventListener('change', triggerAutoSave);
+      });
+      
+      // Add beforeunload listener to warn about unsaved changes
+      window.addEventListener('beforeunload', (e) => {
+        const cachedData = localStorage.getItem(getCacheKey());
+        if (cachedData && !existingReview?.status !== 'COMPLETED') {
+          e.preventDefault();
+          e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+          return 'You have unsaved changes. Are you sure you want to leave?';
+        }
+      });
+
+      // Handle form submission
+      document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Collect form data
+        const formData = {
+          paperId: document.getElementById('paperId').value,
+          title: document.getElementById('title').value,
+          reviewerName: document.getElementById('reviewerName').value,
+          reviewerEmail: document.getElementById('reviewerEmail').value,
+          
+          // Scores
+          originality: parseInt(document.getElementById('originality').value) || null,
+          relevance: parseInt(document.getElementById('relevance').value) || null,
+          literature: parseInt(document.getElementById('literature').value) || null,
+          methodology: parseInt(document.getElementById('methodology').value) || null,
+          analysis: parseInt(document.getElementById('analysis').value) || null,
+          clarity: parseInt(document.getElementById('clarity').value) || null,
+          presentation: parseInt(document.getElementById('presentation').value) || null,
+          significance: parseInt(document.getElementById('significance').value) || null,
+          ethics: parseInt(document.getElementById('ethics').value) || null,
+          
+          // Comments
+          originalityComment: document.querySelector('textarea[name="originalityComment"]').value,
+          relevanceComment: document.querySelector('textarea[name="relevanceComment"]').value,
+          literatureComment: document.querySelector('textarea[name="literatureComment"]').value,
+          methodologyComment: document.querySelector('textarea[name="methodologyComment"]').value,
+          analysisComment: document.querySelector('textarea[name="analysisComment"]').value,
+          clarityComment: document.querySelector('textarea[name="clarityComment"]').value,
+          presentationComment: document.querySelector('textarea[name="presentationComment"]').value,
+          significanceComment: document.querySelector('textarea[name="significanceComment"]').value,
+          ethicsComment: document.querySelector('textarea[name="ethicsComment"]').value,
+          
+          // General feedback
+          strengths: document.getElementById('strengths').value,
+          weaknesses: document.getElementById('weaknesses').value,
+          comments: document.getElementById('comments').value,
+          recommendation: document.getElementById('recommendation').value
+        };
+
+        // Validate required fields
+        const requiredScores = ['originality', 'relevance', 'literature', 'methodology', 'analysis', 'clarity', 'presentation', 'significance', 'ethics'];
+        const missingScores = requiredScores.filter(field => !formData[field]);
+        
+        if (missingScores.length > 0) {
+          alert(`Please provide scores for: ${missingScores.join(', ')}`);
+          return;
+        }
+
+        // Validate required comments
+        const requiredComments = {
+          originalityComment: 'Originality',
+          relevanceComment: 'Relevance',
+          literatureComment: 'Literature Review',
+          methodologyComment: 'Methodology',
+          analysisComment: 'Analysis',
+          clarityComment: 'Clarity',
+          presentationComment: 'Presentation',
+          significanceComment: 'Significance',
+          ethicsComment: 'Ethics'
+        };
+        
+        const missingComments = Object.keys(requiredComments).filter(field => !formData[field] || formData[field].trim() === '');
+        
+        if (missingComments.length > 0) {
+          const missingNames = missingComments.map(field => requiredComments[field]);
+          alert(`Please provide comments for: ${missingNames.join(', ')}`);
+          return;
+        }
+
+        // Validate general feedback fields
+        if (!formData.strengths || formData.strengths.trim() === '') {
+          alert('Please provide strengths of the paper');
+          return;
+        }
+        
+        if (!formData.weaknesses || formData.weaknesses.trim() === '') {
+          alert('Please provide areas for improvement');
+          return;
+        }
+        
+        if (!formData.comments || formData.comments.trim() === '') {
+          alert('Please provide additional reviewer comments');
+          return;
+        }
+
+        if (!formData.recommendation) {
+          alert('Please select a final recommendation');
+          return;
+        }
+
+        // Submit the review
+        await submitReview(formData);
+      });
+    });
+  </script>
+</body>
+</html>

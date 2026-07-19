@@ -1,0 +1,1940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submission Details - Admin Dashboard</title>
+
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .slide-up { animation: slideUp 0.6s ease-out; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .workflow-step { transition: all 0.3s ease; }
+        .workflow-step.active { transform: scale(1.05); }
+        .review-card { transition: all 0.3s ease; }
+        .review-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <img src="/images/Logo.png" alt="DEJ Logo" class="h-8 w-auto mr-3">
+                    <nav class="flex items-center space-x-2 text-sm text-gray-500">
+                        <a href="/admin" class="hover:text-gray-700">Admin</a>
+                        <i class="fas fa-chevron-right text-xs"></i>
+                        <a href="/admin/submissions" class="hover:text-gray-700">Submissions</a>
+                        <i class="fas fa-chevron-right text-xs"></i>
+                        <span class="text-gray-900 font-medium" id="breadcrumb-title">Submission Details</span>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600" id="admin-name">Admin User</span>
+                    <button onclick="adminLogout()" class="text-red-600 hover:text-red-700 text-sm font-medium">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading State -->
+    <div id="loading-state" class="max-w-7xl mx-auto p-8">
+        <div class="text-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p class="text-gray-600">Loading submission details...</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="max-w-7xl mx-auto p-8 hidden">
+        <!-- Submission Header -->
+        <div class="bg-white rounded-xl shadow-sm p-8 mb-8 fade-in">
+            <div class="flex items-start justify-between mb-6">
+                <div class="flex-1">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2" id="submission-title">Loading...</h1>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="px-3 py-1 text-sm font-medium rounded-full" id="submission-status">Loading...</span>
+                        <span class="text-sm text-gray-500" id="submission-date">Loading...</span>
+                        <span class="text-sm text-gray-500" id="submission-type">Loading...</span>
+                    </div>
+                    <div class="flex items-center space-x-6 text-sm text-gray-600">
+                        <div class="flex items-center">
+                            <i class="fas fa-user mr-2"></i>
+                            <span id="author-name">Loading...</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-building mr-2"></i>
+                            <span id="author-affiliation">Loading...</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope mr-2"></i>
+                            <span id="author-email">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex space-x-3">
+                    <button id="message-author-btn" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-envelope mr-2"></i>
+                        Message Author
+                    </button>
+                    <button id="download-files-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-download mr-2"></i>
+                        Download Files
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Workflow Progress -->
+            <div id="workflow-progress" class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Editorial Workflow</h3>
+                <div class="flex items-center justify-between">
+                    <!-- Workflow steps will be populated here -->
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div id="action-buttons" class="flex space-x-3">
+                <!-- Action buttons will be populated based on submission status -->
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Submission Details -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Abstract and Content -->
+                <div class="bg-white rounded-xl shadow-sm p-6 slide-up">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Abstract</h2>
+                    <div class="prose max-w-none text-gray-700" id="submission-abstract">
+                        Loading abstract...
+                    </div>
+                    
+                    <div class="mt-6" id="keywords-section">
+                        <h3 class="text-sm font-medium text-gray-900 mb-2">Keywords</h3>
+                        <div class="flex flex-wrap gap-2" id="keywords-container">
+                            <!-- Keywords will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Files -->
+                <div class="bg-white rounded-xl shadow-sm p-6 slide-up" style="animation-delay: 0.1s">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Submission Files</h2>
+                    <div id="files-container">
+                        <!-- Files will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Reviews Section -->
+                <div class="bg-white rounded-xl shadow-sm slide-up" style="animation-delay: 0.2s">
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-lg font-semibold text-gray-900">Reviews</h2>
+                            <button id="assign-reviewer-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
+                                <i class="fas fa-user-plus mr-2"></i>
+                                Assign Reviewer
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="reviews-container" class="p-6">
+                        <!-- Reviews will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Decision History -->
+                <div class="bg-white rounded-xl shadow-sm p-6 slide-up" style="animation-delay: 0.3s">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Decision History</h2>
+                    <div id="decision-history" class="space-y-4">
+                        <!-- Decision history will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Actions and Info -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-xl shadow-sm p-6 slide-up" style="animation-delay: 0.4s">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+                    <div class="space-y-3" id="quick-actions">
+                        <!-- Quick actions will be populated based on status -->
+                    </div>
+                </div>
+
+                <!-- Submission Info -->
+                <div class="bg-white rounded-xl shadow-sm p-6 slide-up" style="animation-delay: 0.5s">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Submission Information</h2>
+                    <dl class="space-y-3">
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Submission ID</dt>
+                            <dd class="text-sm text-gray-900" id="submission-id">Loading...</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Paper Type</dt>
+                            <dd class="text-sm text-gray-900" id="info-paper-type">Loading...</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Submitted Date</dt>
+                            <dd class="text-sm text-gray-900" id="info-submit-date">Loading...</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Last Updated</dt>
+                            <dd class="text-sm text-gray-900" id="info-updated-date">Loading...</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Current Status</dt>
+                            <dd class="text-sm" id="info-current-status">Loading...</dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <!-- Review Statistics -->
+                <div class="bg-white rounded-xl shadow-sm p-6 slide-up" style="animation-delay: 0.6s">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Review Statistics</h2>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Total Reviews</span>
+                            <span class="text-lg font-semibold text-blue-600" id="total-reviews">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Completed</span>
+                            <span class="text-lg font-semibold text-green-600" id="completed-reviews">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Pending</span>
+                            <span class="text-lg font-semibold text-yellow-600" id="pending-reviews">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Average Score</span>
+                            <span class="text-lg font-semibold text-purple-600" id="average-score">N/A</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Reviewer Modal -->
+    <div id="assign-reviewer-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-screen overflow-y-auto">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-900">Assign Reviewer</h3>
+                        <button id="close-assign-modal" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <!-- Multiple reviewer selection mode toggle -->
+                    <div class="mb-4">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="multiple-reviewers-mode" class="mr-2 rounded border-gray-300">
+                            <span class="text-sm font-medium text-gray-700">Assign multiple reviewers</span>
+                        </label>
+                    </div>
+                    
+                    <!-- Reviewer search and selection will be implemented here -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Search Reviewers</label>
+                        <div class="relative">
+                            <input type="text" id="reviewer-search" placeholder="Search by name, expertise, or keywords..." 
+                                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <div id="reviewers-list" class="space-y-3 max-h-96 overflow-y-auto">
+                        <!-- Reviewers will be populated here -->
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button id="cancel-assign" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+                            Cancel
+                        </button>
+                        <button id="assign-selected-reviewer" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" disabled>
+                            <span id="assign-button-text">Assign Reviewer</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reject Submission Modal -->
+    <div id="reject-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-900">Reject Submission</h3>
+                        <button id="close-reject-modal" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <form id="reject-form" class="p-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Reason for Rejection</label>
+                            <select id="reject-reason" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                                <option value="">Select a reason</option>
+                                <option value="insufficient_quality">Insufficient Quality</option>
+                                <option value="outside_scope">Outside Journal Scope</option>
+                                <option value="incomplete_submission">Incomplete Submission</option>
+                                <option value="plagiarism_concerns">Plagiarism Concerns</option>
+                                <option value="formatting_issues">Formatting Issues</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Comments to Author</label>
+                            <textarea id="reject-comments" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent" 
+                                      placeholder="Provide detailed feedback for the rejection..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" id="cancel-reject" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                            Reject Submission
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Publish Decision Modal -->
+    <div id="publish-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-900">Publication Decision</h3>
+                        <button id="close-publish-modal" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <form id="publish-form" class="p-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Decision</label>
+                            <select id="publish-decision" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Select Decision</option>
+                                <option value="accept">Accept</option>
+                                <option value="reject">Reject</option>
+                                <option value="revision">Request Revision</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Comments to Author</label>
+                            <textarea id="publish-comments" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                                      placeholder="Provide feedback and reasoning for your decision..."></textarea>
+                        </div>
+                        
+                        <div id="revision-details" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Specific Revision Requirements</label>
+                            <textarea id="revision-requirements" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                                      placeholder="List specific changes required..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" id="cancel-publish" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            Submit Decision
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Publish Panel Modal -->
+    <div id="publish-panel-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full">
+                <div class="flex items-center justify-between p-6 border-b">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Publish Submission</h3>
+                        <p class="text-sm text-gray-600 mt-1">Ready to publish this accepted submission</p>
+                    </div>
+                    <button id="close-publish-panel-modal" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form id="publish-panel-form" class="p-6">
+                    <div class="space-y-4">
+                        <!-- Payment Status Check -->
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <h4 class="text-sm font-medium text-blue-900 mb-2">Pre-Publication Checklist</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="payment-confirmed" class="mr-2 rounded border-gray-300">
+                                    <span class="text-sm text-blue-800">Payment received from author</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="final-review-done" class="mr-2 rounded border-gray-300">
+                                    <span class="text-sm text-blue-800">Final manuscript review completed</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="formatting-checked" class="mr-2 rounded border-gray-300">
+                                    <span class="text-sm text-blue-800">Formatting and style guidelines verified</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Publication Details -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Volume (optional)</label>
+                                <input type="text" id="publish-volume" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="e.g., Vol 1">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Issue (optional)</label>
+                                <input type="text" id="publish-issue" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="e.g., Issue 1">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">DOI (optional)</label>
+                                <input type="text" id="publish-doi" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="10.xxxx/xxxx">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Pages</label>
+                                <input type="text" id="publish-pages" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="e.g., 1-15">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Publication URL (optional)</label>
+                            <input type="url" id="publish-url" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="https://example.com/paper-url">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Publication Notes</label>
+                            <textarea id="publish-notes" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" 
+                                      placeholder="Any additional notes about the publication..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" id="cancel-publish-panel" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+                            Cancel
+                        </button>
+                        <button type="submit" id="confirm-publish-btn" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            <i class="fas fa-globe mr-2"></i>
+                            Publish Now
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin Authentication Check
+        function checkAdminAuth() {
+            const adminAuth = localStorage.getItem('adminAuthenticated');
+            if (adminAuth !== 'true') {
+                window.location.href = '/admin-login';
+                return false;
+            }
+            return true;
+        }
+
+        // Logout function
+        function adminLogout() {
+            localStorage.removeItem('adminAuthenticated');
+            window.location.href = '/admin-login';
+        }
+
+        // Check authentication on page load
+        if (!checkAdminAuth()) {
+            // Will redirect to login page
+        }
+
+        let submissionId = null;
+        let submissionData = null;
+        let selectedReviewerId = null;
+        let selectedReviewerIds = new Set(); // For multiple reviewer selection
+        let isMultipleReviewersMode = false;
+
+        const ADMIN_TOKEN_PREFIX = 'admin-session-loratech-';
+
+        function generateAdminToken(date = new Date()) {
+            return `${ADMIN_TOKEN_PREFIX}${date.toDateString()}`;
+        }
+
+        function ensureAdminToken() {
+            const expectedToken = generateAdminToken();
+            let token = localStorage.getItem('adminToken');
+
+            if (token !== expectedToken) {
+                token = expectedToken;
+                localStorage.setItem('adminToken', token);
+            }
+
+            return token;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get submission ID from URL
+            const pathParts = window.location.pathname.split('/');
+            submissionId = pathParts[pathParts.length - 1];
+            
+            loadUserInfo();
+            loadSubmissionDetails();
+            setupEventListeners();
+        });
+
+        // Load user information
+        async function loadUserInfo() {
+            try {
+                // For hardcoded admin auth, just set admin name
+                document.getElementById('admin-name').textContent = 'Admin User';
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                document.getElementById('admin-name').textContent = 'Admin';
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Modal events
+            document.getElementById('close-assign-modal').addEventListener('click', closeAssignModal);
+            document.getElementById('cancel-assign').addEventListener('click', closeAssignModal);
+            document.getElementById('close-publish-modal').addEventListener('click', closePublishModal);
+            document.getElementById('cancel-publish').addEventListener('click', closePublishModal);
+            document.getElementById('close-reject-modal').addEventListener('click', closeRejectModal);
+            document.getElementById('cancel-reject').addEventListener('click', closeRejectModal);
+            
+            // Multiple reviewers mode toggle
+            document.getElementById('multiple-reviewers-mode').addEventListener('change', toggleMultipleReviewersMode);
+            
+            // Publish panel events
+            document.getElementById('close-publish-panel-modal').addEventListener('click', closePublishPanel);
+            document.getElementById('cancel-publish-panel').addEventListener('click', closePublishPanel);
+            document.getElementById('publish-panel-form').addEventListener('submit', submitPublish);
+            
+            // Form events
+            document.getElementById('publish-form').addEventListener('submit', submitPublishDecision);
+            document.getElementById('reject-form').addEventListener('submit', submitRejectDecision);
+            document.getElementById('publish-decision').addEventListener('change', toggleRevisionDetails);
+            document.getElementById('assign-selected-reviewer').addEventListener('click', assignReviewer);
+            
+            // Action buttons
+            document.getElementById('message-author-btn').addEventListener('click', messageAuthor);
+            document.getElementById('download-files-btn').addEventListener('click', downloadAllFiles);
+            
+            // Publish panel checklist validation
+            const checkboxes = ['payment-confirmed', 'final-review-done', 'formatting-checked'];
+            checkboxes.forEach(id => {
+                document.getElementById(id).addEventListener('change', validatePublishChecklist);
+            });
+        }
+
+        // Load submission details
+        async function loadSubmissionDetails() {
+            try {
+                const response = await fetch(`/api/admin/submissions/${submissionId}`, {
+                    headers: {
+                        'admin-token': ensureAdminToken()
+                    }
+                });
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        showError('Submission not found');
+                        return;
+                    }
+                    throw new Error('Failed to load submission details');
+                }
+                
+                submissionData = await response.json();
+                displaySubmissionDetails(submissionData);
+                await loadReviews();
+                
+            } catch (error) {
+                console.error('Error loading submission details:', error);
+                showError('Failed to load submission details');
+            } finally {
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+            }
+        }
+
+        // Display submission details
+        function displaySubmissionDetails(submission) {
+            // Update breadcrumb
+            document.getElementById('breadcrumb-title').textContent = submission.title.substring(0, 50) + '...';
+            
+            // Header information
+            document.getElementById('submission-title').textContent = submission.title;
+            document.getElementById('submission-date').textContent = `Submitted ${formatDate(submission.created_at)}`;
+            document.getElementById('submission-type').textContent = submission.paper_type || 'Research Paper';
+            
+            // Status
+            const statusElement = document.getElementById('submission-status');
+            const statusColor = getStatusColor(submission.status);
+            statusElement.className = `px-3 py-1 text-sm font-medium rounded-full ${statusColor.bg} ${statusColor.text}`;
+            statusElement.textContent = submission.status.replace('_', ' ').toUpperCase();
+            
+            // Author information
+            document.getElementById('author-name').textContent = submission.author?.full_name || 'Unknown Author';
+            document.getElementById('author-affiliation').textContent = submission.author?.affiliation || 'No affiliation';
+            document.getElementById('author-email').textContent = submission.author?.email || 'No email';
+            
+            // Abstract
+            document.getElementById('submission-abstract').textContent = submission.abstract || 'No abstract provided';
+            
+            // Keywords
+            if (submission.keywords_text) {
+                let keywords = [];
+                try {
+                    keywords = JSON.parse(submission.keywords_text);
+                } catch (e) {
+                    keywords = submission.keywords_text.split(',').map(k => k.trim());
+                }
+                
+                const keywordsContainer = document.getElementById('keywords-container');
+                keywordsContainer.innerHTML = keywords.map(keyword => 
+                    `<span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">${keyword}</span>`
+                ).join('');
+            }
+            
+            // Files
+            displayFiles(submission.submission_files || []);
+            
+            // Workflow progress
+            displayWorkflowProgress(submission.status);
+            
+            // Action buttons
+            displayActionButtons(submission.status);
+            
+            // Quick actions
+            displayQuickActions(submission.status);
+            
+            // Submission info
+            document.getElementById('submission-id').textContent = submission.id;
+            document.getElementById('info-paper-type').textContent = submission.paper_type || 'Research Paper';
+            document.getElementById('info-submit-date').textContent = formatDate(submission.created_at);
+            document.getElementById('info-updated-date').textContent = formatDate(submission.updated_at);
+            
+            const infoStatusElement = document.getElementById('info-current-status');
+            infoStatusElement.innerHTML = `<span class="px-2 py-1 text-xs font-medium rounded-full ${statusColor.bg} ${statusColor.text}">${submission.status.replace('_', ' ').toUpperCase()}</span>`;
+        }
+
+        // Display files
+        function displayFiles(files) {
+            const container = document.getElementById('files-container');
+            
+            if (!files || files.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-4">No files uploaded</p>';
+                return;
+            }
+            
+            container.innerHTML = files.map(file => `
+                <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg mb-3">
+                    <div class="flex items-center">
+                        <i class="fas fa-file-pdf text-red-600 text-xl mr-3"></i>
+                        <div>
+                            <p class="font-medium text-gray-900">${file.original_filename}</p>
+                            <p class="text-sm text-gray-500">${formatFileSize(file.byte_size)} • ${file.mime_type}</p>
+                            <p class="text-xs text-gray-400">Uploaded: ${formatDate(file.created_at)}</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        ${file.id ? `
+                            <a href="/api/admin/files/serve/${file.id}?adminToken=${ensureAdminToken()}" target="_blank" class="px-3 py-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 flex items-center">
+                                <i class="fas fa-eye mr-1"></i>
+                                View
+                            </a>
+                            <a href="/api/admin/files/download-direct/${file.id}?adminToken=${ensureAdminToken()}" class="px-3 py-2 bg-green-100 text-green-700 rounded hover:bg-green-200 flex items-center">
+                                <i class="fas fa-download mr-1"></i>
+                                Download
+                            </a>
+                        ` : `
+                            <span class="text-sm text-gray-400">File not available</span>
+                        `}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Display workflow progress
+        function displayWorkflowProgress(currentStatus) {
+            const steps = [
+                { key: 'pending', label: 'Submitted', icon: 'file-alt' },
+                { key: 'verified', label: 'Verified', icon: 'check' },
+                { key: 'under_review', label: 'Under Review', icon: 'eye' },
+                { key: 'review_completed', label: 'Review Complete', icon: 'check-circle' },
+                { key: 'decision', label: 'Decision', icon: 'gavel' }
+            ];
+            
+            const statusOrder = ['pending', 'verified', 'under_review', 'review_completed', 'ready_to_publish', 'published', 'rejected'];
+            const currentIndex = statusOrder.indexOf(currentStatus);
+            
+            const workflowContainer = document.getElementById('workflow-progress').querySelector('.flex');
+            workflowContainer.innerHTML = steps.map((step, index) => {
+                const isActive = index <= Math.min(currentIndex, 3);
+                const isCurrent = index === Math.min(currentIndex, 3);
+                
+                return `
+                    <div class="workflow-step flex items-center ${isCurrent ? 'active' : ''}">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-full ${isActive ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}">
+                            <i class="fas fa-${step.icon} text-sm"></i>
+                        </div>
+                        <div class="ml-2 text-sm font-medium ${isActive ? 'text-blue-600' : 'text-gray-500'}">${step.label}</div>
+                        ${index < steps.length - 1 ? '<div class="w-12 h-px bg-gray-200 mx-4"></div>' : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Display action buttons
+        function displayActionButtons(status) {
+            const container = document.getElementById('action-buttons');
+            const buttons = [];
+            
+            switch (status) {
+                case 'pending':
+                case 'submitted':
+                    buttons.push(`
+                        <button onclick="verifySubmission()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium">
+                            <i class="fas fa-check mr-2"></i>
+                            Verify Submission
+                        </button>
+                    `);
+                    buttons.push(`
+                        <button onclick="openRejectModal()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium">
+                            <i class="fas fa-times mr-2"></i>
+                            Reject Submission
+                        </button>
+                    `);
+                    break;
+                case 'verified':
+                case 'under_review':
+                    buttons.push(`
+                        <button onclick="openAssignModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium mr-3">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            Assign Reviewer
+                        </button>
+                    `);
+                    
+                    // Only show "Mark Review Completed" button if there are completed reviews
+                    if (submissionData.review_statistics && submissionData.review_statistics.completed_reviews > 0) {
+                        buttons.push(`
+                            <button onclick="markReviewCompleted()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                Mark Review Completed
+                            </button>
+                        `);
+                    }
+                    break;
+                case 'review_completed':
+                case 'ready_to_publish':
+                    buttons.push(`
+                        <button onclick="openPublishModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium">
+                            <i class="fas fa-gavel mr-2"></i>
+                            Make Decision
+                        </button>
+                    `);
+                    break;
+                case 'accepted':
+                    buttons.push(`
+                        <button onclick="openPublishPanel()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium">
+                            <i class="fas fa-globe mr-2"></i>
+                            Publish
+                        </button>
+                    `);
+                    break;
+            }
+            
+            container.innerHTML = buttons.join('');
+        }
+
+        // Display quick actions
+        function displayQuickActions(status) {
+            const container = document.getElementById('quick-actions');
+            const actions = [
+                `<button onclick="viewAuthorProfile()" class="w-full flex items-center justify-center px-4 py-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100">
+                    <i class="fas fa-user mr-2"></i>
+                    View Author Profile
+                </button>`,
+                `<button onclick="downloadAllFiles()" class="w-full flex items-center justify-center px-4 py-3 bg-green-50 text-green-700 rounded-lg hover:bg-green-100">
+                    <i class="fas fa-download mr-2"></i>
+                    Download All Files
+                </button>`,
+                `<button onclick="exportSubmission()" class="w-full flex items-center justify-center px-4 py-3 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100">
+                    <i class="fas fa-file-export mr-2"></i>
+                    Export Details
+                </button>`
+            ];
+            
+            container.innerHTML = actions.join('');
+        }
+
+        // Load and display reviews
+        async function loadReviews() {
+            try {
+                const response = await fetch(`/api/admin/submissions/${submissionId}/reviews`, {
+                    headers: {
+                        'admin-token': ensureAdminToken()
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load reviews');
+                }
+                
+                const data = await response.json();
+                displayReviews(data.reviews || []);
+                updateReviewStatistics(data.reviews || []);
+                
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+                showError('Failed to load reviews');
+            }
+        }
+
+        // Display reviews
+        function displayReviews(reviews) {
+            const container = document.getElementById('reviews-container');
+            
+            if (!reviews || reviews.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">No reviews assigned yet</p>';
+                return;
+            }
+            
+            container.innerHTML = reviews.map(review => createReviewCard(review)).join('');
+        }
+
+        // Create review card
+        function createReviewCard(review) {
+            console.log('Creating review card for review:', review);
+            const statusColor = getReviewStatusColor(review.status);
+            const reviewer = review.reviewer || {};
+            
+            return `
+                <div class="review-card border border-gray-200 rounded-lg p-4 mb-4">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user-check text-purple-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900">${reviewer.full_name || 'Anonymous Reviewer'}</h4>
+                                <p class="text-sm text-gray-500">${reviewer.institution || 'Institution not specified'}</p>
+                            </div>
+                        </div>
+                        <span class="px-2 py-1 text-xs font-medium rounded-full ${statusColor.bg} ${statusColor.text}">
+                            ${review.status.replace('_', ' ').toUpperCase()}
+                        </span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-sm mb-3">
+                        <div>
+                            <span class="text-gray-500">Assigned:</span>
+                            <span class="text-gray-900">${formatDate(review.assigned_at)}</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">Due:</span>
+                            <span class="text-gray-900">${formatDate(review.due_date)}</span>
+                        </div>
+                        ${review.completed_at ? `
+                        <div>
+                            <span class="text-gray-500">Completed:</span>
+                            <span class="text-gray-900">${formatDate(review.completed_at)}</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">Score:</span>
+                            <span class="text-gray-900">${review.score || 'N/A'}/10</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                    
+                    ${review.comments ? `
+                    <div class="bg-gray-50 rounded-lg p-3 mb-3">
+                        <h5 class="text-sm font-medium text-gray-900 mb-1">Comments</h5>
+                        <p class="text-sm text-gray-700">${review.comments}</p>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="flex space-x-2">
+                        <button onclick="viewReviewDetails('${review.id || 'unknown'}')" class="text-blue-600 hover:text-blue-700 text-sm font-medium cursor-pointer" type="button">
+                            View Details
+                        </button>
+                        ${review.status !== 'COMPLETED' ? `
+                        <button onclick="sendReminder('${review.id || 'unknown'}')" class="text-yellow-600 hover:text-yellow-700 text-sm font-medium cursor-pointer" type="button">
+                            Send Reminder
+                        </button>
+                        <button onclick="reassignReview('${review.id || 'unknown'}')" class="text-purple-600 hover:text-purple-700 text-sm font-medium cursor-pointer" type="button">
+                            Reassign
+                        </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Update review statistics
+        function updateReviewStatistics(reviews) {
+            const total = reviews.length;
+            const completed = reviews.filter(r => r.status === 'COMPLETED').length;
+            const pending = total - completed;
+            
+            let avgScore = 'N/A';
+            const scoredReviews = reviews.filter(r => r.score !== null);
+            if (scoredReviews.length > 0) {
+                const totalScore = scoredReviews.reduce((sum, r) => sum + r.score, 0);
+                avgScore = (totalScore / scoredReviews.length).toFixed(1);
+            }
+            
+            document.getElementById('total-reviews').textContent = total;
+            document.getElementById('completed-reviews').textContent = completed;
+            document.getElementById('pending-reviews').textContent = pending;
+            document.getElementById('average-score').textContent = avgScore;
+        }
+
+        // Modal functions
+        function openAssignModal() {
+            document.getElementById('assign-reviewer-modal').classList.remove('hidden');
+            selectedReviewerId = null;
+            selectedReviewerIds.clear();
+            isMultipleReviewersMode = false;
+            document.getElementById('multiple-reviewers-mode').checked = false;
+            document.getElementById('assign-selected-reviewer').disabled = true;
+            document.getElementById('assign-button-text').textContent = 'Assign Reviewer';
+            loadAvailableReviewers();
+        }
+
+        function closeAssignModal() {
+            document.getElementById('assign-reviewer-modal').classList.add('hidden');
+            selectedReviewerId = null;
+            selectedReviewerIds.clear();
+            isMultipleReviewersMode = false;
+        }
+
+        function toggleMultipleReviewersMode() {
+            isMultipleReviewersMode = document.getElementById('multiple-reviewers-mode').checked;
+            selectedReviewerId = null;
+            selectedReviewerIds.clear();
+            
+            // Update button text
+            const buttonText = document.getElementById('assign-button-text');
+            buttonText.textContent = isMultipleReviewersMode ? 'Assign Reviewers' : 'Assign Reviewer';
+            
+            // Disable assign button
+            document.getElementById('assign-selected-reviewer').disabled = true;
+            
+            // Reload reviewers list to change input types
+            loadAvailableReviewers();
+        }
+
+        function openPublishModal() {
+            document.getElementById('publish-modal').classList.remove('hidden');
+        }
+
+        function closePublishModal() {
+            document.getElementById('publish-modal').classList.add('hidden');
+        }
+
+        function openRejectModal() {
+            document.getElementById('reject-modal').classList.remove('hidden');
+        }
+
+        function closeRejectModal() {
+            document.getElementById('reject-modal').classList.add('hidden');
+        }
+
+        function toggleRevisionDetails() {
+            const decision = document.getElementById('publish-decision').value;
+            const revisionDetails = document.getElementById('revision-details');
+            
+            if (decision === 'revision') {
+                revisionDetails.classList.remove('hidden');
+            } else {
+                revisionDetails.classList.add('hidden');
+            }
+        }
+
+        // Load available reviewers
+        async function loadAvailableReviewers() {
+            try {
+                // Reset button state
+                selectedReviewerId = null;
+                document.getElementById('assign-selected-reviewer').disabled = true;
+                
+                // Get submission keywords for matching
+                let keywords = [];
+                if (submissionData.keywords_text) {
+                    try {
+                        keywords = JSON.parse(submissionData.keywords_text);
+                    } catch (e) {
+                        keywords = submissionData.keywords_text.split(',').map(k => k.trim());
+                    }
+                }
+                
+                const response = await fetch(`/api/admin/reviewers/recommendations?keywords=${encodeURIComponent(JSON.stringify(keywords))}&submissionId=${submissionId}`, {
+                    headers: {
+                        'admin-token': ensureAdminToken()
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load reviewers');
+                }
+                
+                const data = await response.json();
+                displayAvailableReviewers(data.recommendations || []);
+                
+            } catch (error) {
+                console.error('Error loading reviewers:', error);
+                showError('Failed to load available reviewers');
+            }
+        }
+
+        // Display available reviewers
+        function displayAvailableReviewers(reviewers) {
+            const container = document.getElementById('reviewers-list');
+            
+            if (!reviewers || reviewers.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-4">No matching reviewers found. All available reviewers may already be assigned to this submission.</p>';
+                return;
+            }
+            
+            const inputType = isMultipleReviewersMode ? 'checkbox' : 'radio';
+            const inputName = isMultipleReviewersMode ? 'reviewers' : 'reviewer';
+            
+            container.innerHTML = reviewers.map(reviewer => {
+                const expertiseAreas = reviewer.expertise_areas || [];
+                const displayedAreas = expertiseAreas.slice(0, 4);
+                const hasMore = expertiseAreas.length > 4;
+                
+                return `
+                <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input type="${inputType}" name="${inputName}" value="${reviewer.id}" class="text-blue-600 focus:ring-blue-500" data-reviewer-id="${reviewer.id}">
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-medium text-gray-900">${reviewer.full_name}</h4>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">${reviewer.workload || 0} active reviews</span>
+                                ${reviewer.isAlreadyAssigned ? '<span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded font-medium">Already Assigned</span>' : ''}
+                                ${reviewer.isSubmissionOwner ? '<span class="px-2 py-1 text-xs bg-red-100 text-red-800 rounded font-medium">Submission Owner</span>' : ''}
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600">${reviewer.institution || 'Institution not specified'}</p>
+                        <div class="flex flex-wrap gap-1 mt-2">
+                            ${displayedAreas.map(area => 
+                                `<span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded font-medium">${area}</span>`
+                            ).join('')}
+                            ${hasMore ? `<span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded font-medium">+${expertiseAreas.length - 4} more</span>` : ''}
+                            ${expertiseAreas.length === 0 ? '<span class="text-xs text-gray-400 italic">No expertise areas specified</span>' : ''}
+                        </div>
+                    </div>
+                </label>`;
+            }).join('');
+            
+            // Add event listener for reviewer selection changes
+            container.addEventListener('change', function(e) {
+                if (e.target.type === inputType && e.target.name === inputName) {
+                    const reviewerId = e.target.getAttribute('data-reviewer-id');
+                    if (isMultipleReviewersMode) {
+                        handleMultipleReviewerSelection(reviewerId, e.target.checked);
+                    } else {
+                        selectReviewer(reviewerId);
+                    }
+                }
+            });
+        }
+
+        function selectReviewer(reviewerId) {
+            console.log('Selecting reviewer:', reviewerId);
+            selectedReviewerId = reviewerId;
+            const button = document.getElementById('assign-selected-reviewer');
+            if (button) {
+                button.disabled = false;
+                console.log('Assign button enabled');
+            } else {
+                console.error('Assign button not found');
+            }
+        }
+
+        function handleMultipleReviewerSelection(reviewerId, isSelected) {
+            console.log('Multiple reviewer selection:', reviewerId, isSelected);
+            if (isSelected) {
+                selectedReviewerIds.add(reviewerId);
+            } else {
+                selectedReviewerIds.delete(reviewerId);
+            }
+            
+            const button = document.getElementById('assign-selected-reviewer');
+            const buttonText = document.getElementById('assign-button-text');
+            
+            if (button && buttonText) {
+                button.disabled = selectedReviewerIds.size === 0;
+                const count = selectedReviewerIds.size;
+                buttonText.textContent = count === 0 
+                    ? 'Assign Reviewers' 
+                    : `Assign ${count} Reviewer${count > 1 ? 's' : ''}`;
+                console.log(`${count} reviewers selected`);
+            }
+        }
+
+        // Action functions
+        async function verifySubmission() {
+            try {
+                const response = await fetch(`/api/admin/submissions/${submissionId}/verify`, {
+                    method: 'POST',
+                    headers: {
+                        'admin-token': ensureAdminToken(),
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to verify submission');
+                }
+                
+                showSuccess('Submission verified successfully!');
+                loadSubmissionDetails();
+            } catch (error) {
+                console.error('Error verifying submission:', error);
+                showError('Failed to verify submission');
+            }
+        }
+
+        async function assignReviewer() {
+            console.log('assignReviewer called');
+            
+            if (isMultipleReviewersMode) {
+                // Handle multiple reviewer assignment
+                if (selectedReviewerIds.size === 0) {
+                    console.error('No reviewers selected');
+                    showError('Please select at least one reviewer');
+                    return;
+                }
+                
+                try {
+                    console.log('Assigning multiple reviewers:', Array.from(selectedReviewerIds), 'to submission:', submissionId);
+                    const response = await fetch(`/api/admin/submissions/${submissionId}/assign-multiple-reviewers`, {
+                        method: 'POST',
+                        headers: {
+                            'admin-token': ensureAdminToken(),
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            reviewer_ids: Array.from(selectedReviewerIds),
+                            due_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString() // 2 weeks from now
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                        throw new Error(errorData.message || errorData.error || 'Failed to assign reviewers');
+                    }
+                    
+                    const result = await response.json();
+                    const successCount = result.results.successful_count;
+                    const failedCount = result.results.failed_count;
+                    
+                    if (successCount > 0) {
+                        showSuccess(`Successfully assigned ${successCount} reviewer${successCount > 1 ? 's' : ''}!`);
+                    }
+                    
+                    if (failedCount > 0) {
+                        const failedReasons = result.results.failed.map(f => f.error).join(', ');
+                        showError(`Failed to assign ${failedCount} reviewer${failedCount > 1 ? 's' : ''}: ${failedReasons}`);
+                        console.error('Failed assignments:', result.results.failed);
+                    }
+                    
+                    closeAssignModal();
+                    loadReviews();
+                } catch (error) {
+                    console.error('Error assigning reviewers:', error);
+                    showError(`Failed to assign reviewers: ${error.message}`);
+                }
+            } else {
+                // Handle single reviewer assignment
+                if (!selectedReviewerId) {
+                    console.error('No reviewer selected');
+                    showError('Please select a reviewer first');
+                    return;
+                }
+                
+                try {
+                    console.log('Assigning reviewer:', selectedReviewerId, 'to submission:', submissionId);
+                    const response = await fetch(`/api/admin/submissions/${submissionId}/assign-reviewer`, {
+                        method: 'POST',
+                        headers: {
+                            'admin-token': ensureAdminToken(),
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            reviewer_id: selectedReviewerId,
+                            due_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString() // 2 weeks from now
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                        const errorMessage = errorData.message || errorData.error || response.statusText;
+                        
+                        // Check if it's a duplicate assignment error
+                        if (errorMessage.includes('already assigned')) {
+                            showError('This reviewer is already assigned to this submission');
+                            closeAssignModal();
+                            loadReviews(); // Refresh to show current assignments
+                            return;
+                        }
+                        
+                        throw new Error(errorMessage);
+                    }
+                    
+                    const result = await response.json();
+                    showSuccess('Reviewer assigned successfully!');
+                    closeAssignModal();
+                    loadReviews();
+                } catch (error) {
+                    console.error('Error assigning reviewer:', error);
+                    
+                    // Check if it's a duplicate assignment error
+                    if (error.message.includes('already assigned')) {
+                        showError('This reviewer is already assigned to this submission');
+                        closeAssignModal();
+                        loadReviews(); // Refresh to show current assignments
+                    } else {
+                        showError(`Failed to assign reviewer: ${error.message}`);
+                    }
+                }
+            }
+        }
+
+        async function submitPublishDecision(e) {
+            e.preventDefault();
+            
+            const decision = document.getElementById('publish-decision').value;
+            const comments = document.getElementById('publish-comments').value;
+            const revisionRequirements = document.getElementById('revision-requirements').value;
+            
+            if (!decision) {
+                showError('Please select a decision');
+                return;
+            }
+            
+            try {
+                let endpoint = '';
+                let body = { comments };
+                
+                switch (decision) {
+                    case 'accept':
+                        // Just accept the submission - no automatic publishing
+                        const acceptResponse = await fetch(`/api/admin/submissions/${submissionId}/status`, {
+                            method: 'PUT',
+                            headers: {
+                                'admin-token': ensureAdminToken(),
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ 
+                                status: 'accepted',
+                                comments: comments
+                            })
+                        });
+                        
+                        if (!acceptResponse.ok) {
+                            throw new Error('Failed to accept submission');
+                        }
+                        
+                        // No automatic publishing - will be done separately after payment
+                        endpoint = null;
+                        break;
+                    case 'reject':
+                        endpoint = 'reject';
+                        break;
+                    case 'revision':
+                        endpoint = 'request-revision';
+                        body.revision_requirements = revisionRequirements;
+                        break;
+                }
+                
+                // Only make the second API call if we have an endpoint (not for simple accept)
+                if (endpoint) {
+                    const response = await fetch(`/api/admin/submissions/${submissionId}/${endpoint}`, {
+                        method: 'POST',
+                        headers: {
+                            'admin-token': ensureAdminToken(),
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(body)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Failed to ${decision} submission`);
+                    }
+                }
+                
+                showSuccess(`Decision submitted successfully!`);
+                closePublishModal();
+                loadSubmissionDetails();
+            } catch (error) {
+                console.error('Error submitting decision:', error);
+                showError('Failed to submit decision');
+            }
+        }
+
+        async function submitRejectDecision(e) {
+            e.preventDefault();
+            
+            const reason = document.getElementById('reject-reason').value;
+            const comments = document.getElementById('reject-comments').value;
+            
+            if (!reason) {
+                showError('Please select a reason for rejection');
+                return;
+            }
+            
+            if (!comments.trim()) {
+                showError('Please provide comments for the rejection');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/admin/submissions/${submissionId}/reject`, {
+                    method: 'POST',
+                    headers: {
+                        'admin-token': ensureAdminToken(),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        reason: reason,
+                        comments: comments.trim()
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to reject submission');
+                }
+                
+                showSuccess('Submission rejected successfully!');
+                closeRejectModal();
+                loadSubmissionDetails();
+            } catch (error) {
+                console.error('Error rejecting submission:', error);
+                showError('Failed to reject submission');
+            }
+        }
+
+        // Document viewing now handled by direct links in displayFiles()
+        // Removed redundant viewDocument function
+
+        // File downloads now handled by direct links in displayFiles()
+        // Removed redundant downloadFile function
+
+        // Review management functions
+        async function sendReminder(reviewId) {
+            try {
+                const response = await fetch(`/api/admin/reviews/${reviewId}/reminder`, {
+                    method: 'POST'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to send reminder');
+                }
+                
+                showSuccess('Reminder sent successfully!');
+                loadReviews();
+            } catch (error) {
+                console.error('Error sending reminder:', error);
+                showError('Failed to send reminder');
+            }
+        }
+
+        function viewReviewDetails(reviewId) {
+            console.log('viewReviewDetails called with:', reviewId);
+            // Fetch and display full review details in a modal
+            showReviewModal(reviewId);
+        }
+
+        function reassignReview(reviewId) {
+            // This would open the assign reviewer modal for reassignment
+            alert(`Reassign review ${reviewId} - Feature coming soon!`);
+        }
+
+        // Utility functions
+        function messageAuthor() {
+            alert(`Message author - Feature coming soon!`);
+        }
+
+        function downloadFiles() {
+            alert(`Download files - Feature coming soon!`);
+        }
+
+        function viewAuthorProfile() {
+            if (submissionData && submissionData.author) {
+                window.location.href = `/admin/authors/${encodeURIComponent(submissionData.author.email)}`;
+            }
+        }
+
+        function downloadAllFiles() {
+            if (!submissionData || !submissionData.submission_files || submissionData.submission_files.length === 0) {
+                showError('No files available for download');
+                return;
+            }
+            
+            showInfo('Downloading all files...');
+            
+            // Download each file sequentially using direct download links
+            submissionData.submission_files.forEach((file, index) => {
+                if (file.id) {
+                    setTimeout(() => {
+                        // Create a temporary link and click it to download
+                        const a = document.createElement('a');
+                        a.href = `/api/admin/files/download-direct/${file.id}?adminToken=${ensureAdminToken()}`;
+                        a.download = file.original_filename;
+                        a.style.display = 'none';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    }, index * 1000); // Stagger downloads by 1 second
+                }
+            });
+        }
+
+        function exportSubmission() {
+            alert(`Export submission - Feature coming soon!`);
+        }
+
+        // Removed deprecated downloadFile(fileId) function - functionality moved to direct links
+
+        function rejectSubmission() {
+            // Redirect to reject modal instead
+            openRejectModal();
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                pending: { bg: 'bg-yellow-100', text: 'text-yellow-800' },
+                verified: { bg: 'bg-blue-100', text: 'text-blue-800' },
+                under_review: { bg: 'bg-purple-100', text: 'text-purple-800' },
+                revision_required: { bg: 'bg-orange-100', text: 'text-orange-800' },
+                ready_to_publish: { bg: 'bg-green-100', text: 'text-green-800' },
+                published: { bg: 'bg-indigo-100', text: 'text-indigo-800' },
+                rejected: { bg: 'bg-red-100', text: 'text-red-800' }
+            };
+            return colors[status] || colors.pending;
+        }
+
+        function getReviewStatusColor(status) {
+            const colors = {
+                PENDING: { bg: 'bg-yellow-100', text: 'text-yellow-800' },
+                IN_PROGRESS: { bg: 'bg-blue-100', text: 'text-blue-800' },
+                COMPLETED: { bg: 'bg-green-100', text: 'text-green-800' }
+            };
+            return colors[status] || colors.PENDING;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function formatFileSize(bytes) {
+            if (!bytes) return '0 B';
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(1024));
+            return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function showError(message) {
+            // Create and show a toast notification for errors
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md';
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-3 text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 5000);
+            
+            console.error(message);
+        }
+
+        function showSuccess(message) {
+            // Create and show a toast notification for success
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md';
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-3 text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 3000);
+            
+            console.log(message);
+        }
+
+        // Review Details Modal functionality
+        async function showReviewModal(reviewId) {
+            console.log('showReviewModal called with reviewId:', reviewId);
+            try {
+                const response = await fetch(`/api/admin/reviews/${reviewId}`, {
+                    credentials: 'include'
+                });
+
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch review details');
+                }
+
+                const review = await response.json();
+                console.log('Review data received:', review);
+                populateReviewModal(review);
+                document.getElementById('review-details-modal').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error fetching review details:', error);
+                showError('Failed to load review details');
+            }
+        }
+
+        function populateReviewModal(review) {
+            // Basic info
+            document.getElementById('modal-reviewer-name').textContent = review.reviewer?.full_name || 'N/A';
+            document.getElementById('modal-reviewer-email').textContent = review.reviewer?.applicant_email || 'N/A';
+            document.getElementById('modal-submission-title').textContent = review.submission?.title || 'N/A';
+            document.getElementById('modal-review-status').textContent = review.status || 'N/A';
+            document.getElementById('modal-assigned-date').textContent = review.assigned_at ? 
+                new Date(review.assigned_at).toLocaleDateString() : 'N/A';
+            document.getElementById('modal-completed-date').textContent = review.completed_at ? 
+                new Date(review.completed_at).toLocaleDateString() : 'Not completed';
+            document.getElementById('modal-due-date').textContent = review.due_date ? 
+                new Date(review.due_date).toLocaleDateString() : 'N/A';
+
+            // Individual scores (using correct field names from schema)
+            document.getElementById('modal-originality').textContent = review.originality_score || 'N/A';
+            document.getElementById('modal-relevance').textContent = review.relevance_score || 'N/A';
+            document.getElementById('modal-literature').textContent = review.literature_score || 'N/A';
+            document.getElementById('modal-methodology').textContent = review.methodology_score || 'N/A';
+            document.getElementById('modal-analysis').textContent = review.analysis_score || 'N/A';
+            document.getElementById('modal-clarity').textContent = review.clarity_score || 'N/A';
+            document.getElementById('modal-presentation').textContent = review.presentation_score || 'N/A';
+            document.getElementById('modal-significance').textContent = review.significance_score || 'N/A';
+            document.getElementById('modal-ethics').textContent = review.ethics_score || 'N/A';
+            document.getElementById('modal-overall-score').textContent = review.score || 'N/A';
+
+            // Comments (using correct field names from schema)
+            document.getElementById('modal-originality-comment').textContent = review.originality_comment || 'No comment';
+            document.getElementById('modal-relevance-comment').textContent = review.relevance_comment || 'No comment';
+            document.getElementById('modal-literature-comment').textContent = review.literature_comment || 'No comment';
+            document.getElementById('modal-methodology-comment').textContent = review.methodology_comment || 'No comment';
+            document.getElementById('modal-analysis-comment').textContent = review.analysis_comment || 'No comment';
+            document.getElementById('modal-clarity-comment').textContent = review.clarity_comment || 'No comment';
+            document.getElementById('modal-presentation-comment').textContent = review.presentation_comment || 'No comment';
+            document.getElementById('modal-significance-comment').textContent = review.significance_comment || 'No comment';
+            document.getElementById('modal-ethics-comment').textContent = review.ethics_comment || 'No comment';
+
+            // Overall feedback (using correct field names from schema)
+            document.getElementById('modal-recommendation').textContent = review.recommendation || 'N/A';
+            document.getElementById('modal-strengths').textContent = review.strengths || 'No strengths noted';
+            document.getElementById('modal-weaknesses').textContent = review.weaknesses || 'No weaknesses noted';
+            document.getElementById('modal-additional-comments').textContent = review.additional_comments || 'No additional comments';
+
+            // Review process details
+            document.getElementById('modal-started-date').textContent = review.started_at ? 
+                new Date(review.started_at).toLocaleDateString() : 'Not started';
+            document.getElementById('modal-assigned-by').textContent = review.assigned_by || 'N/A';
+            document.getElementById('modal-reminder-sent').textContent = review.reminder_sent ? 'Yes' : 'No';
+            document.getElementById('modal-reminder-count').textContent = review.reminder_count || '0';
+            document.getElementById('modal-last-reminder-date').textContent = review.reminder_sent_at ? 
+                new Date(review.reminder_sent_at).toLocaleDateString() : 'Never';
+            document.getElementById('modal-admin-completed').textContent = review.admin_completed ? 
+                `Yes (by ${review.admin_completed_by || 'Unknown'})` : 'No';
+        }
+
+        function closeReviewModal() {
+            document.getElementById('review-details-modal').classList.add('hidden');
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('review-details-modal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        closeReviewModal();
+                    }
+                });
+            }
+        });
+    </script>
+
+    <!-- Review Details Modal -->
+    <div id="review-details-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="p-6 border-b border-gray-200 sticky top-0 bg-white">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xl font-semibold text-gray-900">Review Details</h3>
+                        <button onclick="closeReviewModal()" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="p-6 space-y-6">
+                    <!-- Basic Information -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-gray-900 mb-3">Review Information</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="font-medium text-gray-700">Reviewer:</span>
+                                <span id="modal-reviewer-name" class="ml-2 text-gray-900"></span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Email:</span>
+                                <span id="modal-reviewer-email" class="ml-2 text-gray-900"></span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Submission:</span>
+                                <span id="modal-submission-title" class="ml-2 text-gray-900"></span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Status:</span>
+                                <span id="modal-review-status" class="ml-2 text-gray-900"></span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Assigned:</span>
+                                <span id="modal-assigned-date" class="ml-2 text-gray-900"></span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Due Date:</span>
+                                <span id="modal-due-date" class="ml-2 text-gray-900"></span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Completed:</span>
+                                <span id="modal-completed-date" class="ml-2 text-gray-900"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Evaluation Scores -->
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-gray-900 mb-3">Evaluation Scores</h4>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Originality:</span>
+                                <span id="modal-originality" class="font-medium text-gray-900"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Relevance:</span>
+                                <span id="modal-relevance" class="font-medium text-gray-900"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Literature:</span>
+                                <span id="modal-literature" class="font-medium text-gray-900"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Methodology:</span>
+                                <span id="modal-methodology" class="font-medium text-gray-900"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Analysis:</span>
+                                <span id="modal-analysis" class="font-medium text-gray-900"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Clarity:</span>
+                                <span id="modal-clarity" class="font-medium text-gray-900"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Presentation:</span>
+                                <span id="modal-presentation" class="font-medium text-gray-900"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Significance:</span>
+                                <span id="modal-significance" class="font-medium text-gray-900"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Ethics:</span>
+                                <span id="modal-ethics" class="font-medium text-gray-900"></span>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-blue-200">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-900">Overall Score:</span>
+                                <span id="modal-overall-score" class="text-xl font-bold text-blue-600"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Comments -->
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-gray-900 mb-3">Detailed Comments</h4>
+                        <div class="space-y-3 text-sm">
+                            <div>
+                                <span class="font-medium text-gray-700">Originality:</span>
+                                <p id="modal-originality-comment" class="mt-1 text-gray-900 bg-white p-2 rounded border"></p>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Relevance:</span>
+                                <p id="modal-relevance-comment" class="mt-1 text-gray-900 bg-white p-2 rounded border"></p>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Literature Review:</span>
+                                <p id="modal-literature-comment" class="mt-1 text-gray-900 bg-white p-2 rounded border"></p>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Methodology:</span>
+                                <p id="modal-methodology-comment" class="mt-1 text-gray-900 bg-white p-2 rounded border"></p>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Analysis:</span>
+                                <p id="modal-analysis-comment" class="mt-1 text-gray-900 bg-white p-2 rounded border"></p>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Clarity:</span>
+                                <p id="modal-clarity-comment" class="mt-1 text-gray-900 bg-white p-2 rounded border"></p>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Presentation:</span>
+                                <p id="modal-presentation-comment" class="mt-1 text-gray-900 bg-white p-2 rounded border"></p>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Significance:</span>
+                                <p id="modal-significance-comment" class="mt-1 text-gray-900 bg-white p-2 rounded border"></p>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Ethics:</span>
+                                <p id="modal-ethics-comment" class="mt-1 text-gray-900 bg-white p-2 rounded border"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overall Recommendation -->
+                    <div class="bg-yellow-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-gray-900 mb-3">Overall Assessment</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <span class="font-medium text-gray-700">Recommendation:</span>
+                                <span id="modal-recommendation" class="ml-2 font-medium text-gray-900"></span>
+                            </div>
+                          
+                            <div>
+                                <span class="font-medium text-gray-700">Strengths:</span>
+                                <p id="modal-strengths" class="mt-2 text-gray-900 bg-white p-3 rounded border"></p>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Weaknesses:</span>
+                                <p id="modal-weaknesses" class="mt-2 text-gray-900 bg-white p-3 rounded border"></p>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Additional Comments:</span>
+                                <p id="modal-additional-comments" class="mt-2 text-gray-900 bg-white p-3 rounded border"></p>
+                            </div>
+                           
+                        </div>
+                    </div>
+
+                    <!-- Review Process Information -->
+                    <div class="bg-indigo-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-gray-900 mb-3">Review Process Details</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="font-medium text-gray-700">Started At:</span>
+                                <span id="modal-started-date" class="ml-2 text-gray-900"></span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Assigned By:</span>
+                                <span id="modal-assigned-by" class="ml-2 text-gray-900"></span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Reminder Sent:</span>
+                                <span id="modal-reminder-sent" class="ml-2 text-gray-900"></span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Reminder Count:</span>
+                                <span id="modal-reminder-count" class="ml-2 text-gray-900"></span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Last Reminder:</span>
+                                <span id="modal-last-reminder-date" class="ml-2 text-gray-900"></span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Admin Completed:</span>
+                                <span id="modal-admin-completed" class="ml-2 text-gray-900"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 border-t border-gray-200 bg-gray-50">
+                    <div class="flex justify-end">
+                        <button onclick="closeReviewModal()" class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Publish Panel Functions
+        function openPublishPanel() {
+            document.getElementById('publish-panel-modal').classList.remove('hidden');
+            // Reset form
+            document.getElementById('publish-panel-form').reset();
+            validatePublishChecklist();
+        }
+
+        function closePublishPanel() {
+            document.getElementById('publish-panel-modal').classList.add('hidden');
+        }
+
+        function validatePublishChecklist() {
+            const checkboxes = ['payment-confirmed', 'final-review-done', 'formatting-checked'];
+            const allChecked = checkboxes.every(id => document.getElementById(id).checked);
+            
+            const publishBtn = document.getElementById('confirm-publish-btn');
+            publishBtn.disabled = !allChecked;
+            
+            if (allChecked) {
+                publishBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                publishBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        async function markReviewCompleted() {
+            if (!confirm('Are you sure you want to mark this submission as review completed? This will allow the submission to proceed to the decision phase.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/admin/submissions/${submissionId}/mark-review-completed`, {
+                    method: 'POST',
+                    headers: {
+                        'admin-token': ensureAdminToken(),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        reason: 'Admin override - manual review completion'
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                    throw new Error(errorData.message || errorData.error || 'Failed to mark review completed');
+                }
+                
+                const result = await response.json();
+                showSuccess('Submission marked as review completed successfully!');
+                loadSubmissionDetails(); // Refresh the page to show updated status
+            } catch (error) {
+                console.error('Error marking review completed:', error);
+                showError(`Failed to mark review completed: ${error.message}`);
+            }
+        }
+
+        async function submitPublish(e) {
+            e.preventDefault();
+            
+            // Validate checklist
+            const paymentConfirmed = document.getElementById('payment-confirmed').checked;
+            const finalReviewDone = document.getElementById('final-review-done').checked;
+            const formattingChecked = document.getElementById('formatting-checked').checked;
+            
+            if (!paymentConfirmed || !finalReviewDone || !formattingChecked) {
+                showError('Please complete all pre-publication checklist items');
+                return;
+            }
+            
+            // Collect publication data
+            const publicationData = {
+                volume: document.getElementById('publish-volume').value.trim(),
+                issue: document.getElementById('publish-issue').value.trim(),
+                doi: document.getElementById('publish-doi').value.trim(),
+                pages: document.getElementById('publish-pages').value.trim(),
+                publication_url: document.getElementById('publish-url').value.trim(),
+                publication_notes: document.getElementById('publish-notes').value.trim()
+            };
+            
+            // Remove empty strings and convert to null for optional fields
+            Object.keys(publicationData).forEach(key => {
+                if (publicationData[key] === '') {
+                    publicationData[key] = null;
+                }
+            });
+            
+            try {
+                const response = await fetch(`/api/admin/submissions/${submissionId}/publish`, {
+                    method: 'POST',
+                    headers: {
+                        'admin-token': ensureAdminToken(),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(publicationData)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                    throw new Error(errorData.message || errorData.error || 'Failed to publish submission');
+                }
+                
+                const result = await response.json();
+                showSuccess('Submission published successfully!');
+                closePublishPanel();
+                loadSubmissionDetails(); // Refresh to show updated status
+            } catch (error) {
+                console.error('Error publishing submission:', error);
+                showError(`Failed to publish submission: ${error.message}`);
+            }
+        }
+    </script>
+
+</body>
+</html>
