@@ -3,365 +3,353 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Submit Research Paper - Digital Evolution Journal</title>
+  <meta name="description" content="Submit your manuscript to the Digital Evolution Journal."/>
+  <title>Submit Research — Digital Evolution Journal</title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            serif: ['Merriweather', 'serif'],
-          },
+          fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Merriweather', 'serif'] },
           colors: {
-            navy: {
-              50: '#f8fafc',
-              100: '#f1f5f9',
-              200: '#e2e8f0',
-              300: '#cbd5e1',
-              400: '#94a3b8',
-              500: '#64748b',
-              600: '#475569',
-              700: '#334155',
-              800: '#1e293b',
-              900: '#0f172a',
-            },
-            gold: {
-              50: '#fdfdf6',
-              100: '#fbf9eb',
-              500: '#d97706',
-              600: '#b45309',
-              700: '#78350f',
-            }
+            navy: { 50:'#f0f4ff',100:'#e0e9ff',200:'#c0d2ff',300:'#93b0f8',400:'#6088ee',500:'#3d63d8',600:'#2949bc',700:'#1f3799',800:'#1e2e7a',900:'#0f1f5c',950:'#080f30' },
+            gold: { 50:'#fffbeb',100:'#fef3c7',400:'#fbbf24',500:'#f59e0b',600:'#d97706' },
+            cream: { 50:'#fdfdf6', 100:'#f9f8f0' }
           }
         }
       }
     }
   </script>
   <style>
+    .skip-link { position:absolute; left:-9999px; }
+    .skip-link:focus { position:fixed; top:1rem; left:1rem; padding:.75rem 1.5rem; background:#0f1f5c; color:white; border-radius:8px; font-weight:600; z-index:9999; }
     body { font-family: 'Inter', sans-serif; }
-    h1, h2, h3, h4, h5, h6, .font-editorial { font-family: 'Merriweather', serif; }
+    h1, h2, h3, .font-editorial { font-family: 'Merriweather', serif; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+    *:focus-visible { outline: 2px solid #f59e0b; outline-offset: 3px; border-radius: 4px; }
+    
+    .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 10px 40px -10px rgba(15,31,92,0.1); }
+    
+    .step-fade-enter { opacity: 0; transform: translateY(10px); transition: all 0.4s ease-out; }
+    .step-fade-enter-active { opacity: 1; transform: translateY(0); }
+    .step-fade-exit { display: none; }
+    
+    .form-input { @apply w-full border border-navy-200 rounded-xl p-3.5 text-sm bg-white/50 backdrop-blur focus:outline-none focus:ring-2 focus:ring-navy-500/20 focus:border-navy-500 focus:bg-white transition-all; }
   </style>
 </head>
-<body class="text-navy-900 bg-[#f8fafc] min-h-screen flex flex-col justify-between">
+<body class="bg-cream-50 text-navy-950 min-h-screen flex flex-col relative">
+  <!-- Subtle background glow -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="absolute -top-40 -right-40 w-[600px] h-[600px] bg-navy-200/20 rounded-full blur-[100px]"></div>
+    <div class="absolute top-1/3 -left-20 w-[400px] h-[400px] bg-gold-200/20 rounded-full blur-[80px]"></div>
+  </div>
 
-  <!-- Navbar -->
-  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-navy-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-      <div class="flex items-center">
-        <a href="/" class="transition-opacity hover:opacity-90">
-          <img src="/images/Logo.png" alt="Digital Evolution Journal Logo" class="h-10 sm:h-12 w-auto">
-        </a>
-      </div>
+  <a href="#main-content" class="skip-link z-[100]">Skip to main content</a>
 
-      <!-- Desktop Navigation -->
-      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
-        <a href="/" class="text-navy-500 hover:text-gold-500 transition-colors">Home</a>
-        <a href="/researches" class="text-navy-500 hover:text-gold-500 transition-colors">Published Papers</a>
-        <a href="/submit" class="text-navy-800 hover:text-gold-500 transition-colors">Submit Research</a>
-        <a href="/reviewer" class="text-navy-500 hover:text-gold-500 transition-colors">Review Paper</a>
+  <!-- ══ NAVBAR ══ -->
+  <header class="sticky top-0 z-50 bg-navy-950/95 backdrop-blur-md border-b border-white/5" role="banner">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+      <a href="/" aria-label="Digital Evolution Journal — Home" class="hover:opacity-80 transition-opacity">
+        <img src="/images/Logo.png" alt="Digital Evolution Journal" class="h-9 w-auto">
+      </a>
+      <nav class="hidden md:flex items-center space-x-1 text-sm font-medium" aria-label="Main navigation">
+        <a href="/" class="px-3 py-2 text-white/60 hover:text-gold-400 rounded-md transition-colors">Home</a>
+        <a href="/researches" class="px-3 py-2 text-white/60 hover:text-gold-400 rounded-md transition-colors">Published Papers</a>
+        <a href="/submit" class="px-3 py-2 text-gold-400 font-semibold rounded-md transition-colors" aria-current="page">Submit Research</a>
         <span id="dashboardTab" class="relative hidden">
-          <button class="inline-flex items-center gap-1 text-navy-500 hover:text-gold-500 transition-colors font-medium">
+          <button id="dashboardBtn" aria-expanded="false" aria-haspopup="true" aria-controls="dashboardMenu"
+            class="px-3 py-2 text-white/60 hover:text-white rounded-md transition-colors inline-flex items-center gap-1 min-h-[44px]">
             Dashboards
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <svg id="dashChevron" class="h-3.5 w-3.5 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
             </svg>
           </button>
-          <div class="absolute right-0 mt-2 w-44 bg-white border border-navy-100 rounded-md shadow-lg hidden py-1" id="dashboardMenu">
-            <a href="/dashboard/author" class="block px-4 py-2 text-navy-700 hover:bg-navy-50 hover:text-gold-500 transition-colors">Author</a>
-            <a href="/dashboard/reviewer" class="block px-4 py-2 text-navy-700 hover:bg-navy-50 hover:text-gold-500 transition-colors">Reviewer</a>
+          <div id="dashboardMenu" role="menu" class="absolute right-0 mt-2 w-48 bg-navy-900 border border-white/10 rounded-xl shadow-2xl hidden py-1.5">
+            <a href="/dashboard/author" role="menuitem" class="block px-4 py-2.5 text-white/70 hover:text-gold-400 hover:bg-white/5 text-sm transition-colors">Author Dashboard</a>
+            <a href="/dashboard/reviewer" role="menuitem" class="block px-4 py-2.5 text-white/70 hover:text-gold-400 hover:bg-white/5 text-sm transition-colors">Reviewer Dashboard</a>
           </div>
         </span>
-        <span id="authLinks" class="flex items-center gap-4 border-l border-navy-100 pl-8">
-          <a href="/login" class="text-navy-600 hover:text-gold-500 transition-colors">Login</a>
-          <a href="/register" class="bg-navy-900 text-white hover:bg-navy-800 transition-colors px-4 py-2 rounded font-medium shadow-sm">Register</a>
+        <span id="authLinks" class="flex items-center gap-2 pl-4 ml-2 border-l border-white/10">
+          <a href="/login?next=/submit" class="px-3 py-1.5 text-white/70 hover:text-white transition-colors min-h-[44px] inline-flex items-center">Sign In</a>
+          <a href="/register" class="px-4 py-2 bg-white hover:bg-white/90 text-navy-950 rounded-lg transition-colors font-bold text-xs uppercase tracking-wider">Register</a>
         </span>
       </nav>
-
-      <!-- Mobile Menu Button -->
-      <button id="mobileMenuButton" class="md:hidden p-2 text-navy-600 hover:text-navy-900 focus:outline-none transition-colors">
-        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
+      <button id="mobileMenuButton" aria-expanded="false" class="md:hidden p-2 text-white/70 hover:text-white rounded-lg">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
     </div>
-
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="md:hidden hidden bg-white border-t border-navy-100">
-      <div class="px-4 py-4 space-y-2">
-        <a href="/" class="block px-3 py-2 text-base font-medium text-navy-900 hover:bg-navy-50 rounded">Home</a>
-        <a href="/researches" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">Published Papers</a>
-        <a href="/submit" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">Submit Research</a>
-        <a href="/reviewer" class="block px-3 py-2 text-base font-medium text-navy-600 hover:bg-navy-50 rounded">Review Paper</a>
-        <span id="mobileDashboardTab" class="hidden block border-t border-navy-50 pt-2">
-          <a href="/dashboard/author" class="block px-6 py-2 text-navy-600 hover:bg-navy-50 rounded">Author Dashboard</a>
-          <a href="/dashboard/reviewer" class="block px-6 py-2 text-navy-600 hover:bg-navy-50 rounded">Reviewer Dashboard</a>
-        </span>
-        <div id="mobileAuthLinks" class="border-t border-navy-100 pt-4 flex flex-col gap-2">
-          <a href="/login" class="block w-full text-center border border-navy-200 text-navy-700 px-4 py-2.5 rounded font-medium">Login</a>
-          <a href="/register" class="block w-full text-center bg-navy-900 text-white px-4 py-2.5 rounded font-medium">Register</a>
+    <div id="mobileMenu" class="md:hidden hidden bg-navy-950 border-t border-white/5">
+      <div class="px-4 py-4 space-y-1">
+        <a href="/" class="block px-3 py-3 text-white/70 rounded-lg">Home</a>
+        <a href="/researches" class="block px-3 py-3 text-white/70 rounded-lg">Published Papers</a>
+        <a href="/submit" class="block px-3 py-3 text-gold-400 font-semibold rounded-lg bg-white/5">Submit Research</a>
+        <div id="mobileDashboardTab" class="hidden border-t border-white/10 pt-3 mt-3">
+          <a href="/dashboard/author" class="block px-3 py-2.5 text-white/70 rounded-lg">Author Dashboard</a>
+          <a href="/dashboard/reviewer" class="block px-3 py-2.5 text-white/70 rounded-lg">Reviewer Dashboard</a>
+        </div>
+        <div id="mobileAuthLinks" class="border-t border-white/10 pt-4 mt-3 flex flex-col gap-2">
+          <a href="/login?next=/submit" class="block w-full text-center border border-white/20 text-white px-4 py-2.5 rounded-xl">Sign In</a>
+          <a href="/register" class="block w-full text-center bg-white text-navy-950 px-4 py-2.5 rounded-xl font-bold uppercase tracking-wider text-xs">Register</a>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Submit Container -->
-  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-12 flex-grow space-y-8">
-    <div class="space-y-2 text-center">
-      <h1 class="text-3xl sm:text-4xl font-bold font-editorial text-navy-900">Submit Manuscript</h1>
-      <p class="text-sm text-navy-500">Publish your research with our 10-reviewer academic pipeline</p>
+  <!-- ══ MAIN ══ -->
+  <main id="main-content" class="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 py-10 z-10">
+
+    <div class="text-center space-y-3 mb-12">
+      <div class="inline-flex items-center justify-center gap-2 bg-navy-100 text-navy-800 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm">
+        <span class="w-1.5 h-1.5 rounded-full bg-gold-500"></span>
+        Peer Review Pipeline
+      </div>
+      <h1 class="text-4xl sm:text-5xl font-bold font-editorial text-navy-950">Submit Manuscript</h1>
+      <p class="text-navy-500 max-w-lg mx-auto text-sm sm:text-base">Join the world's leading researchers by publishing through our rigorous 10-reviewer academic pipeline.</p>
     </div>
 
-    <!-- Multi-Step Progress Tracker -->
-    <nav aria-label="Progress" class="py-4">
-      <ol class="flex items-center justify-between w-full max-w-2xl mx-auto text-xs sm:text-sm font-medium">
-        <li class="flex items-center text-gold-500 gap-2 step-indicator" id="ind-1">
-          <span class="w-8 h-8 rounded-full border-2 border-gold-500 flex items-center justify-center font-bold bg-white" id="ind-bubble-1">1</span>
-          <span class="hidden sm:inline">Upload</span>
+    <!-- Progress Tracker -->
+    <nav aria-label="Progress" class="mb-10 max-w-3xl mx-auto">
+      <ol class="flex items-center justify-between w-full text-xs sm:text-sm font-semibold tracking-wide">
+        <li class="flex flex-col items-center gap-2 text-gold-600 transition-colors duration-300" id="ind-1">
+          <div class="w-10 h-10 rounded-full border-2 border-gold-500 bg-gold-50 flex items-center justify-center shadow-lg shadow-gold-500/20" id="ind-bubble-1">1</div>
+          <span class="hidden sm:block">Upload</span>
         </li>
-        <li class="w-full border-t-2 border-navy-200 mx-2 flex-grow step-divider" id="div-1"></li>
-        <li class="flex items-center text-navy-400 gap-2 step-indicator" id="ind-2">
-          <span class="w-8 h-8 rounded-full border-2 border-navy-200 flex items-center justify-center font-bold bg-white" id="ind-bubble-2">2</span>
-          <span class="hidden sm:inline">Details</span>
+        <li class="flex-1 h-0.5 bg-navy-200 mx-4 rounded-full transition-colors duration-300" id="div-1"></li>
+        
+        <li class="flex flex-col items-center gap-2 text-navy-300 transition-colors duration-300" id="ind-2">
+          <div class="w-10 h-10 rounded-full border-2 border-navy-200 bg-white flex items-center justify-center" id="ind-bubble-2">2</div>
+          <span class="hidden sm:block">Details</span>
         </li>
-        <li class="w-full border-t-2 border-navy-200 mx-2 flex-grow step-divider" id="div-2"></li>
-        <li class="flex items-center text-navy-400 gap-2 step-indicator" id="ind-3">
-          <span class="w-8 h-8 rounded-full border-2 border-navy-200 flex items-center justify-center font-bold bg-white" id="ind-bubble-3">3</span>
-          <span class="hidden sm:inline">Authors</span>
+        <li class="flex-1 h-0.5 bg-navy-200 mx-4 rounded-full transition-colors duration-300" id="div-2"></li>
+        
+        <li class="flex flex-col items-center gap-2 text-navy-300 transition-colors duration-300" id="ind-3">
+          <div class="w-10 h-10 rounded-full border-2 border-navy-200 bg-white flex items-center justify-center" id="ind-bubble-3">3</div>
+          <span class="hidden sm:block">Authors</span>
         </li>
-        <li class="w-full border-t-2 border-navy-200 mx-2 flex-grow step-divider" id="div-3"></li>
-        <li class="flex items-center text-navy-400 gap-2 step-indicator" id="ind-4">
-          <span class="w-8 h-8 rounded-full border-2 border-navy-200 flex items-center justify-center font-bold bg-white" id="ind-bubble-4">4</span>
-          <span class="hidden sm:inline">Review</span>
+        <li class="flex-1 h-0.5 bg-navy-200 mx-4 rounded-full transition-colors duration-300" id="div-3"></li>
+        
+        <li class="flex flex-col items-center gap-2 text-navy-300 transition-colors duration-300" id="ind-4">
+          <div class="w-10 h-10 rounded-full border-2 border-navy-200 bg-white flex items-center justify-center" id="ind-bubble-4">4</div>
+          <span class="hidden sm:block">Review</span>
         </li>
       </ol>
     </nav>
 
-    <!-- Submission Form -->
-    <form class="bg-white border border-navy-100 p-6 sm:p-10 rounded-xl shadow-sm space-y-6" id="paperForm">
+    <!-- FORM -->
+    <form id="paperForm" class="glass-panel rounded-3xl p-6 sm:p-12 relative overflow-hidden">
+      <!-- Decorative element inside panel -->
+      <div class="absolute -top-24 -right-24 w-48 h-48 bg-gold-500/5 rounded-full blur-[40px] pointer-events-none"></div>
 
-      <!-- STEP 1: UPLOAD MANUSCRIPT -->
-      <div id="step-1-content" class="space-y-6">
-        <div class="space-y-2">
-          <h2 class="text-xl font-bold font-editorial text-navy-900">Upload Manuscript File</h2>
-          <p class="text-xs text-navy-500">Provide your research document in Word (.doc or .docx) format. Max size: 25MB.</p>
+      <!-- ── STEP 1: UPLOAD ── -->
+      <div id="step-1-content" class="step-fade-enter step-fade-enter-active">
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold font-editorial text-navy-900 mb-2">Upload Manuscript File</h2>
+          <p class="text-navy-500 text-sm">Provide your research document in Word (.doc or .docx) format. Maximum file size: 25MB.</p>
         </div>
 
-        <div class="border-2 border-dashed border-navy-200 rounded-xl p-8 sm:p-12 text-center text-navy-500 bg-navy-50/50 hover:border-gold-500 transition-colors relative cursor-pointer" id="dropZoneContainer">
-          <div class="flex flex-col items-center justify-center space-y-3" id="fileDrop">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-navy-400 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16a4 4 0 004-4V6a4 4 0 00-8 0v6a4 4 0 004 4zm0 0v4m0 0H8m4 0h4" />
-            </svg>
-            <p class="text-sm font-medium">Drag and drop your manuscript here, or <button type="button" id="browseBtn" class="text-gold-500 hover:underline font-semibold">browse files</button></p>
-            <p class="text-xs text-navy-400">Microsoft Word files only</p>
+        <div id="dropZoneContainer" class="border-2 border-dashed border-navy-200 hover:border-gold-400 bg-white/50 hover:bg-gold-50/30 rounded-2xl p-10 sm:p-16 text-center transition-all duration-300 cursor-pointer group mb-8 shadow-inner shadow-navy-900/5">
+          <div id="fileDrop" class="flex flex-col items-center justify-center gap-4">
+            <div class="w-16 h-16 bg-navy-50 text-navy-400 rounded-full flex items-center justify-center group-hover:scale-110 group-hover:bg-gold-50 group-hover:text-gold-500 transition-all duration-300 shadow-sm">
+              <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16a4 4 0 004-4V6a4 4 0 00-8 0v6a4 4 0 004 4zm0 0v4m0 0H8m4 0h4" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-navy-700 font-medium text-base sm:text-lg mb-1">Drag and drop your manuscript</p>
+              <p class="text-navy-500 text-sm">or <button type="button" id="browseBtn" class="text-gold-600 font-bold hover:underline focus:outline-none focus-visible:ring">browse files</button></p>
+            </div>
           </div>
           <input id="paperFile" name="file" type="file" accept=".doc,.docx" class="hidden" />
           
-          <div id="paperFileStatus" class="mt-4 hidden max-w-md mx-auto">
-            <div class="flex items-center justify-between bg-white border border-navy-200 rounded-lg p-3 shadow-sm">
-              <div class="flex items-center gap-3 truncate">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gold-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div id="paperFileStatus" class="hidden mt-4">
+            <div class="inline-flex items-center gap-4 bg-white border border-navy-100 rounded-xl p-3 shadow-sm mx-auto max-w-full text-left transition-all">
+              <div class="w-10 h-10 bg-gold-50 text-gold-600 rounded-lg flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
-                <span id="paperFileName" class="text-sm text-navy-800 font-medium truncate"></span>
               </div>
-              <button type="button" id="paperFileRemove" class="text-xs text-red-600 hover:underline font-semibold px-2">Remove</button>
+              <span id="paperFileName" class="text-sm text-navy-800 font-semibold truncate max-w-[200px] sm:max-w-xs"></span>
+              <button type="button" id="paperFileRemove" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors shrink-0" title="Remove file" aria-label="Remove uploaded file">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
             </div>
           </div>
         </div>
 
-        <div class="flex justify-end pt-4">
-          <button type="button" id="btn-next-1" class="bg-navy-900 hover:bg-navy-800 text-white px-6 py-3 rounded-lg font-medium transition-all shadow-sm">
+        <div class="flex justify-end pt-4 border-t border-navy-100/50">
+          <button type="button" id="btn-next-1" class="bg-navy-950 hover:bg-navy-900 text-white px-8 py-3.5 rounded-xl font-bold tracking-wide transition-all shadow-xl shadow-navy-950/20 hover:shadow-navy-950/30 hover:-translate-y-0.5">
             Continue to Details
           </button>
         </div>
       </div>
 
-      <!-- STEP 2: METADATA -->
-      <div id="step-2-content" class="space-y-6 hidden">
-        <div class="space-y-2">
-          <h2 class="text-xl font-bold font-editorial text-navy-900">Manuscript Metadata</h2>
-          <p class="text-xs text-navy-500">Provide the title, publication type, and comprehensive abstract for index parsing.</p>
+      <!-- ── STEP 2: DETAILS ── -->
+      <div id="step-2-content" class="step-fade-exit">
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold font-editorial text-navy-900 mb-2">Manuscript Metadata</h2>
+          <p class="text-navy-500 text-sm">Provide the core information needed for indexing and reviewer pairing.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="md:col-span-2 space-y-1">
-            <label class="block text-xs font-semibold text-navy-700 uppercase tracking-wider">Paper Title*</label>
-            <input type="text" id="paperTitle" class="w-full border border-navy-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 bg-white" placeholder="Enter paper title" />
+        <div class="space-y-6 mb-8">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="md:col-span-2 space-y-1.5">
+              <label class="block text-[11px] font-bold text-navy-500 uppercase tracking-widest">Paper Title*</label>
+              <input type="text" id="paperTitle" class="form-input text-lg font-editorial" placeholder="Enter the full manuscript title" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-[11px] font-bold text-navy-500 uppercase tracking-widest">Publication Type*</label>
+              <select id="paperType" class="form-input appearance-none bg-no-repeat bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%231f3799%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px_10px] bg-[right_1rem_center]">
+                <option value="Research Paper">Research Paper (3,000-5,000 words)</option>
+                <option value="White Paper">White Paper (1,000-2,000 words)</option>
+              </select>
+            </div>
           </div>
-          <div class="space-y-1">
-            <label class="block text-xs font-semibold text-navy-700 uppercase tracking-wider">Publication Type*</label>
-            <select id="paperType" class="w-full border border-navy-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 bg-white">
-              <option value="Research Paper">Research Paper (3,000-5,000 words)</option>
-              <option value="White Paper">White Paper (1,000-2,000 words)</option>
-            </select>
+          <div class="space-y-1.5">
+            <label class="block text-[11px] font-bold text-navy-500 uppercase tracking-widest">Abstract*</label>
+            <textarea id="paperAbstract" class="form-input resize-none" rows="7" placeholder="Provide a detailed abstract summarizing the manuscript scope (200-300 words)..."></textarea>
           </div>
         </div>
 
-        <div class="space-y-1">
-          <label class="block text-xs font-semibold text-navy-700 uppercase tracking-wider">Abstract*</label>
-          <textarea id="paperAbstract" class="w-full border border-navy-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 bg-white" rows="6" placeholder="Provide a detailed abstract summarizing the manuscript scope (200-300 words)..."></textarea>
-        </div>
-
-        <div class="flex justify-between pt-4 border-t border-navy-100">
-          <button type="button" id="btn-back-2" class="border border-navy-200 hover:bg-navy-50 text-navy-700 px-6 py-3 rounded-lg font-medium transition-all">Back</button>
-          <button type="button" id="btn-next-2" class="bg-navy-900 hover:bg-navy-800 text-white px-6 py-3 rounded-lg font-medium transition-all shadow-sm">Continue to Authors</button>
+        <div class="flex justify-between pt-6 border-t border-navy-100/50">
+          <button type="button" id="btn-back-2" class="border border-navy-200 hover:bg-navy-50 text-navy-700 px-6 py-3 rounded-xl font-bold transition-all">Back</button>
+          <button type="button" id="btn-next-2" class="bg-navy-950 hover:bg-navy-900 text-white px-8 py-3.5 rounded-xl font-bold tracking-wide transition-all shadow-xl shadow-navy-950/20 hover:-translate-y-0.5">Continue to Authors</button>
         </div>
       </div>
 
-      <!-- STEP 3: AUTHORS & KEYWORDS -->
-      <div id="step-3-content" class="space-y-6 hidden">
-        <div class="space-y-2">
-          <h2 class="text-xl font-bold font-editorial text-navy-900">Authors & Keywords</h2>
-          <p class="text-xs text-navy-500">Provide researcher profiles and select key subject categories for reviewer assignment.</p>
+      <!-- ── STEP 3: AUTHORS ── -->
+      <div id="step-3-content" class="step-fade-exit">
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold font-editorial text-navy-900 mb-2">Authors & Keywords</h2>
+          <p class="text-navy-500 text-sm">Provide researcher profiles and select key subject categories for reviewer assignment.</p>
         </div>
 
-        <div class="space-y-4">
-          <label class="block text-xs font-semibold text-navy-700 uppercase tracking-wider">Authors*</label>
-          <div id="authorFields" class="space-y-4">
-            <div class="author-row border border-navy-100 rounded-xl bg-navy-50/50 p-4 space-y-4">
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="space-y-1">
-                  <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Author Name*</label>
-                  <input type="text" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="Dr. Jane Doe" required />
-                </div>
-                <div class="space-y-1">
-                  <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Affiliation*</label>
-                  <input type="text" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="Department, University / Institution" required />
-                </div>
-                <div class="space-y-1">
-                  <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Location (City, Country)*</label>
-                  <input type="text" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="Boston, USA" required />
-                </div>
-                <div class="space-y-1">
-                  <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Email Address*</label>
-                  <input type="email" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="jane.doe@university.edu" required />
+        <div class="space-y-8 mb-8">
+          <!-- Authors -->
+          <div class="space-y-4">
+            <label class="block text-[11px] font-bold text-navy-500 uppercase tracking-widest">Research Authors*</label>
+            <div id="authorFields" class="space-y-4">
+              <div class="author-row border border-navy-100 bg-white/40 backdrop-blur rounded-2xl p-5 sm:p-6 shadow-sm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-4">
+                  <div class="space-y-1.5">
+                    <label class="block text-[10px] font-bold text-navy-400 uppercase">Author Name*</label>
+                    <input type="text" class="form-input" placeholder="Dr. Jane Doe" required />
+                  </div>
+                  <div class="space-y-1.5">
+                    <label class="block text-[10px] font-bold text-navy-400 uppercase">Affiliation*</label>
+                    <input type="text" class="form-input" placeholder="University / Institution" required />
+                  </div>
+                  <div class="space-y-1.5">
+                    <label class="block text-[10px] font-bold text-navy-400 uppercase">Location (City, Country)*</label>
+                    <input type="text" class="form-input" placeholder="Boston, USA" required />
+                  </div>
+                  <div class="space-y-1.5">
+                    <label class="block text-[10px] font-bold text-navy-400 uppercase">Email Address*</label>
+                    <input type="email" class="form-input" placeholder="jane.doe@university.edu" required />
+                  </div>
                 </div>
               </div>
             </div>
+            <button type="button" id="addAuthor" class="inline-flex items-center gap-1.5 text-sm text-gold-600 hover:text-gold-500 font-bold transition-colors mt-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              Add Co-Author
+            </button>
           </div>
-          <button type="button" id="addAuthor" class="inline-flex items-center text-sm text-gold-500 hover:text-gold-600 font-semibold transition-colors mt-2">
-            + Add Co-Author
-          </button>
-        </div>
 
-        <div class="space-y-3 pt-4 border-t border-navy-100">
-          <div class="flex justify-between items-baseline">
-            <label class="block text-xs font-semibold text-navy-700 uppercase tracking-wider">Subject Keywords*</label>
-            <span class="text-xs text-navy-400">Select exactly 3: <span id="kwCount" class="font-bold text-gold-500">0</span>/3</span>
-          </div>
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm text-navy-700" id="keywordChoices">
-            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
-              <input type="checkbox" value="Artificial Intelligence" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Artificial Intelligence
-            </label>
-            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
-              <input type="checkbox" value="Blockchain" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Blockchain
-            </label>
-            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
-              <input type="checkbox" value="Cybersecurity" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Cybersecurity
-            </label>
-            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
-              <input type="checkbox" value="Data Science" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Data Science
-            </label>
-            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
-              <input type="checkbox" value="Internet of Things" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Internet of Things
-            </label>
-            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
-              <input type="checkbox" value="Cloud Computing" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Cloud Computing
-            </label>
-            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
-              <input type="checkbox" value="Machine Learning" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Machine Learning
-            </label>
-            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
-              <input type="checkbox" value="Software Engineering" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Software Engineering
-            </label>
-            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
-              <input type="checkbox" value="Computer Networks" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Computer Networks
-            </label>
-            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
-              <input type="checkbox" value="Database Systems" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Database Systems
-            </label>
-            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
-              <input type="checkbox" value="Mobile Computing" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Mobile Computing
-            </label>
-            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
-              <input type="checkbox" value="Robotics" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Robotics
-            </label>
-            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
-              <input type="checkbox" value="Virtual Reality" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Virtual Reality
-            </label>
-            <label class="flex items-center gap-2 p-2 hover:bg-navy-50 rounded border border-navy-100 bg-white cursor-pointer select-none">
-              <input type="checkbox" value="Other" class="rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" /> Other
-            </label>
+          <!-- Keywords -->
+          <div class="space-y-4 pt-6 border-t border-navy-100/50">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-end gap-2">
+              <label class="block text-[11px] font-bold text-navy-500 uppercase tracking-widest">Subject Keywords*</label>
+              <div class="text-xs font-semibold bg-navy-50 text-navy-700 px-3 py-1 rounded-full inline-block">
+                Selected: <span id="kwCount" class="text-gold-600 font-bold text-sm ml-1">0</span> / 3
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 text-sm" id="keywordChoices">
+              <!-- JS maps these -->
+            </div>
           </div>
         </div>
 
-        <div class="flex justify-between pt-4 border-t border-navy-100">
-          <button type="button" id="btn-back-3" class="border border-navy-200 hover:bg-navy-50 text-navy-700 px-6 py-3 rounded-lg font-medium transition-all">Back</button>
-          <button type="button" id="btn-next-3" class="bg-navy-900 hover:bg-navy-800 text-white px-6 py-3 rounded-lg font-medium transition-all shadow-sm">Continue to Review</button>
+        <div class="flex justify-between pt-6 border-t border-navy-100/50">
+          <button type="button" id="btn-back-3" class="border border-navy-200 hover:bg-navy-50 text-navy-700 px-6 py-3 rounded-xl font-bold transition-all">Back</button>
+          <button type="button" id="btn-next-3" class="bg-navy-950 hover:bg-navy-900 text-white px-8 py-3.5 rounded-xl font-bold tracking-wide transition-all shadow-xl shadow-navy-950/20 hover:-translate-y-0.5">Continue to Review</button>
         </div>
       </div>
 
-      <!-- STEP 4: REVIEW & CONFIRM -->
-      <div id="step-4-content" class="space-y-6 hidden">
-        <div class="space-y-2">
-          <h2 class="text-xl font-bold font-editorial text-navy-900">Review & Ethical Terms</h2>
-          <p class="text-xs text-navy-500">Agree to the ethical code and declare manuscript validity prior to submission.</p>
+      <!-- ── STEP 4: CONFIRM ── -->
+      <div id="step-4-content" class="step-fade-exit">
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold font-editorial text-navy-900 mb-2">Review & Submit</h2>
+          <p class="text-navy-500 text-sm">Agree to the ethical code and declare manuscript validity prior to final submission.</p>
         </div>
 
-        <div class="bg-navy-50 border border-navy-100 rounded-lg p-5 text-sm space-y-4 max-h-72 overflow-y-auto">
-          <h4 class="font-bold text-navy-900">Ethical Commitments</h4>
-          <div class="flex items-start gap-3">
-            <input type="checkbox" id="term-1" class="mt-1 rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" />
-            <label for="term-1" class="text-navy-600 leading-relaxed cursor-pointer select-none">
-              I agree to the <a href="/publication-ethics.html" target="_blank" class="text-gold-500 hover:underline">publication terms</a> and
-              <a href="/author-guidelines.html" target="_blank" class="text-gold-500 hover:underline">ethical guidelines</a>.
-            </label>
+        <div class="bg-white/60 border border-navy-100 rounded-2xl p-6 sm:p-8 space-y-6 mb-8 shadow-sm">
+          <div class="flex items-center gap-3 pb-4 border-b border-navy-100">
+            <div class="w-10 h-10 bg-gold-50 text-gold-500 rounded-xl flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            </div>
+            <div>
+              <h4 class="font-bold font-editorial text-navy-900 text-lg">Ethical Commitments</h4>
+              <p class="text-xs text-navy-500">All boxes must be checked to proceed.</p>
+            </div>
           </div>
-        
-          <div class="flex items-start gap-3">
-            <input type="checkbox" id="term-2" class="mt-1 rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" />
-            <label for="term-2" class="text-navy-600 leading-relaxed cursor-pointer select-none">
-              The submission has not been previously published, nor is it before another journal for consideration.
-            </label>
-          </div>
-        
-          <div class="flex items-start gap-3">
-            <input type="checkbox" id="term-3" class="mt-1 rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" />
-            <label for="term-3" class="text-navy-600 leading-relaxed cursor-pointer select-none">The submission file is in Microsoft Word format.</label>
-          </div>
-        
-          <div class="flex items-start gap-3">
-            <input type="checkbox" id="term-4" class="mt-1 rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" />
-            <label for="term-4" class="text-navy-600 leading-relaxed cursor-pointer select-none">Where available, URLs for all references have been provided.</label>
-          </div>
-        
-          <div class="flex items-start gap-3">
-            <input type="checkbox" id="term-5" class="mt-1 rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" />
-            <label for="term-5" class="text-navy-600 leading-relaxed cursor-pointer select-none">
-              The text is single-spaced; uses 12-point font; and all illustrations and tables are placed in-text.
-            </label>
-          </div>
-        
-          <div class="flex items-start gap-3">
-            <input type="checkbox" id="term-6" class="mt-1 rounded border-navy-300 text-gold-500 focus:ring-gold-500/20" />
-            <label for="term-6" class="text-navy-600 leading-relaxed cursor-pointer select-none">
-              The text adheres to the stylistic and bibliographic requirements outlined in the Author Guidelines.
-            </label>
-          </div>
-        </div>
-
-        <div class="flex justify-between pt-6 border-t border-navy-100 items-center">
-          <button type="button" id="btn-back-4" class="border border-navy-200 hover:bg-navy-50 text-navy-700 px-6 py-3 rounded-lg font-medium transition-all">Back</button>
           
-          <button type="submit" id="submitButton" class="bg-gold-500 hover:bg-gold-600 text-white px-8 py-3.5 rounded-lg font-semibold transition-all shadow-md flex items-center justify-center gap-2">
+          <div class="space-y-4">
+            <label class="flex items-start gap-4 p-3 hover:bg-navy-50 rounded-xl transition-colors cursor-pointer group">
+              <div class="relative flex items-start pt-0.5">
+                <input type="checkbox" id="term-1" class="peer appearance-none w-5 h-5 border-2 border-navy-300 rounded cursor-pointer checked:bg-gold-500 checked:border-gold-500 transition-colors focus:ring-2 focus:ring-gold-500/30 outline-none" />
+                <svg class="absolute w-5 h-5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div class="text-sm text-navy-700 font-medium leading-snug group-hover:text-navy-900">
+                I agree to the <a href="/publication-ethics.html" target="_blank" class="text-gold-600 hover:underline">publication terms</a> and <a href="/author-guidelines.html" target="_blank" class="text-gold-600 hover:underline">ethical guidelines</a>.
+              </div>
+            </label>
+
+            <label class="flex items-start gap-4 p-3 hover:bg-navy-50 rounded-xl transition-colors cursor-pointer group">
+              <div class="relative flex items-start pt-0.5">
+                <input type="checkbox" id="term-2" class="peer appearance-none w-5 h-5 border-2 border-navy-300 rounded cursor-pointer checked:bg-gold-500 checked:border-gold-500 transition-colors focus:ring-2 focus:ring-gold-500/30 outline-none" />
+                <svg class="absolute w-5 h-5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div class="text-sm text-navy-700 font-medium leading-snug group-hover:text-navy-900">The submission has not been previously published, nor is it before another journal.</div>
+            </label>
+
+            <label class="flex items-start gap-4 p-3 hover:bg-navy-50 rounded-xl transition-colors cursor-pointer group">
+              <div class="relative flex items-start pt-0.5">
+                <input type="checkbox" id="term-3" class="peer appearance-none w-5 h-5 border-2 border-navy-300 rounded cursor-pointer checked:bg-gold-500 checked:border-gold-500 transition-colors focus:ring-2 focus:ring-gold-500/30 outline-none" />
+                <svg class="absolute w-5 h-5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div class="text-sm text-navy-700 font-medium leading-snug group-hover:text-navy-900">The submission file is in Microsoft Word format.</div>
+            </label>
+
+            <label class="flex items-start gap-4 p-3 hover:bg-navy-50 rounded-xl transition-colors cursor-pointer group">
+              <div class="relative flex items-start pt-0.5">
+                <input type="checkbox" id="term-4" class="peer appearance-none w-5 h-5 border-2 border-navy-300 rounded cursor-pointer checked:bg-gold-500 checked:border-gold-500 transition-colors focus:ring-2 focus:ring-gold-500/30 outline-none" />
+                <svg class="absolute w-5 h-5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div class="text-sm text-navy-700 font-medium leading-snug group-hover:text-navy-900">Where available, URLs for all references have been provided.</div>
+            </label>
+            
+            <label class="flex items-start gap-4 p-3 hover:bg-navy-50 rounded-xl transition-colors cursor-pointer group">
+              <div class="relative flex items-start pt-0.5">
+                <input type="checkbox" id="term-5" class="peer appearance-none w-5 h-5 border-2 border-navy-300 rounded cursor-pointer checked:bg-gold-500 checked:border-gold-500 transition-colors focus:ring-2 focus:ring-gold-500/30 outline-none" />
+                <svg class="absolute w-5 h-5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div class="text-sm text-navy-700 font-medium leading-snug group-hover:text-navy-900">The text is single-spaced; uses 12-point font; and illustrations are placed in-text.</div>
+            </label>
+          </div>
+        </div>
+
+        <div class="flex flex-col-reverse sm:flex-row justify-between pt-6 border-t border-navy-100/50 items-center gap-4">
+          <button type="button" id="btn-back-4" class="w-full sm:w-auto border border-navy-200 hover:bg-navy-50 text-navy-700 px-6 py-3.5 rounded-xl font-bold transition-all">Back</button>
+          
+          <button type="submit" id="submitButton" class="w-full sm:w-auto bg-gradient-to-r from-gold-500 to-gold-400 hover:from-gold-600 hover:to-gold-500 text-white px-10 py-3.5 rounded-xl font-bold tracking-wider uppercase text-sm transition-all shadow-xl shadow-gold-500/30 hover:shadow-gold-500/40 hover:-translate-y-0.5 flex items-center justify-center gap-2">
             <span>Submit Manuscript</span>
             <div id="loadingSpinner" class="hidden">
-              <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
@@ -369,385 +357,240 @@
           </button>
         </div>
       </div>
-
     </form>
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-navy-900 text-navy-400 text-xs py-8 border-t border-navy-800 text-center">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <div class="flex gap-4">
-        <a href="#" class="hover:text-navy-300">Privacy Policy</a>
+  <!-- ══ FOOTER ══ -->
+  <footer class="bg-navy-950 border-t border-white/5 mt-auto relative z-10" role="contentinfo">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex gap-6 text-xs font-medium text-white/40">
+        <a href="#" class="hover:text-gold-400 transition-colors">Privacy Policy</a>
         <span>·</span>
-        <a href="#" class="hover:text-navy-300">Terms of Service</a>
+        <a href="#" class="hover:text-gold-400 transition-colors">Terms of Service</a>
       </div>
-      <div>© 2026 Digital Evolution Journal. All rights reserved.</div>
+      <div class="text-xs text-white/30 font-medium">© 2026 Digital Evolution Journal. All rights reserved.</div>
     </div>
   </footer>
 
   <script>
-    // Navigation workflow logic
-    let activeStep = 1;
+    // Build keywords UI
+    const kws = ["Artificial Intelligence","Blockchain","Cybersecurity","Data Science","Internet of Things","Cloud Computing","Machine Learning","Software Engineering","Computer Networks","Database Systems","Mobile Computing","Robotics","Virtual Reality","Other"];
+    document.getElementById('keywordChoices').innerHTML = kws.map(kw => `
+      <label class="group relative flex items-center gap-3 p-3 bg-white/50 border border-navy-100 hover:border-gold-400 rounded-xl cursor-pointer transition-all hover:bg-gold-50/30">
+        <input type="checkbox" value="${kw}" class="peer appearance-none w-4 h-4 border border-navy-300 rounded checked:bg-gold-500 checked:border-gold-500 focus:ring-2 focus:ring-gold-500/20 outline-none shrink-0 transition-colors" />
+        <svg class="absolute left-3 w-4 h-4 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        <span class="text-xs font-semibold text-navy-700 group-hover:text-navy-900 transition-colors ml-2">${kw}</span>
+      </label>
+    `).join('');
 
+    // Multistep logic
+    let activeStep = 1;
     function setStep(step) {
       if (step < 1 || step > 4) return;
-      
-      // Update UI panels
-      document.getElementById('step-1-content').classList.toggle('hidden', step !== 1);
-      document.getElementById('step-2-content').classList.toggle('hidden', step !== 2);
-      document.getElementById('step-3-content').classList.toggle('hidden', step !== 3);
-      document.getElementById('step-4-content').classList.toggle('hidden', step !== 4);
-      
-      // Update header indicators
+      document.getElementById('step-1-content').className = step === 1 ? 'step-fade-enter step-fade-enter-active' : 'step-fade-exit';
+      document.getElementById('step-2-content').className = step === 2 ? 'step-fade-enter step-fade-enter-active' : 'step-fade-exit';
+      document.getElementById('step-3-content').className = step === 3 ? 'step-fade-enter step-fade-enter-active' : 'step-fade-exit';
+      document.getElementById('step-4-content').className = step === 4 ? 'step-fade-enter step-fade-enter-active' : 'step-fade-exit';
+
       for (let i = 1; i <= 4; i++) {
         const ind = document.getElementById(`ind-${i}`);
         const bubble = document.getElementById(`ind-bubble-${i}`);
         const div = document.getElementById(`div-${i}`);
         
         if (i < step) {
-          // Completed
-          ind.classList.remove('text-navy-400', 'text-gold-500');
-          ind.classList.add('text-navy-800');
-          bubble.classList.remove('border-navy-200', 'border-gold-500');
-          bubble.classList.add('border-navy-800', 'bg-navy-100');
-          bubble.textContent = '✓';
+          ind.className = "flex flex-col items-center gap-2 text-navy-900 transition-colors duration-300";
+          bubble.className = "w-10 h-10 rounded-full border-2 border-navy-900 bg-navy-50 flex items-center justify-center font-bold";
+          bubble.innerHTML = '<svg class="w-5 h-5 text-navy-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>';
+          if(div) div.className = "flex-1 h-0.5 bg-navy-900 mx-4 rounded-full transition-colors duration-300";
         } else if (i === step) {
-          // Active
-          ind.classList.remove('text-navy-400', 'text-navy-800');
-          ind.classList.add('text-gold-500');
-          bubble.classList.remove('border-navy-200', 'border-navy-800', 'bg-navy-100');
-          bubble.classList.add('border-gold-500');
+          ind.className = "flex flex-col items-center gap-2 text-gold-600 transition-colors duration-300";
+          bubble.className = "w-10 h-10 rounded-full border-2 border-gold-500 bg-gold-50 flex items-center justify-center font-bold shadow-lg shadow-gold-500/20 text-gold-600";
           bubble.textContent = i;
+          if(div) div.className = "flex-1 h-0.5 bg-navy-200 mx-4 rounded-full transition-colors duration-300";
         } else {
-          // Future
-          ind.classList.remove('text-navy-800', 'text-gold-500');
-          ind.classList.add('text-navy-400');
-          bubble.classList.remove('border-navy-800', 'border-gold-500', 'bg-navy-100');
-          bubble.classList.add('border-navy-200');
+          ind.className = "flex flex-col items-center gap-2 text-navy-300 transition-colors duration-300";
+          bubble.className = "w-10 h-10 rounded-full border-2 border-navy-200 bg-white flex items-center justify-center font-bold";
           bubble.textContent = i;
+          if(div) div.className = "flex-1 h-0.5 bg-navy-200 mx-4 rounded-full transition-colors duration-300";
         }
       }
       activeStep = step;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Step 1 check
     document.getElementById('btn-next-1').addEventListener('click', () => {
       const fileInput = document.getElementById('paperFile');
-      if (!fileInput.files || fileInput.files.length === 0) {
-        alert('Please choose or drop a Microsoft Word file to continue.');
-        return;
-      }
+      if (!fileInput.files || fileInput.files.length === 0) return alert('Please choose or drop a Microsoft Word file to continue.');
       setStep(2);
     });
-
-    // Step 2 checks
     document.getElementById('btn-back-2').addEventListener('click', () => setStep(1));
     document.getElementById('btn-next-2').addEventListener('click', () => {
-      const title = document.getElementById('paperTitle').value.trim();
-      const abstract = document.getElementById('paperAbstract').value.trim();
-      if (!title || !abstract) {
-        alert('Please complete the paper title and abstract fields.');
-        return;
+      if (!document.getElementById('paperTitle').value.trim() || !document.getElementById('paperAbstract').value.trim()) {
+        return alert('Please complete the paper title and abstract fields.');
       }
       setStep(3);
     });
-
-    // Step 3 checks
     document.getElementById('btn-back-3').addEventListener('click', () => setStep(2));
     document.getElementById('btn-next-3').addEventListener('click', () => {
-      // Validate authors
       const authorRows = document.querySelectorAll('#authorFields .author-row');
-      let validAuthors = true;
-      authorRows.forEach(row => {
-        const inputs = row.querySelectorAll('input[required]');
-        inputs.forEach(input => {
-          if (!input.value.trim()) validAuthors = false;
-        });
-      });
-      if (!validAuthors) {
-        alert('Please enter names, affiliations, locations, and email addresses for all authors.');
-        return;
-      }
-      // Validate keywords
-      const kwBoxes = Array.from(document.querySelectorAll('#keywordChoices input[type="checkbox"]:checked'));
-      if (kwBoxes.length !== 3) {
-        alert('Please select exactly 3 keywords for reviewer matching.');
-        return;
-      }
+      let valid = true;
+      authorRows.forEach(row => row.querySelectorAll('input[required]').forEach(i => { if (!i.value.trim()) valid = false; }));
+      if (!valid) return alert('Please complete all author fields.');
+      const kws = document.querySelectorAll('#keywordChoices input[type="checkbox"]:checked');
+      if (kws.length !== 3) return alert('Please select exactly 3 keywords.');
       setStep(4);
     });
-
-    // Step 4 back
     document.getElementById('btn-back-4').addEventListener('click', () => setStep(3));
 
-    // Dynamic co-author addition
-    const maxAuthors = 6;
-    const addBtn = document.getElementById('addAuthor');
-    const authorFields = document.getElementById('authorFields');
+    // Keyword limiter
+    document.getElementById('keywordChoices').addEventListener('change', () => {
+      const boxes = document.querySelectorAll('#keywordChoices input[type="checkbox"]');
+      const checked = Array.from(boxes).filter(b => b.checked);
+      document.getElementById('kwCount').textContent = checked.length;
+      Array.from(boxes).forEach(b => { if(!b.checked) b.disabled = checked.length >= 3; });
+    });
 
-    addBtn.addEventListener('click', () => {
-      const current = authorFields.querySelectorAll('.author-row').length;
-      if (current >= maxAuthors) return;
-
+    // Author handling
+    document.getElementById('addAuthor').addEventListener('click', () => {
+      const authorFields = document.getElementById('authorFields');
+      if (authorFields.querySelectorAll('.author-row').length >= 6) return;
       const row = document.createElement('div');
-      row.className = "author-row border border-navy-100 rounded-xl bg-navy-50/50 p-4 space-y-4";
+      row.className = "author-row border border-navy-100 bg-white/40 backdrop-blur rounded-2xl p-5 sm:p-6 shadow-sm relative";
       row.innerHTML = `
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="space-y-1">
-            <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Author Name*</label>
-            <input type="text" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="Author Name*" required />
-          </div>
-          <div class="space-y-1">
-            <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Affiliation*</label>
-            <input type="text" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="Affiliation*" required />
-          </div>
-          <div class="space-y-1">
-            <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Location*</label>
-            <input type="text" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="Location (City, Country)*" required />
-          </div>
-          <div class="space-y-1">
-            <label class="block text-[10px] font-semibold text-navy-500 uppercase tracking-wider">Email Address*</label>
-            <input type="email" class="w-full border border-navy-200 rounded-lg p-2.5 text-sm bg-white" placeholder="Author Email*" required />
-          </div>
+        <button type="button" class="remove-author absolute top-4 right-4 text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-lg transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-4 pr-8">
+          <div class="space-y-1.5"><label class="block text-[10px] font-bold text-navy-400 uppercase">Author Name*</label><input type="text" class="form-input" placeholder="Co-Author Name" required /></div>
+          <div class="space-y-1.5"><label class="block text-[10px] font-bold text-navy-400 uppercase">Affiliation*</label><input type="text" class="form-input" placeholder="Institution" required /></div>
+          <div class="space-y-1.5"><label class="block text-[10px] font-bold text-navy-400 uppercase">Location*</label><input type="text" class="form-input" placeholder="City, Country" required /></div>
+          <div class="space-y-1.5"><label class="block text-[10px] font-bold text-navy-400 uppercase">Email Address*</label><input type="email" class="form-input" placeholder="Email" required /></div>
         </div>
-        <div class="flex items-center justify-between">
-          <label class="text-xs flex items-center gap-2 text-navy-600 cursor-pointer">
-            <input type="checkbox" class="comm-checkbox rounded border-navy-300 text-gold-500" />
-            Receive communications
-          </label>
-          <button type="button" class="text-red-600 text-xs hover:underline remove-author font-semibold">Remove Co-Author</button>
-        </div>
+        <label class="inline-flex items-center gap-3 p-2 hover:bg-navy-50 rounded-lg transition-colors cursor-pointer group">
+          <div class="relative flex items-center">
+            <input type="checkbox" class="comm-checkbox peer appearance-none w-4 h-4 border-2 border-navy-300 rounded cursor-pointer checked:bg-navy-500 checked:border-navy-500 outline-none" />
+            <svg class="absolute w-4 h-4 text-white pointer-events-none opacity-0 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <span class="text-xs text-navy-600 font-medium group-hover:text-navy-900">Receive communications</span>
+        </label>
       `;
       row.querySelector('.remove-author').addEventListener('click', () => row.remove());
       authorFields.appendChild(row);
     });
 
-    // File Upload Handlers
+    // File Drag/Drop
     const hiddenInput = document.getElementById('paperFile');
-    const browseBtn = document.getElementById('browseBtn');
     const dropZone = document.getElementById('dropZoneContainer');
-    const statusWrap = document.getElementById('paperFileStatus');
-    const nameEl = document.getElementById('paperFileName');
-    const removeBtn = document.getElementById('paperFileRemove');
-
-    function isValidPaper(file) {
-      const maxBytes = 25 * 1024 * 1024;
-      const okExt = /\.(doc|docx)$/i.test(file.name || '');
-      return okExt && file.size <= maxBytes;
-    }
-
-    function showSelected(file) {
-      nameEl.textContent = `${file.name} (${(file.size / 1048576).toFixed(2)} MB)`;
-      statusWrap.classList.remove('hidden');
+    const clearFile = () => { hiddenInput.value = ''; document.getElementById('paperFileStatus').classList.add('hidden'); document.getElementById('fileDrop').classList.remove('hidden'); };
+    const setFile = (f) => {
+      if(!/\.(doc|docx)$/i.test(f.name) || f.size > 25*1024*1024) return alert('Please provide a valid .doc or .docx under 25MB.'), clearFile();
+      document.getElementById('paperFileName').textContent = `${f.name} (${(f.size/1048576).toFixed(1)}MB)`;
+      document.getElementById('paperFileStatus').classList.remove('hidden');
       document.getElementById('fileDrop').classList.add('hidden');
-    }
-
-    function clearSelected() {
-      hiddenInput.value = '';
-      statusWrap.classList.add('hidden');
-      document.getElementById('fileDrop').classList.remove('hidden');
-      nameEl.textContent = '';
-    }
-
-    browseBtn.addEventListener('click', (e) => { e.stopPropagation(); hiddenInput.click(); });
-    dropZone.addEventListener('click', () => { if (hiddenInput.value === '') hiddenInput.click(); });
-
-    hiddenInput.addEventListener('change', () => {
-      const f = hiddenInput.files && hiddenInput.files[0];
-      if (!f) return clearSelected();
-      if (!isValidPaper(f)) {
-        alert('Please select a valid .doc or .docx file up to 25MB.');
-        return clearSelected();
-      }
-      showSelected(f);
-    });
-
-    removeBtn.addEventListener('click', (e) => { e.stopPropagation(); clearSelected(); });
-
-    ['dragenter', 'dragover'].forEach(evt => dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.add('border-gold-500', 'bg-gold-50/10'); }));
-    ;['dragleave', 'drop'].forEach(evt => dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.remove('border-gold-500', 'bg-gold-50/10'); }));
-    dropZone.addEventListener('drop', e => {
-      const files = e.dataTransfer.files;
-      if (files && files.length) {
-        const dt = new DataTransfer();
-        dt.items.add(files[0]);
-        hiddenInput.files = dt.files;
-        const f = dt.files[0];
-        if (!isValidPaper(f)) {
-          alert('Please drop a valid .doc or .docx file up to 25MB.');
-          return clearSelected();
-        }
-        showSelected(f);
+    };
+    document.getElementById('browseBtn').addEventListener('click', e => { e.stopPropagation(); hiddenInput.click(); });
+    dropZone.addEventListener('click', () => { if(!hiddenInput.value) hiddenInput.click(); });
+    hiddenInput.addEventListener('change', () => hiddenInput.files[0] ? setFile(hiddenInput.files[0]) : clearFile());
+    document.getElementById('paperFileRemove').addEventListener('click', e => { e.stopPropagation(); clearFile(); });
+    ['dragenter','dragover'].forEach(e => dropZone.addEventListener(e, ev => { ev.preventDefault(); dropZone.classList.add('border-gold-400','bg-gold-50/30'); }));
+    ['dragleave','drop'].forEach(e => dropZone.addEventListener(e, ev => { ev.preventDefault(); dropZone.classList.remove('border-gold-400','bg-gold-50/30'); }));
+    dropZone.addEventListener('drop', ev => {
+      if(ev.dataTransfer.files?.length) {
+        const dt = new DataTransfer(); dt.items.add(ev.dataTransfer.files[0]);
+        hiddenInput.files = dt.files; setFile(dt.files[0]);
       }
     });
 
-    // Enforce 3 keywords choice limit
-    (function () {
-      const container = document.getElementById('keywordChoices');
-      const counter = document.getElementById('kwCount');
-      const limit = 3;
-      const update = () => {
-        const boxes = container.querySelectorAll('input[type="checkbox"]');
-        const checked = Array.from(boxes).filter(b => b.checked);
-        counter.textContent = String(checked.length);
-        const disable = checked.length >= limit;
-        Array.from(boxes).forEach(b => { if (!b.checked) b.disabled = disable; });
-      };
-      container.addEventListener('change', update);
-    })();
-
-    // Upload & Post logic
-    async function uploadFileToR2(file) {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('type', 'paper');
-      const res = await fetch('/api/upload', { method: 'POST', body: formData });
-      if (!res.ok) throw new Error(await res.text());
-      return res.json();
-    }
-
-    async function postSubmission(e) {
+    // Form Submission
+    document.getElementById('paperForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      for (let i = 1; i <= 5; i++) if (!document.getElementById(`term-${i}`).checked) return alert('Please accept all ethical terms to proceed.');
       
-      // Confirm all terms checked
-      for (let i = 1; i <= 6; i++) {
-        if (!document.getElementById(`term-${i}`).checked) {
-          alert('Please read and agree to all ethical submission terms.');
-          return;
-        }
-      }
-
-      const submitButton = document.getElementById('submitButton');
-      const loadingSpinner = document.getElementById('loadingSpinner');
-      const buttonText = submitButton.querySelector('span');
+      const btn = document.getElementById('submitButton');
+      const spin = document.getElementById('loadingSpinner');
+      btn.disabled = true; spin.classList.remove('hidden');
       
-      submitButton.disabled = true;
-      loadingSpinner.classList.remove('hidden');
-      
-      const title = document.getElementById('paperTitle').value.trim();
-      const paper_type = document.getElementById('paperType').value;
-      const abstract = document.getElementById('paperAbstract').value.trim();
-      const kwBoxes = Array.from(document.querySelectorAll('#keywordChoices input[type="checkbox"]:checked'));
-      const keywords = kwBoxes.map(b => b.value).join(', ');
-      const authors = Array.from(document.querySelectorAll('#authorFields .author-row')).map((row, idx) => {
-        const nameEl = row.querySelector('input[placeholder^="Author Name"]');
-        const affiliationEl = row.querySelector('input[placeholder^="Affiliation"]');
-        const locationEl = row.querySelector('input[placeholder^="Location"]');
-        const emailEl = row.querySelector('input[type="email"]');
-        const commEl = row.querySelector('input.comm-checkbox');
-        return {
-          fullName: (nameEl?.value || '').trim(),
-          affiliation: (affiliationEl?.value || '').trim(),
-          location: (locationEl?.value || '').trim(),
-          email: (emailEl?.value || '').trim(),
-          receiveCommunications: idx === 0 ? true : Boolean(commEl?.checked)
-        };
-      });
-      const fileInput = document.getElementById('paperFile');
-      const chosenFile = fileInput.files[0];
       try {
-        const upload = await uploadFileToR2(chosenFile);
-        const file_url = upload?.url || upload?.key;
+        const file = hiddenInput.files[0];
+        const fd = new FormData(); fd.append('file', file); fd.append('type', 'paper');
+        const upRes = await fetch('/api/upload', { method: 'POST', body: fd });
+        if (!upRes.ok) throw new Error('File upload failed');
+        const upload = await upRes.json();
+        
         const payload = {
-          title,
-          paper_type,
-          abstract,
-          keywords,
-          authors,
+          title: document.getElementById('paperTitle').value.trim(),
+          paper_type: document.getElementById('paperType').value,
+          abstract: document.getElementById('paperAbstract').value.trim(),
+          keywords: Array.from(document.querySelectorAll('#keywordChoices input:checked')).map(b=>b.value).join(', '),
+          authors: Array.from(document.querySelectorAll('#authorFields .author-row')).map((r, i) => ({
+            fullName: r.querySelector('input[placeholder*="Name"]').value.trim(),
+            affiliation: r.querySelector('input[placeholder*="Affiliation"]').value.trim(),
+            location: r.querySelector('input[placeholder*="Location"]').value.trim(),
+            email: r.querySelector('input[type="email"]').value.trim(),
+            receiveCommunications: i===0 ? true : Boolean(r.querySelector('.comm-checkbox')?.checked)
+          })),
           termsAccepted: true,
-          file_url,
-          firstAuthorEmail: authors[0].email,
-          firstAuthorName: authors[0].fullName
+          file_url: upload.url || upload.key,
+          firstAuthorEmail: document.querySelector('#authorFields input[type="email"]').value.trim(),
+          firstAuthorName: document.querySelector('#authorFields input[placeholder*="Name"]').value.trim()
         };
-        const res = await fetch('/api/submissions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
         
-        if (!res.ok) {
-          const t = await res.text();
-          alert('Failed: ' + t);
-          submitButton.disabled = false;
-          loadingSpinner.classList.add('hidden');
-          return;
-        }
+        const res = await fetch('/api/submissions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        if (!res.ok) throw new Error(await res.text());
         
-        buttonText.textContent = 'Submitted Successfully';
-        loadingSpinner.classList.add('hidden');
-        
-        setTimeout(() => {
-          window.location.href = '/dashboard/author';
-        }, 1500);
-      } catch (error) {
-        alert('Submission Error: ' + error.message);
-        submitButton.disabled = false;
-        loadingSpinner.classList.add('hidden');
+        btn.querySelector('span').textContent = 'Success!';
+        setTimeout(() => window.location.href = '/dashboard/author', 1500);
+      } catch (err) {
+        alert('Error: ' + err.message);
+        btn.disabled = false; spin.classList.add('hidden');
       }
-    }
+    });
 
-    document.getElementById('paperForm').addEventListener('submit', postSubmission);
-
-    // Auth state verification
+    // App Initialization
     (async () => {
+      // Nav setup
+      const dashBtn = document.getElementById('dashboardBtn');
+      const dashMenu = document.getElementById('dashboardMenu');
+      const dashChevron = document.getElementById('dashChevron');
+      let dashOpen = false;
+      dashBtn.addEventListener('click', e => {
+        e.stopPropagation(); dashOpen = !dashOpen;
+        dashMenu.classList.toggle('hidden', !dashOpen);
+        dashChevron.style.transform = dashOpen ? 'rotate(180deg)' : '';
+      });
+      document.addEventListener('click', () => { dashOpen = false; dashMenu.classList.add('hidden'); dashChevron.style.transform = ''; });
+      document.getElementById('mobileMenuButton').addEventListener('click', () => document.getElementById('mobileMenu').classList.toggle('hidden'));
+
+      // Auth validation
       try {
         const res = await fetch('/api/me', { credentials: 'include' });
         const data = await res.json();
-        const el = document.getElementById('authLinks');
-        const mobileEl = document.getElementById('mobileAuthLinks');
-        const dashTab = document.getElementById('dashboardTab');
-        const mobileDashTab = document.getElementById('mobileDashboardTab');
-        
-        if (data && data.isAuthenticated) {
+        if (data?.isAuthenticated) {
           const u = data.user || {};
-          const displayName = u.name || u.email || 'User';
-          const authContent = `
-            <span class="text-sm text-navy-600">Hello, ${displayName}</span>
-            <a href="/logout" class="border border-navy-200 hover:border-navy-400 px-3 py-1.5 rounded text-navy-700 transition-colors bg-white">Logout</a>
+          const name = u.name || u.email || 'User';
+          const init = name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+          
+          document.getElementById('authLinks').innerHTML = `
+            <div class="w-8 h-8 bg-gold-500 rounded-full flex items-center justify-center text-white text-xs font-bold">${init}</div>
+            <span class="text-sm text-white/70 hidden lg:block">${name}</span>
+            <a href="/logout" class="px-3 py-1.5 border border-white/10 hover:border-white/20 text-white/60 hover:text-white rounded-lg transition-colors text-xs min-h-[44px] inline-flex items-center">Logout</a>
           `;
-          const mobileAuthContent = `
-            <div class="text-sm text-navy-600 mb-2 font-medium">Hello, ${displayName}</div>
-            <a href="/logout" class="block w-full text-center border border-navy-200 px-4 py-2.5 rounded hover:bg-navy-50 transition-colors">Logout</a>
+          document.getElementById('mobileAuthLinks').innerHTML = `
+            <div class="text-sm text-white/70 font-medium px-1">${name}</div>
+            <a href="/logout" class="block w-full text-center border border-white/10 px-4 py-3 rounded-xl hover:bg-white/5 text-white/70">Logout</a>
           `;
-          
-          if (el) el.innerHTML = authContent;
-          if (mobileEl) mobileEl.innerHTML = mobileAuthContent;
-          
-          if (dashTab) {
-            dashTab.classList.remove('hidden');
-            const btn = dashTab.querySelector('button');
-            const menu = document.getElementById('dashboardMenu');
-            let open = false;
-            const toggle = (e) => { e?.preventDefault?.(); open = !open; menu.classList.toggle('hidden', !open); };
-            btn.addEventListener('click', toggle);
-            document.addEventListener('click', (e) => { if (!dashTab.contains(e.target)) { open = false; menu.classList.add('hidden'); } });
-          }
-          
-          if (mobileDashTab) {
-            mobileDashTab.classList.remove('hidden');
-          }
-          
-          // Prefill author details
-          try {
-            const nameInput = document.querySelector('#authorFields input[placeholder^="Dr. John Doe"]');
-            const emailInput = document.querySelector('#authorFields input[type="email"]');
-            if (nameInput && data.user.name) nameInput.value = data.user.name;
-            if (emailInput && data.user.email) emailInput.value = data.user.email;
-          } catch (_) {}
+          document.getElementById('dashboardTab').classList.remove('hidden');
+          document.getElementById('mobileDashboardTab').classList.remove('hidden');
 
+          // Auto-fill author 1
+          if(u.name) document.querySelector('#authorFields input[placeholder*="Name"]').value = u.name;
+          if(u.email) document.querySelector('#authorFields input[type="email"]').value = u.email;
         } else {
-          window.location.href = '/api/auth/login?returnTo=/submit';
+          // If unauthenticated, bounce to login instead of 404-ing on api/auth/login
+          window.location.href = '/login?next=/submit';
         }
-      } catch (e) {}
+      } catch(e) {
+        window.location.href = '/login?next=/submit';
+      }
     })();
-
-    // Mobile menu toggle
-    const mobileMenuButton = document.getElementById('mobileMenuButton');
-    const mobileMenu = document.getElementById('mobileMenu');
-    if (mobileMenuButton && mobileMenu) {
-      mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-    }
   </script>
-
 </body>
 </html>
