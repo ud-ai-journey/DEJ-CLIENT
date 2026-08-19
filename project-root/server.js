@@ -26,6 +26,55 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, 'src', 'public')));
 app.use(express.json());
 
+// --- View rendering -------------------------------------------------------
+// Views are static HTML files. They are streamed with a small bootstrap block
+// injected into <head> so the navbar knows the authentication state and the
+// selected colour theme before the first paint (no Login/Register flash).
+const VIEWS_DIR = path.join(__dirname, 'src', 'views');
+const viewCache = new Map();
+
+const readView = (file) => {
+  if (process.env.NODE_ENV === 'production' && viewCache.has(file)) return viewCache.get(file);
+  const html = fs.readFileSync(path.join(VIEWS_DIR, file), 'utf8');
+  viewCache.set(file, html);
+  return html;
+};
+
+const authStateFor = (req) => {
+  try {
+    if (hasAuthConfig && req.oidc?.isAuthenticated() && req.oidc.user) {
+      const { email, name, role } = req.oidc.user;
+      return { isAuthenticated: true, authConfigured: true, user: { email, name: name || email, role: role || 'author' } };
+    }
+  } catch (error) {
+    console.error('Failed to resolve auth state for view:', error);
+  }
+  return { isAuthenticated: false, authConfigured: hasAuthConfig, user: null };
+};
+
+const renderView = (req, res, file) => {
+  let html;
+  try {
+    html = readView(file);
+  } catch (error) {
+    console.error(`View not found: ${file}`, error);
+    return res.status(404).send('Page not found');
+  }
+
+  const bootstrap = [
+    `<script>window.__DEJ_AUTH__=${JSON.stringify(authStateFor(req)).replace(/</g, '\\u003c')};</script>`,
+    '<link rel="stylesheet" href="/css/dej-ui.css">',
+    '<script src="/js/dej-ui.js"></script>'
+  ].join('\n  ');
+
+  const withBootstrap = html.includes('</head>')
+    ? html.replace('</head>', `  ${bootstrap}\n</head>`)
+    : `${bootstrap}\n${html}`;
+
+  res.set('Cache-Control', 'no-store');
+  res.type('html').send(withBootstrap);
+};
+
 // Multer config
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 25 * 1024 * 1024 } });
 
@@ -130,14 +179,14 @@ const pageAuthMiddleware = hasAuthConfig ? requiresAuth() : (req, res, next) => 
 protectedPages.forEach(page => {
   app.get(`/${page}`, pageAuthMiddleware, (req, res) => {
     const file = page.includes('dashboard') ? `${page.replace('/', '-')}.html` : `${page}.html`;
-    res.sendFile(path.join(__dirname, 'src', 'views', file));
+    renderView(req, res, file);
   });
 });
 
 // --- Login and register routes now handled by Auth0 ---
 app.get('/login', (req, res) => {
   if (!hasAuthConfig) {
-    return res.sendFile(path.join(__dirname, 'src', 'views', 'login.html'));
+    return renderView(req, res, 'login.html');
   }
   
   const returnTo = req.query.next || '/dashboard/author';
@@ -155,7 +204,7 @@ app.get('/login', (req, res) => {
 
 app.get('/register', (req, res) => {
   if (!hasAuthConfig) {
-    return res.sendFile(path.join(__dirname, 'src', 'views', 'register.html'));
+    return renderView(req, res, 'register.html');
   }
 
   const returnTo = '/dashboard/author';
@@ -321,37 +370,37 @@ const validateApiParams = (req, res, next) => {
 
 // HTML page routes
 app.get(['/', '/index', '/index.html'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'index.html'));
+  renderView(req, res, 'index.html');
 });
 
 // Admin login routes (both with and without .html extension)
 app.get(['/admin-login', '/admin-login.html'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'admin-login.html'));
+  renderView(req, res, 'admin-login.html');
 });
 
 // Admin submission detail page
 app.get('/admin/submissions/:id', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'admin-submission-detail.html'));
+  renderView(req, res, 'admin-submission-detail.html');
 });
 
 // Admin submissions list page
 app.get('/admin/submissions', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'admin-submissions-list.html'));
+  renderView(req, res, 'admin-submissions-list.html');
 });
 
 // Admin published submissions page
 app.get('/admin/published', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'admin-published-list.html'));
+  renderView(req, res, 'admin-published-list.html');
 });
 
 // Admin author profile page
 app.get('/admin/authors/:email', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'admin-author-profile.html'));
+  renderView(req, res, 'admin-author-profile.html');
 });
 
 // Admin authors list page
 app.get('/admin/authors', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'admin-authors-list.html'));
+  renderView(req, res, 'admin-authors-list.html');
 });
 
 // Legacy alias for authors list (singular path)
@@ -361,49 +410,49 @@ app.get('/admin/author', (_req, res) => {
 
 // Admin reviewers list page
 app.get(['/admin/reviewers', '/admin/reviewers.html'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'admin-reviewers.html'));
+  renderView(req, res, 'admin-reviewers.html');
 });
 
 // Admin dashboard home (clean admin UI)
 app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'admin-dashboard-home.html'));
+  renderView(req, res, 'admin-dashboard-home.html');
 });
 
 app.get('/author-guidelines.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'author-guidelines.html'));
+  renderView(req, res, 'author-guidelines.html');
 });
 
 app.get('/publication-ethics.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'publication-ethics.html'));
+  renderView(req, res, 'publication-ethics.html');
 });
 
 app.get('/review-guidelines.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'review-guidelines.html'));
+  renderView(req, res, 'review-guidelines.html');
 });
 
 app.get('/formatting-guide.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'formatting-guide.html'));
+  renderView(req, res, 'formatting-guide.html');
 });
 
 app.get('/reviewer-ethics.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'reviewer-ethics.html'));
+  renderView(req, res, 'reviewer-ethics.html');
 });
 
 // app.get('/training-materials.html', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'src', 'views', 'training-materials.html'));
+//   renderView(req, res, 'training-materials.html');
 // });
 
 app.get('/about.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'about.html'));
+  renderView(req, res, 'about.html');
 });
 
 app.get('/researches', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'researches.html'));
+  renderView(req, res, 'researches.html');
 });
 
 // Route for paper detail page
 app.get('/paper-detail.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'views', 'paper-detail.html'));
+  renderView(req, res, 'paper-detail.html');
 });
 
 // Auth info for frontend
@@ -3820,7 +3869,7 @@ app.get('/review/:submissionId', requiresAuth(), async (req, res) => {
     }
 
     // Serve the review form
-    res.sendFile(path.join(__dirname, 'src', 'views', 'feedreviewform.html'));
+    renderView(req, res, 'feedreviewform.html');
   } catch (error) {
     console.error('Error serving review form:', error);
     res.status(500).send('Internal server error');
